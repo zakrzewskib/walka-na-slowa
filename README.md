@@ -33,3 +33,17 @@ Commit naming convention:
 ```
 #<issue-number>: commit message
 ```
+
+## Issues strategy
+
+I'll use github issues with ticket that has labels for story points:
+
+```
+story-point:<value>
+```
+
+1 story point ≈ 30 minutes of focused work
+2 points → ~1 hour
+3 points → ~1.5 hours
+5 points → ~2.5–3 hours
+8 points -> ~4-5 hours
