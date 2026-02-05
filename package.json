@@ -13,7 +13,9 @@
     "preview": "vite preview",
     "prepare": "husky",
     "test": "vitest run",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "e2e": "cypress run",
+    "e2e:ci": "pnpm run dev & sleep 1 && pnpm run e2e"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -26,6 +28,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "4.0.18",
+    "cypress": "^15.10.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
