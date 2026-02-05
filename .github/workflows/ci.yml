@@ -19,6 +19,9 @@ jobs:
       - run: corepack enable
       - run: pnpm install
 
+      # Installing cypress
+      - run: pnpm exec cypress install
+
       # Checks:
       - run: npm run lint
       - run: npm run typecheck
