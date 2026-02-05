@@ -34,6 +34,14 @@ Commit naming convention:
 #<issue-number>: commit message
 ```
 
+Code review will be done by AI, CodeRabbit or reviewdog will be considered, for now review will be done by free chatGPT:
+
+```
+git diff develop...feature/<name> -- . ':(exclude)<file-name>' ':(exclude)<dir-name>' | pbcopy
+
+please review the code like senior frontend dev add -byChatGPT v.<your-version> at the end of the each comment and reference file or code, only add comments with fixes and improvements, skip positive comments
+```
+
 ## Issues strategy
 
 I'll use github issues with ticket that has labels for story points:
