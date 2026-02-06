@@ -13,8 +13,7 @@ function Letter(props: LetterProps) {
   const { value, exists, correctPlace } = letter;
   const { isCurrentTurn, isPlayer } = props;
 
-  const isHiddenLetter = value === HIDDEN_LETTER;
-  const calculatedValue = isHiddenLetter ? '' : value;
+  const calculatedValue = value === HIDDEN_LETTER ? '' : value;
 
   function calculateBackgroundColor() {
     if (correctPlace) {
@@ -24,7 +23,7 @@ function Letter(props: LetterProps) {
       return 'yellow.500';
     }
 
-    if (value || isHiddenLetter) {
+    if (value) {
       return 'gray.400';
     }
 
