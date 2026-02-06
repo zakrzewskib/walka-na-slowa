@@ -32,12 +32,8 @@ function Letter(props: LetterProps) {
   }
 
   function calculateBorderColor() {
-    if (isCurrentTurn && isPlayer) {
-      return 'blue.500';
-    }
-
     if (isCurrentTurn) {
-      return 'red.500';
+      return isPlayer ? 'blue.500' : 'red.500';
     }
 
     return 'gray.400';
