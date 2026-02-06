@@ -7,7 +7,8 @@ interface LetterProps extends ILetter {
 }
 function Letter(props: LetterProps) {
   const { value, exists, correctPlace, isCurrentTurn, isOpponent } = props;
-  const calculatedValue = value === '-' ? '' : value;
+  const isHiddenLetter = value === '-';
+  const calculatedValue = isHiddenLetter ? '' : value;
 
   function calculateBackgroundColor() {
     if (exists && correctPlace) {
@@ -17,7 +18,7 @@ function Letter(props: LetterProps) {
       return 'yellow.500';
     }
 
-    if (value) {
+    if (value || isHiddenLetter) {
       return 'gray.400';
     }
 
