@@ -22,12 +22,20 @@ function GameBoard(props: GameBoardProps) {
       <Text alignSelf={isPlayer ? 'start' : 'end'}>
         {playerName} {isPlayer && '(Ty)'}
       </Text>
-      <VStack gap="4px">
+      <VStack
+        gap="4px"
+        smDown={{
+          gap: '2px',
+        }}
+      >
         {words.map((word) => (
           <HStack
             gap="4px"
             mdDown={{
               width: 'full',
+            }}
+            smDown={{
+              gap: '2px',
             }}
           >
             {word.map(({ value, correctPlace, exists }) => (
@@ -46,6 +54,9 @@ function GameBoard(props: GameBoardProps) {
             gap="4px"
             mdDown={{
               width: 'full',
+            }}
+            smDown={{
+              gap: '2px',
             }}
           >
             {new Array(WORD_LENGTH).fill('').map(() => (
