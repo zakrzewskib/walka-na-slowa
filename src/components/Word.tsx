@@ -20,6 +20,7 @@ function Word(props: WordProps) {
       smDown={{
         gap: '2px',
       }}
+      role="row"
     >
       {word.letters.map((letter) => (
         <Letter

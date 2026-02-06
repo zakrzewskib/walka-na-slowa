@@ -48,6 +48,8 @@ function GameBoard(props: GameBoardProps) {
         smDown={{
           gap: '2px',
         }}
+        role="grid"
+        aria-label={isPlayer ? 'Your board' : "Opponent's board"}
       >
         {words.map((word) => (
           <Word
