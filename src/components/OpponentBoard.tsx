@@ -1,12 +1,12 @@
 import { HStack, Text, VStack } from '@chakra-ui/react';
 import Letter from './Letter';
 
-function PlayerBoard() {
-  const words = ['ZAMEK', 'LAMPA', 'KWIAT', 'BALON', 'ŻÓŁTY'];
+function OpponentBoard() {
+  const words = ['     ', '     ', '     ', '     ', '     '];
 
   return (
-    <VStack alignItems="start">
-      <Text>Gracz 1 (Ty)</Text>
+    <VStack alignItems="end">
+      <Text>Gracz 2</Text>
       <VStack
         gap="4px"
         mdDown={{
@@ -30,4 +30,4 @@ function PlayerBoard() {
   );
 }
 
-export default PlayerBoard;
+export default OpponentBoard;
