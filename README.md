@@ -37,9 +37,9 @@ Commit naming convention:
 Code review will be done by AI, CodeRabbit or reviewdog will be considered, for now review will be done by free chatGPT:
 
 ```
-git diff develop...feature/<name> -- . ':(exclude)<file-name>' ':(exclude)<dir-name>' | pbcopy
+git diff develop...feature/#6-add-players-boards -- . ':(exclude)pnpm-lock.yaml' | pbcopy
 
-please review the code like senior frontend dev add -byChatGPT v.<your-version> at the end of the each comment and reference file or code, only add comments with fixes and improvements, skip positive comments
+please review the code like senior frontend dev add -<yourName> v.<your-version> at the end of the each comment, in the comment reference file, only add comments with fixes and improvements, skip positive comments, make comments in a copy-ready format
 ```
 
 ## Issues strategy
