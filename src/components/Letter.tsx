@@ -1,11 +1,40 @@
 import { VStack } from '@chakra-ui/react';
+import type { ILetter } from '../types';
 
-interface LetterProps {
-  value: string;
+interface LetterProps extends ILetter {
+  isCurrentTurn?: boolean;
+  isOpponent?: boolean;
 }
-
 function Letter(props: LetterProps) {
-  const { value } = props;
+  const { value, exists, correctPlace, isCurrentTurn, isOpponent } = props;
+  const calculatedValue = value === '-' ? '' : value;
+
+  function calculateBackgroundColor() {
+    if (exists && correctPlace) {
+      return 'green.500';
+    }
+    if (exists && !correctPlace) {
+      return 'yellow.500';
+    }
+
+    if (value) {
+      return 'gray.400';
+    }
+
+    return 'gray.100';
+  }
+
+  function calculateBorderColor() {
+    if (isCurrentTurn && !isOpponent) {
+      return 'blue.500';
+    }
+
+    if (isCurrentTurn && isOpponent) {
+      return 'red.500';
+    }
+
+    return 'gray.400';
+  }
 
   return (
     <VStack
@@ -15,7 +44,9 @@ function Letter(props: LetterProps) {
       height="60px"
       fontSize="24px"
       fontWeight="bolder"
-      background="gray.400"
+      background={calculateBackgroundColor()}
+      borderColor={calculateBorderColor()}
+      borderWidth={value ? '0px' : '2px'}
       color="white"
       mdDown={{
         flex: '1',
@@ -24,7 +55,7 @@ function Letter(props: LetterProps) {
         fontSize: '22px',
       }}
     >
-      {value}
+      {calculatedValue}
     </VStack>
   );
 }

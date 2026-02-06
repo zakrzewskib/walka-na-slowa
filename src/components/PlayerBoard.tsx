@@ -1,8 +1,18 @@
 import { HStack, Text, VStack } from '@chakra-ui/react';
+import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
+import type { IWord } from '../types';
 import Letter from './Letter';
 
 function PlayerBoard() {
-  const words = ['ZAMEK', 'LAMPA', 'KWIAT', 'BALON', 'ŻÓŁTY'];
+  const words: IWord[] = [
+    [
+      { value: 'Z', exists: true, correctPlace: true },
+      { value: 'A', exists: true, correctPlace: false },
+      { value: 'M', exists: false, correctPlace: false },
+      { value: 'E', exists: true, correctPlace: false },
+      { value: 'K', exists: false, correctPlace: false },
+    ],
+  ];
 
   return (
     <VStack
@@ -20,8 +30,30 @@ function PlayerBoard() {
               width: 'full',
             }}
           >
-            {word.split('').map((letter) => (
-              <Letter value={letter} />
+            {word.map(({ value, correctPlace, exists }) => (
+              <Letter
+                value={value}
+                correctPlace={correctPlace}
+                exists={exists}
+              />
+            ))}
+          </HStack>
+        ))}
+
+        {new Array(WORDS_LENGTH - words.length).fill('').map((_, idx) => (
+          <HStack
+            gap="4px"
+            mdDown={{
+              width: 'full',
+            }}
+          >
+            {new Array(WORD_LENGTH).fill('').map(() => (
+              <Letter
+                value=""
+                exists={false}
+                correctPlace={false}
+                isCurrentTurn={idx === 0}
+              />
             ))}
           </HStack>
         ))}
