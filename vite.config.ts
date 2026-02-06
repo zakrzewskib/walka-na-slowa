@@ -6,6 +6,8 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
   test: {
-    // todo: add coverage threshold
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './tests/setup.ts',
   },
 });
