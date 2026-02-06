@@ -1,5 +1,16 @@
+import { HStack } from '@chakra-ui/react';
+import Page from './components/Page';
+import PlayerBoard from './components/PlayerBoard';
+
 function App() {
-  return <h1 data-testid="cypress-title">Hello World!</h1>;
+  return (
+    <Page>
+      <HStack gap="24px" justifyContent="center">
+        <PlayerBoard />
+        <PlayerBoard />
+      </HStack>
+    </Page>
+  );
 }
 
 export default App;
