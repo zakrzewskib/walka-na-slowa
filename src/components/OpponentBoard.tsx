@@ -5,14 +5,14 @@ function OpponentBoard() {
   const words = ['     ', '     ', '     ', '     ', '     '];
 
   return (
-    <VStack alignItems="end">
-      <Text>Gracz 2</Text>
-      <VStack
-        gap="4px"
-        mdDown={{
-          width: 'full',
-        }}
-      >
+    <VStack
+      mdDown={{
+        width: 'full',
+        alignItems: 'stretch',
+      }}
+    >
+      <Text alignSelf="end">Gracz 2</Text>
+      <VStack gap="4px">
         {words.map((word) => (
           <HStack
             gap="4px"

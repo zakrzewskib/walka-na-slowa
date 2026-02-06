@@ -5,14 +5,14 @@ function PlayerBoard() {
   const words = ['ZAMEK', 'LAMPA', 'KWIAT', 'BALON', 'ŻÓŁTY'];
 
   return (
-    <VStack alignItems="start">
-      <Text>Gracz 1 (Ty)</Text>
-      <VStack
-        gap="4px"
-        mdDown={{
-          width: 'full',
-        }}
-      >
+    <VStack
+      mdDown={{
+        width: 'full',
+        alignItems: 'stretch',
+      }}
+    >
+      <Text alignSelf="start">Gracz 1 (Ty)</Text>
+      <VStack gap="4px">
         {words.map((word) => (
           <HStack
             gap="4px"
