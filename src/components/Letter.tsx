@@ -1,20 +1,26 @@
 import { VStack } from '@chakra-ui/react';
+import { HIDDEN_LETTER } from '../constants';
 import type { ILetter } from '../types';
+import { getLetterAriaLabel } from '../utils/accessibility';
 
-interface LetterProps extends ILetter {
-  isCurrentTurn?: boolean;
-  isOpponent?: boolean;
+interface LetterProps {
+  letter: ILetter;
+  isCurrentTurn: boolean;
+  isPlayer: boolean;
 }
 function Letter(props: LetterProps) {
-  const { value, exists, correctPlace, isCurrentTurn, isOpponent } = props;
-  const isHiddenLetter = value === '-';
+  const { letter } = props;
+  const { value, exists, correctPlace } = letter;
+  const { isCurrentTurn, isPlayer } = props;
+
+  const isHiddenLetter = value === HIDDEN_LETTER;
   const calculatedValue = isHiddenLetter ? '' : value;
 
   function calculateBackgroundColor() {
-    if (exists && correctPlace) {
+    if (correctPlace) {
       return 'green.500';
     }
-    if (exists && !correctPlace) {
+    if (exists) {
       return 'yellow.500';
     }
 
@@ -26,11 +32,11 @@ function Letter(props: LetterProps) {
   }
 
   function calculateBorderColor() {
-    if (isCurrentTurn && !isOpponent) {
+    if (isCurrentTurn && isPlayer) {
       return 'blue.500';
     }
 
-    if (isCurrentTurn && isOpponent) {
+    if (isCurrentTurn) {
       return 'red.500';
     }
 
@@ -39,6 +45,8 @@ function Letter(props: LetterProps) {
 
   return (
     <VStack
+      role="gridcell"
+      aria-label={getLetterAriaLabel(letter, isCurrentTurn, isPlayer)}
       justifyContent="center"
       rounded="sm"
       width="60px"

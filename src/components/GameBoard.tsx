@@ -1,7 +1,8 @@
-import { HStack, Text, VStack } from '@chakra-ui/react';
+import { Text, VStack } from '@chakra-ui/react';
+import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
-import type { IWord } from '../types';
-import Letter from './Letter';
+import type { ILetter, IWord } from '../types';
+import Word from './Word';
 
 interface GameBoardProps {
   words: IWord[];
@@ -11,6 +12,22 @@ interface GameBoardProps {
 
 function GameBoard(props: GameBoardProps) {
   const { words, isPlayer, playerName } = props;
+
+  const emptyWords: IWord[] = [];
+
+  const emptyLetter: ILetter = {
+    id: uuidv4(),
+    value: '',
+    exists: false,
+    correctPlace: false,
+  };
+
+  for (let i = 0; i < WORDS_LENGTH - words.length; i++) {
+    emptyWords.push({
+      id: uuidv4(),
+      letters: [...new Array(WORD_LENGTH).fill(emptyLetter)],
+    });
+  }
 
   return (
     <VStack
@@ -22,6 +39,7 @@ function GameBoard(props: GameBoardProps) {
       <Text alignSelf={isPlayer ? 'start' : 'end'}>
         {playerName} {isPlayer && '(Ty)'}
       </Text>
+
       <VStack
         gap="4px"
         smDown={{
@@ -29,46 +47,21 @@ function GameBoard(props: GameBoardProps) {
         }}
       >
         {words.map((word) => (
-          <HStack
-            gap="4px"
-            mdDown={{
-              width: 'full',
-            }}
-            smDown={{
-              gap: '2px',
-            }}
-          >
-            {word.map(({ value, correctPlace, exists }) => (
-              <Letter
-                value={value}
-                correctPlace={correctPlace}
-                exists={exists}
-                isOpponent={!isPlayer}
-              />
-            ))}
-          </HStack>
+          <Word
+            key={word.id}
+            word={word}
+            isPlayer={isPlayer}
+            isCurrentTurn={false}
+          />
         ))}
 
-        {new Array(WORDS_LENGTH - words.length).fill('').map((_, idx) => (
-          <HStack
-            gap="4px"
-            mdDown={{
-              width: 'full',
-            }}
-            smDown={{
-              gap: '2px',
-            }}
-          >
-            {new Array(WORD_LENGTH).fill('').map(() => (
-              <Letter
-                value=""
-                exists={false}
-                correctPlace={false}
-                isCurrentTurn={idx === 0}
-                isOpponent={!isPlayer}
-              />
-            ))}
-          </HStack>
+        {emptyWords.map((word, idx) => (
+          <Word
+            key={word.id}
+            word={word}
+            isPlayer={isPlayer}
+            isCurrentTurn={idx === 0}
+          />
         ))}
       </VStack>
     </VStack>
