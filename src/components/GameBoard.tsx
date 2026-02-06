@@ -3,16 +3,14 @@ import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
 import type { IWord } from '../types';
 import Letter from './Letter';
 
-function PlayerBoard() {
-  const words: IWord[] = [
-    [
-      { value: 'Z', exists: true, correctPlace: true },
-      { value: 'A', exists: true, correctPlace: false },
-      { value: 'M', exists: false, correctPlace: false },
-      { value: 'E', exists: true, correctPlace: false },
-      { value: 'K', exists: false, correctPlace: false },
-    ],
-  ];
+interface GameBoardProps {
+  words: IWord[];
+  isPlayer: boolean;
+  playerName: string;
+}
+
+function GameBoard(props: GameBoardProps) {
+  const { words, isPlayer, playerName } = props;
 
   return (
     <VStack
@@ -21,7 +19,9 @@ function PlayerBoard() {
         alignItems: 'stretch',
       }}
     >
-      <Text alignSelf="start">Gracz 1 (Ty)</Text>
+      <Text alignSelf={isPlayer ? 'start' : 'end'}>
+        {playerName} {isPlayer && '(Ty)'}
+      </Text>
       <VStack gap="4px">
         {words.map((word) => (
           <HStack
@@ -35,6 +35,7 @@ function PlayerBoard() {
                 value={value}
                 correctPlace={correctPlace}
                 exists={exists}
+                isOpponent={!isPlayer}
               />
             ))}
           </HStack>
@@ -53,6 +54,7 @@ function PlayerBoard() {
                 exists={false}
                 correctPlace={false}
                 isCurrentTurn={idx === 0}
+                isOpponent={!isPlayer}
               />
             ))}
           </HStack>
@@ -62,4 +64,4 @@ function PlayerBoard() {
   );
 }
 
-export default PlayerBoard;
+export default GameBoard;
