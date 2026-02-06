@@ -1,7 +1,8 @@
 import { Text, VStack } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
-import type { ILetter, IWord } from '../types';
+import type { IWord } from '../types';
 import Word from './Word';
 
 interface GameBoardProps {
@@ -13,21 +14,23 @@ interface GameBoardProps {
 function GameBoard(props: GameBoardProps) {
   const { words, isPlayer, playerName } = props;
 
-  const emptyWords: IWord[] = [];
+  const emptyWords: IWord[] = useMemo(() => {
+    const result: IWord[] = [];
 
-  const emptyLetter: ILetter = {
-    id: uuidv4(),
-    value: '',
-    exists: false,
-    correctPlace: false,
-  };
+    for (let i = 0; i < WORDS_LENGTH - words.length; i++) {
+      result.push({
+        id: uuidv4(),
+        letters: Array.from({ length: WORD_LENGTH }, () => ({
+          id: uuidv4(),
+          value: '',
+          exists: false,
+          correctPlace: false,
+        })),
+      });
+    }
 
-  for (let i = 0; i < WORDS_LENGTH - words.length; i++) {
-    emptyWords.push({
-      id: uuidv4(),
-      letters: [...new Array(WORD_LENGTH).fill(emptyLetter)],
-    });
-  }
+    return result;
+  }, [words.length]); // Only regenerate if number of words changes
 
   return (
     <VStack
