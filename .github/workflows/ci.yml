@@ -47,8 +47,6 @@ jobs:
       - run: npm run build
 
       # Tests
-      - run: npm run test
-
-      # Todo: Create coverage artifact
+      - run: npm run coverage
 
       - run: npm run e2e:ci
