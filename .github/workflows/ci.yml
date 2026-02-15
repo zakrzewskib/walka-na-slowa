@@ -47,8 +47,13 @@ jobs:
       - run: npm run build
 
       # Tests
-      - run: npm run test
-
-      # Todo: Create coverage artifact
+      - run: npm run coverage
 
       - run: npm run e2e:ci
+
+      # Coverage artifact upload
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
