@@ -1,4 +1,4 @@
-import { HStack } from '@chakra-ui/react';
+import { HStack, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import GameBoard from './components/GameBoard';
@@ -58,21 +58,24 @@ const MOCK_OPPONENT_WORDS: IWord[] = [
 function App() {
   const [userWords, setUserWords] = useState<IWord[]>([]);
 
-  function handleSubmit(word: IWord) {
-    setUserWords((prev) => [...prev, word]);
+  function handleSubmit(guessResult: IWord) {
+    setUserWords((prev) => [...prev, guessResult]);
   }
 
   return (
     <Page>
-      <HStack gap="24px" justifyContent="center">
-        <GameBoard words={userWords} isPlayer={true} playerName="Gracz 1" />
-        <GameBoard
-          words={MOCK_OPPONENT_WORDS}
-          isPlayer={false}
-          playerName="Gracz 2"
-        />
-      </HStack>
-      <WordInput onSubmit={handleSubmit} />
+      <VStack h="full" w="full" justifyContent="space-between">
+        <HStack gap="24px" justifyContent="center" w="full">
+          <GameBoard words={userWords} isPlayer={true} playerName="Gracz 1" />
+          <GameBoard
+            words={MOCK_OPPONENT_WORDS}
+            isPlayer={false}
+            playerName="Gracz 2"
+          />
+        </HStack>
+
+        <WordInput onSubmit={handleSubmit} />
+      </VStack>
     </Page>
   );
 }

@@ -5,7 +5,7 @@ import type { IWord } from '../types';
 import { getGuessResult } from '../utils/gameLogic';
 
 interface WordInputProps {
-  onSubmit: (word: IWord) => void;
+  onSubmit: (guessResult: IWord) => void;
 }
 
 function WordInput(props: WordInputProps) {
@@ -19,8 +19,12 @@ function WordInput(props: WordInputProps) {
     e.preventDefault();
     // tbd: Add validation if word is correct
     const guess = value.toUpperCase();
+    // tbd: Think if it's a backend side logic
     const result = getGuessResult(guess, MOCK_CORRECT_WORD);
     props.onSubmit(result);
+
+    // tbd: Add animation
+    setValue('');
   }
 
   // tbd: Hide the input and auto focus
