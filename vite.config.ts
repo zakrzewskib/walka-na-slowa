@@ -12,6 +12,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
+      // Only include files with logic, exclude UI components, in the future add more directories if necessary
       include: ['src/utils'],
       thresholds: {
         lines: 80,
