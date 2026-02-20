@@ -1,4 +1,5 @@
 import { HStack } from '@chakra-ui/react';
+import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import GameBoard from './components/GameBoard';
 import Page from './components/Page';
@@ -8,49 +9,44 @@ import type { IWord } from './types';
 
 export const MOCK_CORRECT_WORD = 'LALKA';
 
-const MOCK_PLAYER_WORDS: IWord[] = [
-  {
-    id: uuidv4(),
-    letters: [
-      { id: uuidv4(), value: 'Z', exists: true, correctPlace: true },
-      { id: uuidv4(), value: 'A', exists: true, correctPlace: false },
-      { id: uuidv4(), value: 'M', exists: false, correctPlace: false },
-      { id: uuidv4(), value: 'E', exists: true, correctPlace: false },
-      { id: uuidv4(), value: 'K', exists: false, correctPlace: false },
-    ],
-  },
-];
+// const MOCK_PLAYER_WORDS: IWord[] = [
+//   {
+//     id: uuidv4(),
+//     letters: [
+//       { id: uuidv4(), value: 'Z', exists: true, correctPlace: true },
+//       { id: uuidv4(), value: 'A', exists: true, correctPlace: false },
+//       { id: uuidv4(), value: 'M', exists: false, correctPlace: false },
+//       { id: uuidv4(), value: 'E', exists: true, correctPlace: false },
+//       { id: uuidv4(), value: 'K', exists: false, correctPlace: false },
+//     ],
+//   },
+// ];
 
 const MOCK_OPPONENT_WORDS: IWord[] = [
   {
     id: uuidv4(),
     letters: [
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: true,
         correctPlace: true,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: true,
         correctPlace: false,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: false,
         correctPlace: false,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: true,
         correctPlace: false,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: false,
         correctPlace: false,
@@ -60,21 +56,23 @@ const MOCK_OPPONENT_WORDS: IWord[] = [
 ];
 
 function App() {
+  const [userWords, setUserWords] = useState<IWord[]>([]);
+
+  function handleSubmit(word: IWord) {
+    setUserWords((prev) => [...prev, word]);
+  }
+
   return (
     <Page>
       <HStack gap="24px" justifyContent="center">
-        <GameBoard
-          words={MOCK_PLAYER_WORDS}
-          isPlayer={true}
-          playerName="Gracz 1"
-        />
+        <GameBoard words={userWords} isPlayer={true} playerName="Gracz 1" />
         <GameBoard
           words={MOCK_OPPONENT_WORDS}
           isPlayer={false}
           playerName="Gracz 2"
         />
       </HStack>
-      <WordInput />
+      <WordInput onSubmit={handleSubmit} />
     </Page>
   );
 }

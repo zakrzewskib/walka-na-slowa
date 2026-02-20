@@ -1,5 +1,4 @@
 export interface ILetter {
-  id: string;
   value: string;
   exists: boolean;
   correctPlace: boolean;
@@ -10,4 +9,4 @@ export interface IWord {
   letters: ILetter[];
 }
 
-export type IGuessResult = { exists: boolean; correctPlace: boolean }[];
+export type IGuessResult = ILetter[];
