@@ -1,12 +1,12 @@
 import { Input } from '@chakra-ui/react';
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
-import { MOCK_CORRECT_WORD } from '../App';
 import { WORD_LENGTH } from '../constants';
 import type { IWord } from '../types';
 import { getGuessResult } from '../utils/gameLogic';
 
 interface WordInputProps {
   onSubmit: (guessResult: IWord) => void;
+  correctWord: string;
 }
 
 function WordInput(props: WordInputProps) {
@@ -28,7 +28,7 @@ function WordInput(props: WordInputProps) {
 
     const guess = value.toUpperCase();
     // tbd: Think if it's a backend side logic
-    const result = getGuessResult(guess, MOCK_CORRECT_WORD);
+    const result = getGuessResult(guess, props.correctWord);
     props.onSubmit(result);
 
     // tbd: Add animation

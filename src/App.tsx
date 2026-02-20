@@ -74,7 +74,7 @@ function App() {
           />
         </HStack>
 
-        <WordInput onSubmit={handleSubmit} />
+        <WordInput onSubmit={handleSubmit} correctWord={MOCK_CORRECT_WORD} />
       </VStack>
     </Page>
   );
