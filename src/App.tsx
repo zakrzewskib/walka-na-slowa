@@ -2,9 +2,9 @@ import { HStack, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import GameBoard from './components/GameBoard';
-import Page from './components/Page';
 import WordInput from './components/WordInput';
 import { HIDDEN_LETTER, MOCK_CORRECT_WORD } from './constants';
+import Layout from './layout/Layout';
 import type { IWord } from './types';
 
 const MOCK_OPPONENT_WORDS: IWord[] = [
@@ -48,8 +48,8 @@ function App() {
   }
 
   return (
-    <Page>
-      <VStack minH="full" w="full" justifyContent="space-between">
+    <Layout>
+      <VStack w="full" flex="1" justifyContent="space-between">
         <HStack gap="24px" justifyContent="center" w="full">
           <GameBoard words={userWords} isPlayer={true} playerName="Gracz 1" />
           <GameBoard
@@ -61,7 +61,7 @@ function App() {
 
         <WordInput onSubmit={handleSubmit} correctWord={MOCK_CORRECT_WORD} />
       </VStack>
-    </Page>
+    </Layout>
   );
 }
 
