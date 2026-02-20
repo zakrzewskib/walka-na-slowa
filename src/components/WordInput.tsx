@@ -43,6 +43,15 @@ function WordInput(props: WordInputProps) {
         value={value}
         onChange={handleInputChange}
         data-testid="word-input"
+        aria-label={`Enter your ${WORD_LENGTH}-letter word guess`}
+        placeholder="Enter your guess..."
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="characters"
+        spellCheck="false"
+        maxLength={WORD_LENGTH}
+        autoFocus
+        textTransform="uppercase"
       />
     </form>
   );
