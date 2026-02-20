@@ -1,3 +1,4 @@
+// vitest provides chai-compatible assertions
 import { v4 as uuidv4 } from 'uuid';
 import type { ILetter, IWord } from '../types';
 
