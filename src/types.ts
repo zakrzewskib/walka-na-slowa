@@ -8,5 +8,3 @@ export interface IWord {
   id: string;
   letters: ILetter[];
 }
-
-export type IGuessResult = ILetter[];
