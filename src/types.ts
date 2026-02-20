@@ -1,5 +1,4 @@
 export interface ILetter {
-  id: string;
   value: string;
   exists: boolean;
   correctPlace: boolean;

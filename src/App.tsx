@@ -1,53 +1,37 @@
-import { HStack } from '@chakra-ui/react';
+import { HStack, VStack } from '@chakra-ui/react';
+import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import GameBoard from './components/GameBoard';
 import Page from './components/Page';
-import { HIDDEN_LETTER } from './constants';
+import WordInput from './components/WordInput';
+import { HIDDEN_LETTER, MOCK_CORRECT_WORD } from './constants';
 import type { IWord } from './types';
-
-const MOCK_PLAYER_WORDS: IWord[] = [
-  {
-    id: uuidv4(),
-    letters: [
-      { id: uuidv4(), value: 'Z', exists: true, correctPlace: true },
-      { id: uuidv4(), value: 'A', exists: true, correctPlace: false },
-      { id: uuidv4(), value: 'M', exists: false, correctPlace: false },
-      { id: uuidv4(), value: 'E', exists: true, correctPlace: false },
-      { id: uuidv4(), value: 'K', exists: false, correctPlace: false },
-    ],
-  },
-];
 
 const MOCK_OPPONENT_WORDS: IWord[] = [
   {
     id: uuidv4(),
     letters: [
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: true,
         correctPlace: true,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: true,
         correctPlace: false,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: false,
         correctPlace: false,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: true,
         correctPlace: false,
       },
       {
-        id: uuidv4(),
         value: HIDDEN_LETTER,
         exists: false,
         correctPlace: false,
@@ -57,20 +41,26 @@ const MOCK_OPPONENT_WORDS: IWord[] = [
 ];
 
 function App() {
+  const [userWords, setUserWords] = useState<IWord[]>([]);
+
+  function handleSubmit(guessResult: IWord) {
+    setUserWords((prev) => [...prev, guessResult]);
+  }
+
   return (
     <Page>
-      <HStack gap="24px" justifyContent="center">
-        <GameBoard
-          words={MOCK_PLAYER_WORDS}
-          isPlayer={true}
-          playerName="Gracz 1"
-        />
-        <GameBoard
-          words={MOCK_OPPONENT_WORDS}
-          isPlayer={false}
-          playerName="Gracz 2"
-        />
-      </HStack>
+      <VStack minH="full" w="full" justifyContent="space-between">
+        <HStack gap="24px" justifyContent="center" w="full">
+          <GameBoard words={userWords} isPlayer={true} playerName="Gracz 1" />
+          <GameBoard
+            words={MOCK_OPPONENT_WORDS}
+            isPlayer={false}
+            playerName="Gracz 2"
+          />
+        </HStack>
+
+        <WordInput onSubmit={handleSubmit} correctWord={MOCK_CORRECT_WORD} />
+      </VStack>
     </Page>
   );
 }

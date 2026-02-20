@@ -22,9 +22,9 @@ function Word(props: WordProps) {
       }}
       role="row"
     >
-      {word.letters.map((letter) => (
+      {word.letters.map((letter, idx) => (
         <Letter
-          key={letter.id}
+          key={`${word.id}-${idx}`}
           letter={letter}
           isPlayer={isPlayer}
           isCurrentTurn={isCurrentTurn}
