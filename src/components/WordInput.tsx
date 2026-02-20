@@ -38,7 +38,12 @@ function WordInput(props: WordInputProps) {
   // tbd: Hide the input and auto focus
   return (
     <form onSubmit={handleSubmit}>
-      <Input type="text" value={value} onChange={handleInputChange} />
+      <Input
+        type="text"
+        value={value}
+        onChange={handleInputChange}
+        data-testid="word-input"
+      />
     </form>
   );
 }
