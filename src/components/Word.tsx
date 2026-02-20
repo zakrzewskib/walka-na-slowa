@@ -24,7 +24,7 @@ function Word(props: WordProps) {
     >
       {word.letters.map((letter, idx) => (
         <Letter
-          key={idx}
+          key={`${word.id}-${idx}`}
           letter={letter}
           isPlayer={isPlayer}
           isCurrentTurn={isCurrentTurn}
