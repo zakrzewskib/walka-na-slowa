@@ -3,6 +3,16 @@ import { v4 as uuidv4 } from 'uuid';
 import type { ILetter, IWord } from '../types';
 
 export function getGuessResult(guess: string, correctWord: string): IWord {
+  if (!guess || guess.length === 0) {
+    throw new Error('Guess cannot be empty');
+  }
+
+  if (guess.length !== correctWord.length) {
+    throw new Error(
+      `Guess length (${guess.length}) must match correct word length (${correctWord.length})`,
+    );
+  }
+
   const result: ILetter[] = new Array(guess.length).fill(null);
   const correctLetterCounts: Record<string, number> = {};
 

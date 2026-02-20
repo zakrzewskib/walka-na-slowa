@@ -103,4 +103,24 @@ describe('getGuessResult', () => {
       });
     });
   });
+
+  describe('input validation', () => {
+    it('throws error for empty string', () => {
+      expect(() => getGuessResult('', correctWord)).throw(
+        'Guess cannot be empty',
+      );
+    });
+
+    it('throws error for mismatched length', () => {
+      expect(() => getGuessResult('ABC', correctWord)).throw(
+        'Guess length (3) must match correct word length (5)',
+      );
+    });
+
+    it('throws error for too long guess', () => {
+      expect(() => getGuessResult('ABCDEFG', correctWord)).throw(
+        'Guess length (7) must match correct word length (5)',
+      );
+    });
+  });
 });
