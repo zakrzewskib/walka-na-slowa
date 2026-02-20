@@ -4,10 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import GameBoard from './components/GameBoard';
 import Page from './components/Page';
 import WordInput from './components/WordInput';
-import { HIDDEN_LETTER } from './constants';
+import { HIDDEN_LETTER, MOCK_CORRECT_WORD } from './constants';
 import type { IWord } from './types';
-
-export const MOCK_CORRECT_WORD = 'LALKA';
 
 const MOCK_OPPONENT_WORDS: IWord[] = [
   {

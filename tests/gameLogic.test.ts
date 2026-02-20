@@ -1,16 +1,15 @@
-import { MOCK_CORRECT_WORD } from '../src/App';
 import { getGuessResult } from '../src/utils/gameLogic';
 
 describe('getGuessResult', () => {
   const green = { exists: true, correctPlace: true };
   const yellow = { exists: true, correctPlace: false };
   const gray = { exists: false, correctPlace: false };
-  const correctWord = MOCK_CORRECT_WORD;
+  const correctWord = 'LALKA';
 
   // * INFO *
   // To compare arrays I used to.deep.equal
 
-  describe('LALKA as correct word', () => {
+  describe(`${correctWord} as correct word`, () => {
     it('ZAMEK', () => {
       const result = getGuessResult('ZAMEK', correctWord).letters.map(
         (letter) => ({
