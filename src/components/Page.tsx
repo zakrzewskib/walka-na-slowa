@@ -1,11 +1,11 @@
-import { Box } from '@chakra-ui/react';
+import { VStack } from '@chakra-ui/react';
 import type { ReactNode } from 'react';
 
 function Page({ children }: { children: ReactNode }) {
   return (
-    <Box maxW="7xl" h="100dvh" mx="auto" p={{ base: '4', md: '6' }}>
+    <VStack flex="1" maxW="7xl" mx="auto" p={{ base: '4', md: '6' }} as="main">
       {children}
-    </Box>
+    </VStack>
   );
 }
 
