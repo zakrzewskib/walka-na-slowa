@@ -9,3 +9,5 @@ export interface IWord {
   id: string;
   letters: ILetter[];
 }
+
+export type IGuessResult = { exists: boolean; correctPlace: boolean }[];

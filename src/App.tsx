@@ -2,8 +2,11 @@ import { HStack } from '@chakra-ui/react';
 import { v4 as uuidv4 } from 'uuid';
 import GameBoard from './components/GameBoard';
 import Page from './components/Page';
+import WordInput from './components/WordInput';
 import { HIDDEN_LETTER } from './constants';
 import type { IWord } from './types';
+
+export const MOCK_CORRECT_WORD = 'LALKA';
 
 const MOCK_PLAYER_WORDS: IWord[] = [
   {
@@ -71,6 +74,7 @@ function App() {
           playerName="Gracz 2"
         />
       </HStack>
+      <WordInput />
     </Page>
   );
 }
