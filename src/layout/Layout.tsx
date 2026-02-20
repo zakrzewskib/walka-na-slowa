@@ -9,7 +9,7 @@ interface ILayoutProps {
 
 function Layout({ children }: ILayoutProps) {
   return (
-    <VStack minH="100dvh">
+    <VStack minH="100dvh" align="stretch">
       <Header />
       <Page>{children}</Page>
     </VStack>
