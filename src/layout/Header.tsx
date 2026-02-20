@@ -13,7 +13,7 @@ export default function Header() {
       justifyContent="space-between"
     >
       <HStack>
-        <Image src="/public/logo.webp" height="48px" />
+        <Image src="/logo.webp" height="48px" />
         <Text as="h1" textStyle={{ base: 'md', sm: 'xl' }} fontWeight="bold">
           Walka na słowa
         </Text>
