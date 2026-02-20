@@ -49,7 +49,7 @@ function App() {
 
   return (
     <Page>
-      <VStack h="full" w="full" justifyContent="space-between">
+      <VStack minH="full" w="full" justifyContent="space-between">
         <HStack gap="24px" justifyContent="center" w="full">
           <GameBoard words={userWords} isPlayer={true} playerName="Gracz 1" />
           <GameBoard
