@@ -4,8 +4,7 @@ describe('Accessibility', () => {
     cy.injectAxe();
   });
 
-  // todo: do not skip accessibility violations
-  it.skip('should not have any accessibility violations', () => {
+  it('should not have any accessibility violations', () => {
     cy.checkA11y();
   });
 
