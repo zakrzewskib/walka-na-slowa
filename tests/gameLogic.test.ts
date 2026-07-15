@@ -7,7 +7,7 @@ describe('getGuessResult', () => {
   const correctWord = 'LALKA';
 
   // * INFO *
-  // To compare arrays I used to.deep.equal
+  // To compare arrays to.deep.equal is used
 
   describe(`${correctWord} as correct word`, () => {
     it('ZAMEK', () => {
