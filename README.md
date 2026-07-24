@@ -3,8 +3,7 @@
 ## Setup
 
 Vite + React
-node v25.0.0
-pnpm: 10.28.2
+node v25.0.0 (as referenced in .nvmrc)
 react: ^19.2.0
 
 ## Development
@@ -34,7 +33,7 @@ Commit naming convention:
 #<issue-number>: commit message
 ```
 
-Code review will be done by AI: by ChatGPT or ClaudeSonnet etc.
+Code review will be done by AI: by ChatGPT or Claude Sonnet etc.
 (CodeRabbit or reviewdog will be considered for the future).
 
 Prompt:
