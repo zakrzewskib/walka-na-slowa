@@ -3,8 +3,7 @@
 ## Setup
 
 Vite + React
-nvm with node v25.0.0
-pnpm: 10.28.2
+node v25.0.0 (as referenced in .nvmrc)
 react: ^19.2.0
 
 ## Development
@@ -25,7 +24,7 @@ fix/* → bugfixes
 Branch naming convention:
 
 ```
-type/#<issue number>-branch-name
+<type>/#<issue number>-branch-name
 ```
 
 Commit naming convention:
@@ -34,7 +33,10 @@ Commit naming convention:
 #<issue-number>: commit message
 ```
 
-Code review will be done by AI, CodeRabbit or reviewdog will be considered, for now review will be done by free chatGPT:
+Code review will be done by AI: by ChatGPT or Claude Sonnet etc.
+(CodeRabbit or reviewdog will be considered for the future).
+
+Prompt:
 
 ```
 git diff develop...feature/<branch-name> -- . ':(exclude)pnpm-lock.yaml' | pbcopy
@@ -42,9 +44,11 @@ git diff develop...feature/<branch-name> -- . ':(exclude)pnpm-lock.yaml' | pbcop
 Please review the code like senior frontend dev add -<yourName(which llm are you)> v.<your-version> at the end of the each comment, in the comment reference file, only add comments with fixes and improvements, skip positive comments, make comments in a copy-ready format (for example in markdown)
 ```
 
+Pull request will have CI (checks) and it will be merged with all commits preserved.
+
 ## Issues strategy
 
-I'll use github issues with ticket that has labels for story points:
+Github issues with tickets that have labels for story points:
 
 ```
 story-point:<value>
