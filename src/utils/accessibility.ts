@@ -1,7 +1,6 @@
 import { HIDDEN_LETTER } from '../constants';
 import type { ILetter, KeyboardKey, LetterStatus } from '../types';
 
-// todo: change to polish
 export function getLetterAriaLabel(
   letter: ILetter,
   isCurrentTurn: boolean,
@@ -11,47 +10,37 @@ export function getLetterAriaLabel(
 
   if (!value) {
     if (isCurrentTurn) {
-      return isPlayer ? 'Empty cell, your turn' : 'Empty cell, opponent turn';
+      return isPlayer
+        ? 'Puste pole, twoja tura'
+        : 'Puste pole, tura przeciwnika';
     }
-    return 'Empty cell';
+    return 'Puste pole';
   }
 
   if (value === HIDDEN_LETTER) {
-    return 'Opponent letter, hidden';
+    return 'Litera przeciwnika, ukryta';
   }
 
   if (correctPlace) {
-    return `Letter ${value}, correct position`;
+    return `Litera ${value}, na poprawnym miejscu`;
   }
   if (exists) {
-    return `Letter ${value}, wrong position`;
+    return `Litera ${value}, na niepoprawnym miejscu`;
   }
 
-  return `Letter ${value}, not in word`;
+  return `Litera ${value}, brak w słowie`;
 }
 
-// todo: add tests
+const KEYBOARD_STATUS_TO_POLISH: Record<LetterStatus, string> = {
+  absent: 'nieobecna',
+  correct: 'obecna, na poprawnym miejscu',
+  present: 'obecna, na niepoprawnym miejscu',
+  unused: 'nieużyta',
+};
+
 export function getKeyboardLetterAriaLabel(
   value: KeyboardKey,
   status: LetterStatus,
 ): string {
-  const statusToPolish = (() => {
-    if (status === 'absent') {
-      return 'nieobecna';
-    }
-
-    if (status === 'correct') {
-      return 'obecna, na poprawnym miejscu';
-    }
-
-    if (status === 'present') {
-      return 'obecna, na niepoprawnym miejscu';
-    }
-
-    if (status === 'unused') {
-      return 'nieużyta';
-    }
-  })();
-
-  return `Litera ${value} jest ${statusToPolish}.`;
+  return `Litera ${value}, jest ${KEYBOARD_STATUS_TO_POLISH[status]}.`;
 }

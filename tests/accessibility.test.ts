@@ -1,13 +1,28 @@
 import { describe, expect, it } from 'vitest';
 import { HIDDEN_LETTER } from '../src/constants';
-import { getLetterAriaLabel } from '../src/utils/accessibility';
+import {
+  getKeyboardLetterAriaLabel,
+  getLetterAriaLabel,
+} from '../src/utils/accessibility';
 
 describe('getLetterAriaLabel', () => {
   it('returns correct label for empty cell on player turn', () => {
     const letter = { id: '1', value: '', exists: false, correctPlace: false };
     expect(getLetterAriaLabel(letter, true, true)).toBe(
-      'Empty cell, your turn',
+      'Puste pole, twoja tura',
     );
+  });
+
+  it('returns correct label for empty cell on opponent turn', () => {
+    const letter = { id: '1', value: '', exists: false, correctPlace: false };
+    expect(getLetterAriaLabel(letter, true, false)).toBe(
+      'Puste pole, tura przeciwnika',
+    );
+  });
+
+  it('returns correct label for empty cell when not current turn', () => {
+    const letter = { id: '1', value: '', exists: false, correctPlace: false };
+    expect(getLetterAriaLabel(letter, false, true)).toBe('Puste pole');
   });
 
   it('returns correct label for hidden opponent letter', () => {
@@ -18,28 +33,54 @@ describe('getLetterAriaLabel', () => {
       correctPlace: true,
     };
     expect(getLetterAriaLabel(letter, false, false)).toBe(
-      'Opponent letter, hidden',
+      'Litera przeciwnika, ukryta',
     );
   });
 
   it('returns correct label for letter in correct position', () => {
     const letter = { id: '1', value: 'Z', exists: true, correctPlace: true };
     expect(getLetterAriaLabel(letter, false, true)).toBe(
-      'Letter Z, correct position',
+      'Litera Z, na poprawnym miejscu',
     );
   });
 
   it('returns correct label for letter in wrong position', () => {
     const letter = { id: '1', value: 'A', exists: true, correctPlace: false };
     expect(getLetterAriaLabel(letter, false, true)).toBe(
-      'Letter A, wrong position',
+      'Litera A, na niepoprawnym miejscu',
     );
   });
 
   it('returns correct label for letter not in word', () => {
     const letter = { id: '1', value: 'M', exists: false, correctPlace: false };
     expect(getLetterAriaLabel(letter, false, true)).toBe(
-      'Letter M, not in word',
+      'Litera M, brak w słowie',
+    );
+  });
+});
+
+describe('getKeyboardLetterAriaLabel', () => {
+  it('returns correct label for absent status', () => {
+    expect(getKeyboardLetterAriaLabel('a', 'absent')).toBe(
+      'Litera a, jest nieobecna.',
+    );
+  });
+
+  it('returns correct label for correct status', () => {
+    expect(getKeyboardLetterAriaLabel('z', 'correct')).toBe(
+      'Litera z, jest obecna, na poprawnym miejscu.',
+    );
+  });
+
+  it('returns correct label for present status', () => {
+    expect(getKeyboardLetterAriaLabel('m', 'present')).toBe(
+      'Litera m, jest obecna, na niepoprawnym miejscu.',
+    );
+  });
+
+  it('returns correct label for unused status', () => {
+    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe(
+      'Litera q, jest nieużyta.',
     );
   });
 });

@@ -3,7 +3,7 @@ import type { LetterStatus, LettersUsed, PolishLetter } from './types';
 export const WORD_LENGTH = 5;
 export const WORDS_LENGTH = 6;
 export const HIDDEN_LETTER = '-';
-export const MOCK_CORRECT_WORD = 'LALKA';
+export const MOCK_CORRECT_WORD = 'LALKA'; // todo: unify uppercase/lowercase
 
 // prettier-ignore
 export const POLISH_ALPHABET: PolishLetter[] = [
