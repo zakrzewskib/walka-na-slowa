@@ -30,8 +30,6 @@ const Keyboard = () => {
     },
   );
 
-  // todo: Add backspace and enter
-
   return (
     <VStack
       gap="4px"

@@ -1,6 +1,7 @@
 import { HIDDEN_LETTER } from '../constants';
-import type { ILetter } from '../types';
+import type { ILetter, KeyboardKey, LetterStatus } from '../types';
 
+// todo: change to polish
 export function getLetterAriaLabel(
   letter: ILetter,
   isCurrentTurn: boolean,
@@ -27,4 +28,30 @@ export function getLetterAriaLabel(
   }
 
   return `Letter ${value}, not in word`;
+}
+
+// todo: add tests
+export function getKeyboardLetterAriaLabel(
+  value: KeyboardKey,
+  status: LetterStatus,
+): string {
+  const statusToPolish = (() => {
+    if (status === 'absent') {
+      return 'nieobecna';
+    }
+
+    if (status === 'correct') {
+      return 'obecna, na poprawnym miejscu';
+    }
+
+    if (status === 'present') {
+      return 'obecna, na niepoprawnym miejscu';
+    }
+
+    if (status === 'unused') {
+      return 'nieużyta';
+    }
+  })();
+
+  return `Litera ${value} jest ${statusToPolish}.`;
 }

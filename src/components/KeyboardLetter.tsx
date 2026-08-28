@@ -1,5 +1,6 @@
 import { VStack } from '@chakra-ui/react';
 import type { KeyboardKey, LetterStatus } from '../types';
+import { getKeyboardLetterAriaLabel } from '../utils/accessibility';
 
 interface KeyboardLetterProps {
   value: KeyboardKey;
@@ -78,8 +79,7 @@ function KeyboardLetter(props: KeyboardLetterProps) {
   return (
     <VStack
       role="gridcell"
-      // todo: add aria-label
-      // aria-label={getLetterAriaLabel(letter, isCurrentTurn, isPlayer)}
+      aria-label={getKeyboardLetterAriaLabel(value, status)}
       justifyContent="center"
       rounded="sm"
       width={calculateWidth()}
