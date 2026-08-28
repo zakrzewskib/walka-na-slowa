@@ -38,6 +38,7 @@ const Keyboard = () => {
         alignItems: 'stretch',
       }}
       role="grid"
+      data-testid="keyboard"
     >
       {rowsWithStatus.map((row, i) => (
         <HStack key={i} gap="4px" role="row">
