@@ -1,4 +1,4 @@
-import type { LettersUsed, PolishLetter } from './types';
+import type { LetterStatus, LettersUsed, PolishLetter } from './types';
 
 export const WORD_LENGTH = 5;
 export const WORDS_LENGTH = 6;
@@ -13,9 +13,14 @@ export const POLISH_ALPHABET: PolishLetter[] = [
   'ą','ć','ę','ł','ń','ó','ś','ź','ż',
 ]
 
+// to be deleted
+const statuses: LetterStatus[] = ['unused', 'correct', 'present', 'absent'];
+
 export const STARTING_LETTERS_USED: LettersUsed = POLISH_ALPHABET.reduce(
   (acc, key) => {
-    acc[key] = { status: 'unused' };
+    acc[key] = {
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+    };
     return acc;
   },
   {} as LettersUsed,
