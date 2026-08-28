@@ -16,6 +16,8 @@ export type PolishLetter =
   | 'z' | 'x' | 'c' | 'v' | 'b' | 'n' | 'm'
   | 'ą' | 'ć' | 'ę' | 'ł' | 'ń' | 'ó' | 'ś' | 'ź' | 'ż';
 
+export type KeyboardKey = PolishLetter | 'Backspace' | 'Enter';
+
 export type LetterStatus = 'unused' | 'correct' | 'present' | 'absent';
 
 export type LettersUsed = {

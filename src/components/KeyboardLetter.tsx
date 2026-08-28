@@ -1,12 +1,13 @@
 import { VStack } from '@chakra-ui/react';
-import type { LetterStatus, PolishLetter } from '../types';
+import type { KeyboardKey, LetterStatus } from '../types';
 
 interface KeyboardLetterProps {
-  value: PolishLetter;
+  value: KeyboardKey;
   status: LetterStatus;
+  row: number;
 }
 function KeyboardLetter(props: KeyboardLetterProps) {
-  const { value, status } = props;
+  const { value, status, row } = props;
 
   function calculateBackgroundAndBorderColor() {
     if (status === 'correct') {
@@ -26,6 +27,54 @@ function KeyboardLetter(props: KeyboardLetterProps) {
     return status === 'unused' ? 'black' : 'white';
   }
 
+  function calculateValue() {
+    if (value === 'Backspace') {
+      return '⌫';
+    }
+
+    if (value === 'Enter') {
+      return value;
+    }
+
+    return value.toLocaleUpperCase();
+  }
+
+  function calculateWidth() {
+    if (row === 0) {
+      return '60px';
+    }
+
+    // 10 * 60px / 9 = 66.67px
+    if (row === 1 || row === 3) {
+      return '67px';
+    }
+
+    // 2 * x + 7 * y = 10 * 60 px= 600px => x = 85px => y = 61.4px
+    if (row === 2) {
+      if (value === 'Backspace') {
+        return '85px';
+      }
+      if (value === 'Enter') {
+        return '85px';
+      }
+      return '62px';
+    }
+  }
+
+  function calculateFontSize() {
+    if (value === 'Backspace') {
+      return '24px';
+    }
+    return '18px';
+  }
+
+  function calculateFontSizeMdDown() {
+    if (value === 'Backspace') {
+      return '20px';
+    }
+    return '16px';
+  }
+
   return (
     <VStack
       role="gridcell"
@@ -33,9 +82,9 @@ function KeyboardLetter(props: KeyboardLetterProps) {
       // aria-label={getLetterAriaLabel(letter, isCurrentTurn, isPlayer)}
       justifyContent="center"
       rounded="sm"
-      width="60px"
+      width={calculateWidth()}
       height="52px"
-      fontSize="18px"
+      fontSize={calculateFontSize()}
       fontWeight="bolder"
       background={calculateBackgroundAndBorderColor()}
       borderColor={calculateBackgroundAndBorderColor()}
@@ -45,10 +94,10 @@ function KeyboardLetter(props: KeyboardLetterProps) {
         flex: '1',
         width: 'full',
         flexShrink: 1,
-        fontSize: '16px',
+        fontSize: calculateFontSizeMdDown(),
       }}
     >
-      {value.toUpperCase()}
+      {calculateValue()}
     </VStack>
   );
 }
