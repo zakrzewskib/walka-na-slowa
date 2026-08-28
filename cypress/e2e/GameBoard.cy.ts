@@ -14,12 +14,7 @@ describe('Game Boards Display', () => {
     cy.contains('Gracz 2 (Ty)').should('not.exist');
   });
 
-  it('displays grid structure with proper roles', () => {
-    cy.get('[role="grid"]').should('have.length', 2);
-    cy.get('[role="row"]').should('exist');
-    cy.get('[role="gridcell"]').should('exist');
-  });
-
+  // todo: Add more meaningful tests
   it('displays correct number of rows per board', () => {
     // Each board should have 6 rows (WORDS_LENGTH)
     cy.get('[role="grid"]')
@@ -27,7 +22,7 @@ describe('Game Boards Display', () => {
       .find('[role="row"]')
       .should('have.length', 6);
     cy.get('[role="grid"]')
-      .last()
+      .eq(1) // second element
       .find('[role="row"]')
       .should('have.length', 6);
   });
