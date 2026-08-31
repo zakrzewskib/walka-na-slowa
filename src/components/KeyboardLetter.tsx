@@ -2,11 +2,21 @@ import { VStack } from '@chakra-ui/react';
 import type { KeyboardKey, LetterStatus } from '../types';
 import { getKeyboardLetterAriaLabel } from '../utils/accessibility';
 
+type KeyboardRow = 0 | 1 | 2 | 3;
+
 interface KeyboardLetterProps {
   value: KeyboardKey;
   status: LetterStatus;
-  row: number;
+  row: KeyboardRow;
 }
+
+// Row 2 (bottom row): Enter/Backspace are wider special keys, letters share the remaining space
+// 2 * SPECIAL_KEY_WIDTH + 7 * LETTER_KEY_WIDTH = 10 * FIRST_ROW_KEY_WIDTH (600px)
+const FIRST_ROW_KEY_WIDTH = '60px';
+const SECOND_AND_FOURTH_ROW_KEY_WIDTH = '67px'; // 10 * 60px / 9 rounded
+const THIRD_ROW_SPECIAL_KEY_WIDTH = '85px'; // Enter / Backspace
+const THIRD_ROW_LETTER_WIDTH = '62px'; // remaining letter keys
+
 function KeyboardLetter(props: KeyboardLetterProps) {
   const { value, status, row } = props;
 
@@ -41,24 +51,20 @@ function KeyboardLetter(props: KeyboardLetterProps) {
   }
 
   function calculateWidth() {
-    if (row === 0) {
-      return '60px';
-    }
-
-    // 10 * 60px / 9 = 66.67px
-    if (row === 1 || row === 3) {
-      return '67px';
-    }
-
-    // 2 * x + 7 * y = 10 * 60 px= 600px => x = 85px => y = 61.4px
-    if (row === 2) {
-      if (value === 'Backspace') {
-        return '85px';
+    switch (row) {
+      case 0:
+        return FIRST_ROW_KEY_WIDTH;
+      case 1:
+      case 3:
+        return SECOND_AND_FOURTH_ROW_KEY_WIDTH;
+      case 2:
+        return value === 'Backspace' || value === 'Enter'
+          ? THIRD_ROW_SPECIAL_KEY_WIDTH
+          : THIRD_ROW_LETTER_WIDTH;
+      default: {
+        const exhaustiveCheck: never = row;
+        throw new Error(`Unexpected keyboard row: ${exhaustiveCheck}`);
       }
-      if (value === 'Enter') {
-        return '85px';
-      }
-      return '62px';
     }
   }
 

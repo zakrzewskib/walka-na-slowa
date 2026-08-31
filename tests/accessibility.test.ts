@@ -83,4 +83,12 @@ describe('getKeyboardLetterAriaLabel', () => {
       'Litera q, jest nieużyta.',
     );
   });
+
+  it('returns correct label for Enter', () => {
+    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe('Klawisz Enter');
+  });
+
+  it('returns correct label for Backspace', () => {
+    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe('Klawisz Backspace');
+  });
 });
