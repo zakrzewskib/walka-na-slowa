@@ -62,33 +62,35 @@ describe('getLetterAriaLabel', () => {
 describe('getKeyboardLetterAriaLabel', () => {
   it('returns correct label for absent status', () => {
     expect(getKeyboardLetterAriaLabel('a', 'absent')).toBe(
-      'Litera a, jest nieobecna.',
+      'Litera a, nieobecna.',
     );
   });
 
   it('returns correct label for correct status', () => {
     expect(getKeyboardLetterAriaLabel('z', 'correct')).toBe(
-      'Litera z, jest obecna, na poprawnym miejscu.',
+      'Litera z, obecna, na poprawnym miejscu.',
     );
   });
 
   it('returns correct label for present status', () => {
     expect(getKeyboardLetterAriaLabel('m', 'present')).toBe(
-      'Litera m, jest obecna, na niepoprawnym miejscu.',
+      'Litera m, obecna, na niepoprawnym miejscu.',
     );
   });
 
   it('returns correct label for unused status', () => {
     expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe(
-      'Litera q, jest nieużyta.',
+      'Litera q, nieużyta.',
     );
   });
 
   it('returns correct label for Enter', () => {
-    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe('Klawisz Enter');
+    expect(getKeyboardLetterAriaLabel('Enter', 'unused')).toBe('Klawisz Enter');
   });
 
   it('returns correct label for Backspace', () => {
-    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe('Klawisz Backspace');
+    expect(getKeyboardLetterAriaLabel('Backspace', 'unused')).toBe(
+      'Klawisz Backspace',
+    );
   });
 });

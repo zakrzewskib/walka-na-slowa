@@ -45,5 +45,5 @@ export function getKeyboardLetterAriaLabel(
   if (value === 'Backspace' || value === 'Enter') {
     return `Klawisz ${value}`;
   }
-  return `Litera ${value}, jest ${KEYBOARD_STATUS_TO_POLISH[status]}.`;
+  return `Litera ${value}, ${KEYBOARD_STATUS_TO_POLISH[status]}.`;
 }
