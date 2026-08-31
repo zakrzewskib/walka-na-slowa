@@ -1,5 +1,5 @@
 import { HIDDEN_LETTER } from '../constants';
-import type { ILetter } from '../types';
+import type { ILetter, KeyboardKey, LetterStatus } from '../types';
 
 export function getLetterAriaLabel(
   letter: ILetter,
@@ -10,21 +10,40 @@ export function getLetterAriaLabel(
 
   if (!value) {
     if (isCurrentTurn) {
-      return isPlayer ? 'Empty cell, your turn' : 'Empty cell, opponent turn';
+      return isPlayer
+        ? 'Puste pole, twoja tura'
+        : 'Puste pole, tura przeciwnika';
     }
-    return 'Empty cell';
+    return 'Puste pole';
   }
 
   if (value === HIDDEN_LETTER) {
-    return 'Opponent letter, hidden';
+    return 'Litera przeciwnika, ukryta';
   }
 
   if (correctPlace) {
-    return `Letter ${value}, correct position`;
+    return `Litera ${value}, na poprawnym miejscu`;
   }
   if (exists) {
-    return `Letter ${value}, wrong position`;
+    return `Litera ${value}, na niepoprawnym miejscu`;
   }
 
-  return `Letter ${value}, not in word`;
+  return `Litera ${value}, brak w słowie`;
+}
+
+const KEYBOARD_STATUS_TO_POLISH: Record<LetterStatus, string> = {
+  absent: 'nieobecna',
+  correct: 'obecna, na poprawnym miejscu',
+  present: 'obecna, na niepoprawnym miejscu',
+  unused: 'nieużyta',
+};
+
+export function getKeyboardLetterAriaLabel(
+  value: KeyboardKey,
+  status: LetterStatus,
+): string {
+  if (value === 'Backspace' || value === 'Enter') {
+    return `Klawisz ${value}`;
+  }
+  return `Litera ${value}, ${KEYBOARD_STATUS_TO_POLISH[status]}.`;
 }
