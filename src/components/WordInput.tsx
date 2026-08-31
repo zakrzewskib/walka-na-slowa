@@ -43,8 +43,8 @@ function WordInput(props: WordInputProps) {
         value={value}
         onChange={handleInputChange}
         data-testid="word-input"
-        aria-label={`Enter your ${WORD_LENGTH}-letter word guess`} // todo: change to polish
-        placeholder="Enter your guess..."
+        aria-label={`Wpisac swoje słowo o długości ${WORD_LENGTH}`}
+        placeholder="Wpisz swoje słowo..."
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="characters"

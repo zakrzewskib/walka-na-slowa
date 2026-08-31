@@ -58,7 +58,7 @@ describe('Accessibility', () => {
       cy.wrap($cell).should('have.attr', 'aria-label').and('not.be.empty');
     });
 
-    playerBoard().should('have.attr', 'aria-label', 'Your board');
-    opponentBoard().should('have.attr', 'aria-label', "Opponent's board");
+    playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
+    opponentBoard().should('have.attr', 'aria-label', 'Plansza przeciwnika');
   });
 });

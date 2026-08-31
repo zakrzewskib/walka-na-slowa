@@ -25,8 +25,8 @@ describe('Game Boards Display', () => {
   });
 
   it('labels the player board and opponent board distinctly', () => {
-    playerBoard().should('have.attr', 'aria-label', 'Your board');
-    opponentBoard().should('have.attr', 'aria-label', "Opponent's board");
+    playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
+    opponentBoard().should('have.attr', 'aria-label', 'Plansza przeciwnika');
   });
 
   it('displays correct number of rows per board', () => {
