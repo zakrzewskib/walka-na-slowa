@@ -49,7 +49,8 @@ function GameBoard(props: GameBoardProps) {
           gap: '2px',
         }}
         role="grid"
-        aria-label={isPlayer ? 'Your board' : "Opponent's board"}
+        aria-label={isPlayer ? 'Your board' : "Opponent's board"} // todo: change to polish
+        data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
         {words.map((word) => (
           <Word

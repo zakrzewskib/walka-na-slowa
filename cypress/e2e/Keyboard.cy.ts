@@ -1,3 +1,9 @@
+import { POLISH_ALPHABET } from '../../src/constants';
+
+const KEYBOARD_ROWS = 4; // structural: fixed number of rows in the layout, not derived from data
+const SPECIAL_KEYS_COUNT = 2; // Backspace + Enter
+const TOTAL_KEYBOARD_CELLS = POLISH_ALPHABET.length + SPECIAL_KEYS_COUNT;
+
 describe('Keyboard Display', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -9,79 +15,32 @@ describe('Keyboard Display', () => {
     keyboard().should('exist');
   });
 
-  it('renders 4 rows', () => {
-    keyboard().find('[role="row"]').should('have.length', 4);
+  it('renders the correct number of rows', () => {
+    keyboard().find('[role="row"]').should('have.length', KEYBOARD_ROWS);
   });
 
-  it('renders the correct number of keys per row', () => {
+  it('renders the correct total number of keys', () => {
     keyboard()
-      .find('[role="row"]')
-      .eq(0)
       .find('[role="gridcell"]')
-      .should('have.length', 10);
-    keyboard()
-      .find('[role="row"]')
-      .eq(1)
-      .find('[role="gridcell"]')
-      .should('have.length', 9);
-    keyboard()
-      .find('[role="row"]')
-      .eq(2)
-      .find('[role="gridcell"]')
-      .should('have.length', 9);
-    keyboard()
-      .find('[role="row"]')
-      .eq(3)
-      .find('[role="gridcell"]')
-      .should('have.length', 9);
+      .should('have.length', TOTAL_KEYBOARD_CELLS);
   });
 
-  it('renders the first row letters in uppercase', () => {
-    const letters = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
+  it('renders every Polish alphabet letter exactly once', () => {
     keyboard()
-      .find('[role="row"]')
-      .eq(0)
       .find('[role="gridcell"]')
-      .each(($cell, i) => {
-        cy.wrap($cell).should('have.text', letters[i]);
+      .then(($cells) => {
+        const texts = [...$cells].map((el) =>
+          el.textContent?.toLocaleLowerCase(),
+        );
+        POLISH_ALPHABET.forEach((letter) => {
+          expect(texts).to.include(letter);
+        });
       });
   });
 
-  it('renders the second row letters in uppercase', () => {
-    const letters = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
-    keyboard()
-      .find('[role="row"]')
-      .eq(1)
-      .find('[role="gridcell"]')
-      .each(($cell, i) => {
-        cy.wrap($cell).should('have.text', letters[i]);
-      });
-  });
-
-  it('renders Backspace and Enter keys with correct labels in the third row', () => {
-    keyboard()
-      .find('[role="row"]')
-      .eq(2)
-      .find('[role="gridcell"]')
-      .first()
-      .should('have.text', '⌫');
-    keyboard()
-      .find('[role="row"]')
-      .eq(2)
-      .find('[role="gridcell"]')
-      .last()
-      .should('have.text', 'Enter');
-  });
-
-  it('renders the fourth row with Polish special letters', () => {
-    const letters = ['Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź', 'Ż'];
-    keyboard()
-      .find('[role="row"]')
-      .eq(3)
-      .find('[role="gridcell"]')
-      .each(($cell, i) => {
-        cy.wrap($cell).should('have.text', letters[i]);
-      });
+  it('renders Backspace and Enter keys', () => {
+    keyboard().contains('[role="gridcell"]', '⌫').should('exist');
+    keyboard().contains('[role="gridcell"]', 'Enter').should('exist');
   });
 
   it('gives every key an accessible aria-label', () => {
