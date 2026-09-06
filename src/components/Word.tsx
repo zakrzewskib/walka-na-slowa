@@ -1,6 +1,6 @@
 import { HStack } from '@chakra-ui/react';
 import type { IWord } from '../types';
-import Letter from './Letter';
+import Letter from './Letter/Letter';
 
 interface WordProps {
   word: IWord;
