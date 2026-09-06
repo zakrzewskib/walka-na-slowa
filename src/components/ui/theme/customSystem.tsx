@@ -5,12 +5,10 @@ export const customSystem = createSystem(defaultConfig, {
     tokens: {
       fonts: {
         body: {
-          value:
-            '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+          value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
         },
         heading: {
-          value:
-            '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+          value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
         },
       },
     },
