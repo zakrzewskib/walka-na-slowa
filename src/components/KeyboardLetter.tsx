@@ -2,12 +2,10 @@ import { VStack } from '@chakra-ui/react';
 import type { KeyboardKey, LetterStatus } from '../types';
 import { getKeyboardLetterAriaLabel } from '../utils/accessibility';
 
-type KeyboardRow = 0 | 1 | 2 | 3;
-
 interface KeyboardLetterProps {
   value: KeyboardKey;
   status: LetterStatus;
-  row: KeyboardRow;
+  row: number;
 }
 
 // Row 2 (bottom row): Enter/Backspace are wider special keys, letters share the remaining space
@@ -62,8 +60,7 @@ function KeyboardLetter(props: KeyboardLetterProps) {
           ? THIRD_ROW_SPECIAL_KEY_WIDTH
           : THIRD_ROW_LETTER_WIDTH;
       default: {
-        const exhaustiveCheck: never = row;
-        throw new Error(`Unexpected keyboard row: ${exhaustiveCheck}`);
+        throw new Error('Unexpected keyboard row');
       }
     }
   }
