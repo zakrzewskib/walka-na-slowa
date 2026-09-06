@@ -1,5 +1,3 @@
-// Row 2 (bottom row): Enter/Backspace are wider special keys, letters share the remaining space
-
 import type { KeyboardKey, LetterStatus } from '../../types';
 
 // 2 * SPECIAL_KEY_WIDTH + 7 * LETTER_KEY_WIDTH = 10 * FIRST_ROW_KEY_WIDTH (600px)

@@ -1,4 +1,3 @@
-// utils/letter.test.ts
 import { describe, expect, it } from 'vitest';
 import {
   calculateBackgroundColor,

@@ -13,7 +13,7 @@ export const POLISH_ALPHABET: PolishLetter[] = [
   'ą','ć','ę','ł','ń','ó','ś','ź','ż',
 ];
 
-// to be deleted
+// Random statuses on initial keyboard letters will be deleted in #21
 const statuses: LetterStatus[] = ['unused', 'correct', 'present', 'absent'];
 
 export const STARTING_LETTERS_USED: LettersUsed = POLISH_ALPHABET.reduce(

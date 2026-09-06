@@ -49,7 +49,7 @@ function GameBoard(props: GameBoardProps) {
           gap: '2px',
         }}
         role="grid"
-        aria-label={isPlayer ? 'Twoja plansza' : 'Plansza przeciwnika'} // todo: change to polish
+        aria-label={isPlayer ? 'Twoja plansza' : 'Plansza przeciwnika'}
         data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
         {words.map((word) => (
