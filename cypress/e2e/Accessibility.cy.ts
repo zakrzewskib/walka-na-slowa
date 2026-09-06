@@ -1,8 +1,4 @@
-import {
-  POLISH_ALPHABET,
-  WORD_LENGTH,
-  WORDS_LENGTH,
-} from '../../src/constants';
+import { POLISH_ALPHABET, WORD_LENGTH, WORDS_LENGTH } from '../../src/constants';
 
 const KEYBOARD_ROWS = 4; // structural: fixed number of rows in the layout, not derived from data
 const SPECIAL_KEYS_COUNT = 2; // Backspace + Enter
@@ -38,15 +34,11 @@ describe('Accessibility', () => {
 
     playerBoard().should('have.length', 1);
     playerBoard().find('[role="row"]').should('have.length', BOARD_ROWS);
-    playerBoard()
-      .find('[role="gridcell"]')
-      .should('have.length', CELLS_PER_BOARD);
+    playerBoard().find('[role="gridcell"]').should('have.length', CELLS_PER_BOARD);
 
     opponentBoard().should('have.length', 1);
     opponentBoard().find('[role="row"]').should('have.length', BOARD_ROWS);
-    opponentBoard()
-      .find('[role="gridcell"]')
-      .should('have.length', CELLS_PER_BOARD);
+    opponentBoard().find('[role="gridcell"]').should('have.length', CELLS_PER_BOARD);
 
     keyboard().should('have.length', 1);
     keyboard().find('[role="row"]').should('have.length', KEYBOARD_ROWS);

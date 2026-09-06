@@ -53,11 +53,7 @@ function App() {
       <VStack w="full" flex="1" justifyContent="space-between">
         <HStack gap="24px" justifyContent="center" w="full">
           <GameBoard words={userWords} isPlayer={true} playerName="Gracz 1" />
-          <GameBoard
-            words={MOCK_OPPONENT_WORDS}
-            isPlayer={false}
-            playerName="Gracz 2"
-          />
+          <GameBoard words={MOCK_OPPONENT_WORDS} isPlayer={false} playerName="Gracz 2" />
         </HStack>
 
         <Keyboard />

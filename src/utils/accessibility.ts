@@ -10,9 +10,7 @@ export function getLetterAriaLabel(
 
   if (!value) {
     if (isCurrentTurn) {
-      return isPlayer
-        ? 'Puste pole, twoja tura'
-        : 'Puste pole, tura przeciwnika';
+      return isPlayer ? 'Puste pole, twoja tura' : 'Puste pole, tura przeciwnika';
     }
     return 'Puste pole';
   }
@@ -38,10 +36,7 @@ const KEYBOARD_STATUS_TO_POLISH: Record<LetterStatus, string> = {
   unused: 'nieużyta',
 };
 
-export function getKeyboardLetterAriaLabel(
-  value: KeyboardKey,
-  status: LetterStatus,
-): string {
+export function getKeyboardLetterAriaLabel(value: KeyboardKey, status: LetterStatus): string {
   if (value === 'Backspace' || value === 'Enter') {
     return `Klawisz ${value}`;
   }

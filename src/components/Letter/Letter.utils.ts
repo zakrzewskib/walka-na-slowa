@@ -20,10 +20,7 @@ export function calculateBackgroundColor(letter: ILetter) {
   return 'gray.100';
 }
 
-export function calculateBorderColor(
-  isCurrentTurn: boolean,
-  isPlayer: boolean,
-) {
+export function calculateBorderColor(isCurrentTurn: boolean, isPlayer: boolean) {
   if (isCurrentTurn) {
     return isPlayer ? 'blue.500' : 'red.500';
   }

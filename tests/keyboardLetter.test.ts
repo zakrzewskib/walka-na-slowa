@@ -23,12 +23,9 @@ describe('calculateColor', () => {
   it('returns black for unused', () => {
     expect(calculateColor('unused')).toBe('black');
   });
-  it.each(['correct', 'present', 'absent'] as const)(
-    'returns white for %s',
-    (status) => {
-      expect(calculateColor(status)).toBe('white');
-    },
-  );
+  it.each(['correct', 'present', 'absent'] as const)('returns white for %s', (status) => {
+    expect(calculateColor(status)).toBe('white');
+  });
 });
 
 describe('calculateValue', () => {

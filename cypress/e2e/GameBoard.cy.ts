@@ -38,17 +38,13 @@ describe('Game Boards Display', () => {
     playerBoard()
       .find('[role="row"]')
       .each(($row) => {
-        cy.wrap($row)
-          .find('[role="gridcell"]')
-          .should('have.length', WORD_LENGTH);
+        cy.wrap($row).find('[role="gridcell"]').should('have.length', WORD_LENGTH);
       });
 
     opponentBoard()
       .find('[role="row"]')
       .each(($row) => {
-        cy.wrap($row)
-          .find('[role="gridcell"]')
-          .should('have.length', WORD_LENGTH);
+        cy.wrap($row).find('[role="gridcell"]').should('have.length', WORD_LENGTH);
       });
   });
 

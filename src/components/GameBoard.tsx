@@ -53,21 +53,11 @@ function GameBoard(props: GameBoardProps) {
         data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
         {words.map((word) => (
-          <Word
-            key={word.id}
-            word={word}
-            isPlayer={isPlayer}
-            isCurrentTurn={false}
-          />
+          <Word key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={false} />
         ))}
 
         {emptyWords.map((word, idx) => (
-          <Word
-            key={word.id}
-            word={word}
-            isPlayer={isPlayer}
-            isCurrentTurn={idx === 0}
-          />
+          <Word key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={idx === 0} />
         ))}
       </VStack>
     </VStack>

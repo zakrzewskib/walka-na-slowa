@@ -21,8 +21,7 @@ export function getGuessResult(guess: string, correctWord: string): IWord {
       result[i] = { value: guess[i], exists: true, correctPlace: true };
     } else {
       // Only count letters that weren't matched
-      correctLetterCounts[correctWord[i]] =
-        (correctLetterCounts[correctWord[i]] || 0) + 1;
+      correctLetterCounts[correctWord[i]] = (correctLetterCounts[correctWord[i]] || 0) + 1;
     }
   }
 

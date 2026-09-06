@@ -20,18 +20,14 @@ describe('Keyboard Display', () => {
   });
 
   it('renders the correct total number of keys', () => {
-    keyboard()
-      .find('[role="gridcell"]')
-      .should('have.length', TOTAL_KEYBOARD_CELLS);
+    keyboard().find('[role="gridcell"]').should('have.length', TOTAL_KEYBOARD_CELLS);
   });
 
   it('renders every Polish alphabet letter exactly once', () => {
     keyboard()
       .find('[role="gridcell"]')
       .then(($cells) => {
-        const texts = [...$cells].map((el) =>
-          el.textContent?.toLocaleLowerCase(),
-        );
+        const texts = [...$cells].map((el) => el.textContent?.toLocaleLowerCase());
         POLISH_ALPHABET.forEach((letter) => {
           expect(texts).to.include(letter);
         });

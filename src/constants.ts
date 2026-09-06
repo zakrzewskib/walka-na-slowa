@@ -7,21 +7,18 @@ export const MOCK_CORRECT_WORD = 'LALKA'; // todo: unify uppercase/lowercase in 
 
 // prettier-ignore
 export const POLISH_ALPHABET: PolishLetter[] = [
-  'q','w','e','r','t','y','u','i','o','p',
-  'a','s','d','f','g','h','j','k','l',
-  'z','x','c','v','b','n','m',
-  'ą','ć','ę','ł','ń','ó','ś','ź','ż',
+  'q','w','e','r','t','y','u','i','o','p', // 1. row
+  'a','s','d','f','g','h','j','k','l', // 2. row
+  'z','x','c','v','b','n','m', // 3. row
+  'ą','ć','ę','ł','ń','ó','ś','ź','ż', // 4. row
 ];
 
 // Random statuses on initial keyboard letters will be deleted in #21
 const statuses: LetterStatus[] = ['unused', 'correct', 'present', 'absent'];
 
-export const STARTING_LETTERS_USED: LettersUsed = POLISH_ALPHABET.reduce(
-  (acc, key) => {
-    acc[key] = {
-      status: statuses[Math.floor(Math.random() * statuses.length)],
-    };
-    return acc;
-  },
-  {} as LettersUsed,
-);
+export const STARTING_LETTERS_USED: LettersUsed = POLISH_ALPHABET.reduce((acc, key) => {
+  acc[key] = {
+    status: statuses[Math.floor(Math.random() * statuses.length)],
+  };
+  return acc;
+}, {} as LettersUsed);

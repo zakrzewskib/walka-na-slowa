@@ -1,23 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { HIDDEN_LETTER } from '../src/constants';
-import {
-  getKeyboardLetterAriaLabel,
-  getLetterAriaLabel,
-} from '../src/utils/accessibility';
+import { getKeyboardLetterAriaLabel, getLetterAriaLabel } from '../src/utils/accessibility';
 
 describe('getLetterAriaLabel', () => {
   it('returns correct label for empty cell on player turn', () => {
     const letter = { id: '1', value: '', exists: false, correctPlace: false };
-    expect(getLetterAriaLabel(letter, true, true)).toBe(
-      'Puste pole, twoja tura',
-    );
+    expect(getLetterAriaLabel(letter, true, true)).toBe('Puste pole, twoja tura');
   });
 
   it('returns correct label for empty cell on opponent turn', () => {
     const letter = { id: '1', value: '', exists: false, correctPlace: false };
-    expect(getLetterAriaLabel(letter, true, false)).toBe(
-      'Puste pole, tura przeciwnika',
-    );
+    expect(getLetterAriaLabel(letter, true, false)).toBe('Puste pole, tura przeciwnika');
   });
 
   it('returns correct label for empty cell when not current turn', () => {
@@ -32,38 +25,28 @@ describe('getLetterAriaLabel', () => {
       exists: true,
       correctPlace: true,
     };
-    expect(getLetterAriaLabel(letter, false, false)).toBe(
-      'Litera przeciwnika, ukryta',
-    );
+    expect(getLetterAriaLabel(letter, false, false)).toBe('Litera przeciwnika, ukryta');
   });
 
   it('returns correct label for letter in correct position', () => {
     const letter = { id: '1', value: 'Z', exists: true, correctPlace: true };
-    expect(getLetterAriaLabel(letter, false, true)).toBe(
-      'Litera Z, na poprawnym miejscu',
-    );
+    expect(getLetterAriaLabel(letter, false, true)).toBe('Litera Z, na poprawnym miejscu');
   });
 
   it('returns correct label for letter in wrong position', () => {
     const letter = { id: '1', value: 'A', exists: true, correctPlace: false };
-    expect(getLetterAriaLabel(letter, false, true)).toBe(
-      'Litera A, na niepoprawnym miejscu',
-    );
+    expect(getLetterAriaLabel(letter, false, true)).toBe('Litera A, na niepoprawnym miejscu');
   });
 
   it('returns correct label for letter not in word', () => {
     const letter = { id: '1', value: 'M', exists: false, correctPlace: false };
-    expect(getLetterAriaLabel(letter, false, true)).toBe(
-      'Litera M, brak w słowie',
-    );
+    expect(getLetterAriaLabel(letter, false, true)).toBe('Litera M, brak w słowie');
   });
 });
 
 describe('getKeyboardLetterAriaLabel', () => {
   it('returns correct label for absent status', () => {
-    expect(getKeyboardLetterAriaLabel('a', 'absent')).toBe(
-      'Litera a, nieobecna.',
-    );
+    expect(getKeyboardLetterAriaLabel('a', 'absent')).toBe('Litera a, nieobecna.');
   });
 
   it('returns correct label for correct status', () => {
@@ -79,9 +62,7 @@ describe('getKeyboardLetterAriaLabel', () => {
   });
 
   it('returns correct label for unused status', () => {
-    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe(
-      'Litera q, nieużyta.',
-    );
+    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe('Litera q, nieużyta.');
   });
 
   it('returns correct label for Enter', () => {
@@ -89,8 +70,6 @@ describe('getKeyboardLetterAriaLabel', () => {
   });
 
   it('returns correct label for Backspace', () => {
-    expect(getKeyboardLetterAriaLabel('Backspace', 'unused')).toBe(
-      'Klawisz Backspace',
-    );
+    expect(getKeyboardLetterAriaLabel('Backspace', 'unused')).toBe('Klawisz Backspace');
   });
 });
