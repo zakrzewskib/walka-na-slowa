@@ -2,7 +2,7 @@ import { HStack, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { STARTING_LETTERS_USED } from '../constants';
 import type { KeyboardKey, LettersUsed, PolishLetter } from '../types';
-import KeyboardLetter from './KeyboardLetter';
+import KeyboardLetter from './KeyboardLetter/KeyboardLetter';
 
 // prettier-ignore
 const firstRow: PolishLetter[] = ['q','w','e','r','t','y','u','i','o','p'];
