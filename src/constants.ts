@@ -3,14 +3,14 @@ import type { LetterStatus, LetterStatusMap, PolishLetter } from './types';
 export const WORD_LENGTH = 5;
 export const WORDS_LENGTH = 6;
 export const HIDDEN_LETTER = '-';
-export const MOCK_CORRECT_WORD = 'LALKA'; // todo: unify uppercase/lowercase in #21
+export const MOCK_CORRECT_WORD = 'LALKA';
 
 // prettier-ignore
 export const POLISH_ALPHABET: PolishLetter[] = [
-  'q','w','e','r','t','y','u','i','o','p', // 1. row
-  'a','s','d','f','g','h','j','k','l', // 2. row
-  'z','x','c','v','b','n','m', // 3. row
-  'ą','ć','ę','ł','ń','ó','ś','ź','ż', // 4. row
+  'Q','W','E','R','T','Y','U','I','O','P', // 1. ROW
+  'A','S','D','F','G','H','J','K','L', // 2. ROW
+  'Z','X','C','V','B','N','M', // 3. ROW
+  'Ą','Ć','Ę','Ł','Ń','Ó','Ś','Ź','Ż', // 4. ROW
 ];
 
 // Random statuses on initial keyboard letters will be deleted in #21

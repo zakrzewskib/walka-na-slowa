@@ -1,7 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Letter, Word } from '../types';
 
-export function getWordResult(guess: string, correctWord: string): Word {
+export function getWordResult(guessUnTransformed: string, correctWordUnTransformed: string): Word {
+  const correctWord = correctWordUnTransformed.toUpperCase();
+  const guess = guessUnTransformed.toUpperCase();
+
   if (!guess || guess.length === 0) {
     throw new Error('Guess cannot be empty');
   }

@@ -23,9 +23,8 @@ export const WordInput = () => {
 
     // tbd: Check if word exists in polish language
 
-    const guess = value.toUpperCase();
     // tbd: Think if it's a backend side logic
-    const wordResult = getWordResult(guess, MOCK_CORRECT_WORD);
+    const wordResult = getWordResult(value, MOCK_CORRECT_WORD);
     addGuess({
       id: uuidv4(),
       userId: uuidv4(),

@@ -21,7 +21,7 @@ export function calculateKeyboardState(guesses: Guess[]): LetterStatusMap {
 
   for (const guess of guesses) {
     for (const letter of guess.word.letters) {
-      const key = letter.value.toLowerCase() as PolishLetter;
+      const key = letter.value.toUpperCase() as PolishLetter;
       const current = map[key];
 
       if (!current) continue; // guard against unexpected characters
