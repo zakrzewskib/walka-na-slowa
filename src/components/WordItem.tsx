@@ -1,6 +1,6 @@
 import { HStack } from '@chakra-ui/react';
 import type { Word } from '../types';
-import LetterItem from './LetterItem/LetterItem';
+import { LetterItem } from './LetterItem/LetterItem';
 
 interface WordItemProps {
   word: Word;
@@ -8,7 +8,7 @@ interface WordItemProps {
   isCurrentTurn: boolean;
 }
 
-function WordItem(props: WordItemProps) {
+export const WordItem = (props: WordItemProps) => {
   const { word, isPlayer, isCurrentTurn } = props;
 
   return (
@@ -32,6 +32,4 @@ function WordItem(props: WordItemProps) {
       ))}
     </HStack>
   );
-}
-
-export default WordItem;
+};

@@ -1,9 +1,9 @@
 import { HStack, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import GameBoard from './components/GameBoard';
-import Keyboard from './components/Keyboard';
-import WordInput from './components/WordInput';
+import { GameBoard } from './components/GameBoard';
+import { Keyboard } from './components/Keyboard';
+import { WordInput } from './components/WordInput';
 import { HIDDEN_LETTER, MOCK_CORRECT_WORD } from './constants';
 import Layout from './layout/Layout';
 import type { Word } from './types';

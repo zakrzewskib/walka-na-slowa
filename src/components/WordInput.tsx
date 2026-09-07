@@ -9,7 +9,7 @@ interface WordInputProps {
   correctWord: string;
 }
 
-function WordInput(props: WordInputProps) {
+export const WordInput = (props: WordInputProps) => {
   const [value, setValue] = useState('');
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
@@ -55,6 +55,4 @@ function WordInput(props: WordInputProps) {
       />
     </form>
   );
-}
-
-export default WordInput;
+};

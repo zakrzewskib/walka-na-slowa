@@ -12,7 +12,8 @@ interface LetterItemProps {
   isCurrentTurn: boolean;
   isPlayer: boolean;
 }
-function LetterItem(props: LetterItemProps) {
+
+export const LetterItem = (props: LetterItemProps) => {
   const { letter } = props;
   const { value } = letter;
   const { isCurrentTurn, isPlayer } = props;
@@ -41,6 +42,4 @@ function LetterItem(props: LetterItemProps) {
       {calculateDisplayValue(value)}
     </VStack>
   );
-}
-
-export default LetterItem;
+};

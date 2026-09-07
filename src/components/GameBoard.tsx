@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
 import type { Word } from '../types';
-import WordItem from './WordItem';
+import { WordItem } from './WordItem';
 
 interface GameBoardProps {
   words: Word[];
@@ -11,7 +11,7 @@ interface GameBoardProps {
   playerName: string;
 }
 
-function GameBoard(props: GameBoardProps) {
+export const GameBoard = (props: GameBoardProps) => {
   const { words, isPlayer, playerName } = props;
 
   const emptyWords: Word[] = useMemo(() => {
@@ -62,6 +62,4 @@ function GameBoard(props: GameBoardProps) {
       </VStack>
     </VStack>
   );
-}
-
-export default GameBoard;
+};
