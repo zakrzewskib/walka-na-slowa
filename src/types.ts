@@ -5,8 +5,22 @@ export interface Letter {
 }
 
 export interface Word {
-  id: string;
+  id?: string; // to be deleted
   letters: Letter[];
+}
+
+export interface Guess {
+  id: string;
+  word: Word;
+  userId: string;
+  createdAt: Date;
+}
+
+export interface GuessDTO {
+  id: string;
+  word: Word;
+  userId: string;
+  //  createdAt: Timestamp | FieldValue; // FieldValue when writing (serverTimestamp()), Timestamp when  - for the Firebase in the future <- todo
 }
 
 // prettier-ignore
