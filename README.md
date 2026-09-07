@@ -19,6 +19,7 @@ main → production
 develop → active work
 feature/* → features
 fix/* → bugfixes
+reformat/* -> code cleanup/renaming
 ```
 
 Branch naming convention:
