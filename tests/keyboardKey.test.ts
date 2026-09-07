@@ -6,7 +6,7 @@ import {
   calculateFontSizeMdDown,
   calculateValue,
   calculateWidth,
-} from '../src/components/KeyboardLetter/KeyboardLetter.utils';
+} from '../src/components/KeyboardKey/KeyboardKey.utils';
 
 describe('calculateBackgroundAndBorderColor', () => {
   it.each([

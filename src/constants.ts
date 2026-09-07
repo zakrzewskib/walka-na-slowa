@@ -1,4 +1,4 @@
-import type { LetterStatus, LettersUsed, PolishLetter } from './types';
+import type { LetterStatus, LetterStatusMap, PolishLetter } from './types';
 
 export const WORD_LENGTH = 5;
 export const WORDS_LENGTH = 6;
@@ -16,9 +16,9 @@ export const POLISH_ALPHABET: PolishLetter[] = [
 // Random statuses on initial keyboard letters will be deleted in #21
 const statuses: LetterStatus[] = ['unused', 'correct', 'present', 'absent'];
 
-export const STARTING_LETTERS_USED: LettersUsed = POLISH_ALPHABET.reduce((acc, key) => {
-  acc[key] = {
-    status: statuses[Math.floor(Math.random() * statuses.length)],
-  };
-  return acc;
-}, {} as LettersUsed);
+export const STARTING_LETTERS_USED: LetterStatusMap = Object.fromEntries(
+  POLISH_ALPHABET.map((key) => [
+    key,
+    { status: statuses[Math.floor(Math.random() * statuses.length)] },
+  ]),
+) as LetterStatusMap;

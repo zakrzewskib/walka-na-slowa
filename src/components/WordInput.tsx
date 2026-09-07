@@ -1,15 +1,15 @@
 import { Input } from '@chakra-ui/react';
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { WORD_LENGTH } from '../constants';
-import type { IWord } from '../types';
+import type { Word } from '../types';
 import { getGuessResult } from '../utils/gameLogic';
 
 interface WordInputProps {
-  onSubmit: (guessResult: IWord) => void;
+  onSubmit: (guessResult: Word) => void;
   correctWord: string;
 }
 
-function WordInput(props: WordInputProps) {
+export const WordInput = (props: WordInputProps) => {
   const [value, setValue] = useState('');
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
@@ -55,6 +55,4 @@ function WordInput(props: WordInputProps) {
       />
     </form>
   );
-}
-
-export default WordInput;
+};

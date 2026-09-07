@@ -2,20 +2,20 @@ import { Text, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
-import type { IWord } from '../types';
-import Word from './Word';
+import type { Word } from '../types';
+import { WordItem } from './WordItem';
 
 interface GameBoardProps {
-  words: IWord[];
+  words: Word[];
   isPlayer: boolean;
   playerName: string;
 }
 
-function GameBoard(props: GameBoardProps) {
+export const GameBoard = (props: GameBoardProps) => {
   const { words, isPlayer, playerName } = props;
 
-  const emptyWords: IWord[] = useMemo(() => {
-    const result: IWord[] = [];
+  const emptyWords: Word[] = useMemo(() => {
+    const result: Word[] = [];
 
     for (let i = 0; i < WORDS_LENGTH - words.length; i++) {
       result.push({
@@ -53,15 +53,13 @@ function GameBoard(props: GameBoardProps) {
         data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
         {words.map((word) => (
-          <Word key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={false} />
+          <WordItem key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={false} />
         ))}
 
         {emptyWords.map((word, idx) => (
-          <Word key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={idx === 0} />
+          <WordItem key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={idx === 0} />
         ))}
       </VStack>
     </VStack>
   );
-}
-
-export default GameBoard;
+};

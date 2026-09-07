@@ -1,18 +1,19 @@
 import { VStack } from '@chakra-ui/react';
-import type { ILetter } from '../../types';
+import type { Letter } from '../../types';
 import { getLetterAriaLabel } from '../../utils/accessibility';
 import {
   calculateBackgroundColor,
   calculateBorderColor,
   calculateDisplayValue,
-} from './Letter.utils';
+} from './LetterItem.utils';
 
-interface LetterProps {
-  letter: ILetter;
+interface LetterItemProps {
+  letter: Letter;
   isCurrentTurn: boolean;
   isPlayer: boolean;
 }
-function Letter(props: LetterProps) {
+
+export const LetterItem = (props: LetterItemProps) => {
   const { letter } = props;
   const { value } = letter;
   const { isCurrentTurn, isPlayer } = props;
@@ -41,6 +42,4 @@ function Letter(props: LetterProps) {
       {calculateDisplayValue(value)}
     </VStack>
   );
-}
-
-export default Letter;
+};

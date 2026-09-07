@@ -1,14 +1,14 @@
 import { HStack } from '@chakra-ui/react';
-import type { IWord } from '../types';
-import Letter from './Letter/Letter';
+import type { Word } from '../types';
+import { LetterItem } from './LetterItem/LetterItem';
 
-interface WordProps {
-  word: IWord;
+interface WordItemProps {
+  word: Word;
   isPlayer: boolean;
   isCurrentTurn: boolean;
 }
 
-function Word(props: WordProps) {
+export const WordItem = (props: WordItemProps) => {
   const { word, isPlayer, isCurrentTurn } = props;
 
   return (
@@ -23,7 +23,7 @@ function Word(props: WordProps) {
       role="row"
     >
       {word.letters.map((letter, idx) => (
-        <Letter
+        <LetterItem
           key={`${word.id}-${idx}`}
           letter={letter}
           isPlayer={isPlayer}
@@ -32,6 +32,4 @@ function Word(props: WordProps) {
       ))}
     </HStack>
   );
-}
-
-export default Word;
+};

@@ -8,15 +8,15 @@ import {
   calculateFontSizeMdDown,
   calculateValue,
   calculateWidth,
-} from './KeyboardLetter.utils';
+} from './KeyboardKey.utils';
 
-interface KeyboardLetterProps {
+interface KeyboardKeyItemProps {
   value: KeyboardKey;
   status: LetterStatus;
   row: number;
 }
 
-function KeyboardLetter(props: KeyboardLetterProps) {
+export const KeyboardKeyItem = (props: KeyboardKeyItemProps) => {
   const { value, status, row } = props;
 
   return (
@@ -43,6 +43,4 @@ function KeyboardLetter(props: KeyboardLetterProps) {
       {calculateValue(value)}
     </VStack>
   );
-}
-
-export default KeyboardLetter;
+};
