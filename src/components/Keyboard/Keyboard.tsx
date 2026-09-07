@@ -1,8 +1,8 @@
 import { HStack, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
-import { STARTING_LETTERS_USED } from '../constants';
-import type { KeyboardKey, LetterStatusMap, PolishLetter } from '../types';
-import { KeyboardKeyItem } from './KeyboardKey/KeyboardKey';
+import { useAppStore } from '../../store/store';
+import type { KeyboardKey, PolishLetter } from '../../types';
+import { KeyboardKeyItem } from '../KeyboardKey/KeyboardKey';
+import { calculateKeyboardState } from './Keyboard.utils';
 
 const firstRow: PolishLetter[] = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 const secondRow: PolishLetter[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
@@ -10,7 +10,8 @@ const thirdRow: KeyboardKey[] = ['Backspace', 'z', 'x', 'c', 'v', 'b', 'n', 'm',
 const fourthRow: PolishLetter[] = ['ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż'];
 
 export const Keyboard = () => {
-  const [keyboardState] = useState<LetterStatusMap>(STARTING_LETTERS_USED);
+  const guesses = useAppStore((state) => state.guesses);
+  const keyboardState = calculateKeyboardState(guesses);
 
   const rowsWithStatus = [firstRow, secondRow, thirdRow, fourthRow].map((row) => {
     return row.map((key) => {

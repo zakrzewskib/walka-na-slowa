@@ -1,7 +1,7 @@
 import { HStack, VStack } from '@chakra-ui/react';
 import { v4 as uuidv4 } from 'uuid';
 import { GameBoard } from './components/GameBoard';
-import { Keyboard } from './components/Keyboard';
+import { Keyboard } from './components/Keyboard/Keyboard';
 import { WordInput } from './components/WordInput';
 import { HIDDEN_LETTER } from './constants';
 import Layout from './layout/Layout';
