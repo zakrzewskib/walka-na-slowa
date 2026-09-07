@@ -6,9 +6,9 @@ import Keyboard from './components/Keyboard';
 import WordInput from './components/WordInput';
 import { HIDDEN_LETTER, MOCK_CORRECT_WORD } from './constants';
 import Layout from './layout/Layout';
-import type { IWord } from './types';
+import type { Word } from './types';
 
-const MOCK_OPPONENT_WORDS: IWord[] = [
+const MOCK_OPPONENT_WORDS: Word[] = [
   {
     id: uuidv4(),
     letters: [
@@ -42,9 +42,9 @@ const MOCK_OPPONENT_WORDS: IWord[] = [
 ];
 
 function App() {
-  const [userWords, setUserWords] = useState<IWord[]>([]);
+  const [userWords, setUserWords] = useState<Word[]>([]);
 
-  function handleSubmit(guessResult: IWord) {
+  function handleSubmit(guessResult: Word) {
     setUserWords((prev) => [...prev, guessResult]);
   }
 

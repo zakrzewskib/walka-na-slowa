@@ -1,12 +1,12 @@
-export interface ILetter {
+export interface Letter {
   value: string;
   exists: boolean;
   correctPlace: boolean;
 }
 
-export interface IWord {
+export interface Word {
   id: string;
-  letters: ILetter[];
+  letters: Letter[];
 }
 
 // prettier-ignore
@@ -20,6 +20,4 @@ export type KeyboardKey = PolishLetter | 'Backspace' | 'Enter';
 
 export type LetterStatus = 'unused' | 'correct' | 'present' | 'absent';
 
-export type LettersUsed = {
-  [K in PolishLetter]: { status: LetterStatus };
-};
+export type LetterStatusMap = Record<PolishLetter, { status: LetterStatus }>;

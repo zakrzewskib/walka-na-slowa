@@ -1,8 +1,8 @@
 import { HIDDEN_LETTER } from '../constants';
-import type { ILetter, KeyboardKey, LetterStatus } from '../types';
+import type { KeyboardKey, Letter, LetterStatus } from '../types';
 
 export function getLetterAriaLabel(
-  letter: ILetter,
+  letter: Letter,
   isCurrentTurn: boolean,
   isPlayer: boolean,
 ): string {

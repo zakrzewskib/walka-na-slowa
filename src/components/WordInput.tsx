@@ -1,11 +1,11 @@
 import { Input } from '@chakra-ui/react';
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { WORD_LENGTH } from '../constants';
-import type { IWord } from '../types';
+import type { Word } from '../types';
 import { getGuessResult } from '../utils/gameLogic';
 
 interface WordInputProps {
-  onSubmit: (guessResult: IWord) => void;
+  onSubmit: (guessResult: Word) => void;
   correctWord: string;
 }
 

@@ -4,7 +4,7 @@ import {
   calculateBorderColor,
   calculateBorderWidth,
   calculateDisplayValue,
-} from '../src/components/Letter/Letter.utils';
+} from '../src/components/LetterItem/LetterItem.utils';
 import { HIDDEN_LETTER } from '../src/constants';
 
 describe('calculateDisplayValue', () => {

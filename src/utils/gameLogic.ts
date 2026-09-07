@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { ILetter, IWord } from '../types';
+import type { Letter, Word } from '../types';
 
-export function getGuessResult(guess: string, correctWord: string): IWord {
+export function getGuessResult(guess: string, correctWord: string): Word {
   if (!guess || guess.length === 0) {
     throw new Error('Guess cannot be empty');
   }
@@ -12,7 +12,7 @@ export function getGuessResult(guess: string, correctWord: string): IWord {
     );
   }
 
-  const result: ILetter[] = new Array(guess.length).fill(null);
+  const result: Letter[] = new Array(guess.length).fill(null);
   const correctLetterCounts: Record<string, number> = {};
 
   // First pass — mark greens and count remaining letters in correct word
