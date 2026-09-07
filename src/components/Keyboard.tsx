@@ -2,7 +2,7 @@ import { HStack, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { STARTING_LETTERS_USED } from '../constants';
 import type { KeyboardKey, LetterStatusMap, PolishLetter } from '../types';
-import { KeyboardKeyItem } from './KeyboardLetter/KeyboardLetter';
+import { KeyboardKeyItem } from './KeyboardKey/KeyboardKey';
 
 const firstRow: PolishLetter[] = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 const secondRow: PolishLetter[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];

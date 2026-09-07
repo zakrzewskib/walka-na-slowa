@@ -40,7 +40,7 @@ Code review will be done by AI: by ChatGPT or Claude Sonnet etc.
 Prompt:
 
 ```
-git diff develop...feature/<branch-name> -- . ':(exclude)pnpm-lock.yaml' | pbcopy
+git diff develop...reformat/#24-unify-naming-conventions -- . ':(exclude)pnpm-lock.yaml' | pbcopy
 
 Please review the code like senior frontend dev add -<yourName(which llm are you)> v.<your-version> at the end of the each comment, in the comment reference file, only add comments with fixes and improvements, skip positive comments, make comments in a copy-ready format (for example in markdown)
 ```
