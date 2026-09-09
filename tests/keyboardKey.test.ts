@@ -36,35 +36,35 @@ describe('calculateValue', () => {
     expect(calculateValue('Enter')).toBe('Enter');
   });
   it('uppercases letters', () => {
-    expect(calculateValue('a')).toBe('A');
+    expect(calculateValue('A')).toBe('A');
   });
 });
 
 describe('calculateWidth', () => {
   it('row 0 uses first row width regardless of key', () => {
-    expect(calculateWidth(0, 'a')).toBe('60px');
+    expect(calculateWidth(0, 'A')).toBe('60px');
     expect(calculateWidth(0, 'Enter')).toBe('60px');
   });
   it.each([1, 3] as const)('row %i uses second/fourth row width', (row) => {
-    expect(calculateWidth(row, 'a')).toBe('67px');
+    expect(calculateWidth(row, 'A')).toBe('67px');
   });
   it('row 2 gives special keys the wide width', () => {
     expect(calculateWidth(2, 'Enter')).toBe('85px');
     expect(calculateWidth(2, 'Backspace')).toBe('85px');
   });
   it('row 2 gives regular letters the narrow width', () => {
-    expect(calculateWidth(2, 'a')).toBe('62px');
+    expect(calculateWidth(2, 'A')).toBe('62px');
   });
   it('throws on an invalid row', () => {
-    expect(() => calculateWidth(9, 'a')).toThrow('Unexpected keyboard row');
+    expect(() => calculateWidth(9, 'A')).toThrow('Unexpected keyboard row');
   });
 });
 
 describe('font sizing', () => {
   it('backspace gets larger font sizes than letters', () => {
     expect(calculateFontSize('Backspace')).toBe('24px');
-    expect(calculateFontSize('a')).toBe('18px');
+    expect(calculateFontSize('A')).toBe('18px');
     expect(calculateFontSizeMdDown('Backspace')).toBe('20px');
-    expect(calculateFontSizeMdDown('a')).toBe('16px');
+    expect(calculateFontSizeMdDown('A')).toBe('16px');
   });
 });

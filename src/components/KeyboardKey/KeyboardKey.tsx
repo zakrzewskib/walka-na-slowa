@@ -21,6 +21,7 @@ export const KeyboardKeyItem = (props: KeyboardKeyItemProps) => {
 
   return (
     <VStack
+      data-testid={`key-${value}`}
       role="gridcell"
       aria-label={getKeyboardLetterAriaLabel(value, status)}
       justifyContent="center"
