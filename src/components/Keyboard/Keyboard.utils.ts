@@ -14,6 +14,10 @@ function getLetterStatus(letter: { exists: boolean; correctPlace: boolean }): Le
   return 'absent';
 }
 
+function isPolishLetter(value: string, map: LetterStatusMap): value is PolishLetter {
+  return value in map;
+}
+
 export function calculateKeyboardState(guesses: Guess[]): LetterStatusMap {
   const map = Object.fromEntries(
     POLISH_ALPHABET.map((letter) => [letter, { status: 'unused' as LetterStatus }]),
@@ -21,11 +25,11 @@ export function calculateKeyboardState(guesses: Guess[]): LetterStatusMap {
 
   for (const guess of guesses) {
     for (const letter of guess.word.letters) {
-      const key = letter.value.toUpperCase() as PolishLetter;
+      const key = letter.value.toUpperCase();
+
+      if (!isPolishLetter(key, map)) continue; // guard against unexpected characters
+
       const current = map[key];
-
-      if (!current) continue; // guard against unexpected characters
-
       const newStatus = getLetterStatus(letter);
 
       if (STATUS_PRIORITY[newStatus] > STATUS_PRIORITY[current.status]) {
