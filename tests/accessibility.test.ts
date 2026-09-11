@@ -46,23 +46,23 @@ describe('getLetterAriaLabel', () => {
 
 describe('getKeyboardLetterAriaLabel', () => {
   it('returns correct label for absent status', () => {
-    expect(getKeyboardLetterAriaLabel('a', 'absent')).toBe('Litera a, nieobecna.');
+    expect(getKeyboardLetterAriaLabel('A', 'absent')).toBe('Litera A, nieobecna.');
   });
 
   it('returns correct label for correct status', () => {
-    expect(getKeyboardLetterAriaLabel('z', 'correct')).toBe(
-      'Litera z, obecna, na poprawnym miejscu.',
+    expect(getKeyboardLetterAriaLabel('Z', 'correct')).toBe(
+      'Litera Z, obecna, na poprawnym miejscu.',
     );
   });
 
   it('returns correct label for present status', () => {
-    expect(getKeyboardLetterAriaLabel('m', 'present')).toBe(
-      'Litera m, obecna, na niepoprawnym miejscu.',
+    expect(getKeyboardLetterAriaLabel('M', 'present')).toBe(
+      'Litera M, obecna, na niepoprawnym miejscu.',
     );
   });
 
   it('returns correct label for unused status', () => {
-    expect(getKeyboardLetterAriaLabel('q', 'unused')).toBe('Litera q, nieużyta.');
+    expect(getKeyboardLetterAriaLabel('Q', 'unused')).toBe('Litera Q, nieużyta.');
   });
 
   it('returns correct label for Enter', () => {

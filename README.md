@@ -42,10 +42,12 @@ Prompt:
 ```
 git diff develop...type/<branch-name> -- . ':(exclude)pnpm-lock.yaml' | pbcopy
 
-Please review the code like senior frontend dev add -<yourName(which llm are you)> v.<your-version> at the end of the each comment, in the comment reference file, only add comments with fixes and improvements, skip positive comments, make comments in a copy-ready format (for example in markdown)
+Please review the code like senior frontend dev - I'll give you git diff. Add -<yourName(which llm are you)> v.<your-version> at the end of the comment related to given file. Only add comments with fixes and improvements, skip positive comments.
 ```
 
 Pull request will have CI (checks) and it will be merged with all commits preserved.
+
+You can use `git rev-parse --abbrev-ref HEAD` to get current branch name
 
 ## Issues strategy
 

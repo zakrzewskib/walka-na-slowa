@@ -5,16 +5,31 @@ export interface Letter {
 }
 
 export interface Word {
-  id: string;
+  id?: string; // to be deleted
   letters: Letter[];
 }
 
+export interface Guess {
+  id: string;
+  word: Word;
+  userId: string;
+  createdAt: Date;
+}
+
+// todo: to be used in the future
+// export interface GuessDTO {
+//   id: string;
+//   word: Word;
+//   userId: string;
+//   //  createdAt: Timestamp | FieldValue; // FieldValue when writing (serverTimestamp()), Timestamp when  - for the Firebase in the future <- todo
+// }
+
 // prettier-ignore
 export type PolishLetter =
-  | 'q' | 'w' | 'e' | 'r' | 't' | 'y' | 'u' | 'i' | 'o' | 'p'
-  | 'a' | 's' | 'd' | 'f' | 'g' | 'h' | 'j' | 'k' | 'l'
-  | 'z' | 'x' | 'c' | 'v' | 'b' | 'n' | 'm'
-  | 'ą' | 'ć' | 'ę' | 'ł' | 'ń' | 'ó' | 'ś' | 'ź' | 'ż';
+  | 'Q' | 'W' | 'E' | 'R' | 'T' | 'Y' | 'U' | 'I' | 'O' | 'P'
+  | 'A' | 'S' | 'D' | 'F' | 'G' | 'H' | 'J' | 'K' | 'L'
+  | 'Z' | 'X' | 'C' | 'V' | 'B' | 'N' | 'M'
+  | 'Ą' | 'Ć' | 'Ę' | 'Ł' | 'Ń' | 'Ó' | 'Ś' | 'Ź' | 'Ż';
 
 export type KeyboardKey = PolishLetter | 'Backspace' | 'Enter';
 

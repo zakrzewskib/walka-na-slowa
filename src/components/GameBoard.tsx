@@ -2,22 +2,22 @@ import { Text, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
-import type { Word } from '../types';
+import type { Guess, Word } from '../types';
 import { WordItem } from './WordItem';
 
 interface GameBoardProps {
-  words: Word[];
+  guesses: Guess[];
   isPlayer: boolean;
   playerName: string;
 }
 
 export const GameBoard = (props: GameBoardProps) => {
-  const { words, isPlayer, playerName } = props;
+  const { guesses, isPlayer, playerName } = props;
 
   const emptyWords: Word[] = useMemo(() => {
     const result: Word[] = [];
 
-    for (let i = 0; i < WORDS_LENGTH - words.length; i++) {
+    for (let i = 0; i < WORDS_LENGTH - guesses.length; i++) {
       result.push({
         id: uuidv4(),
         letters: Array.from({ length: WORD_LENGTH }, () => ({
@@ -30,7 +30,7 @@ export const GameBoard = (props: GameBoardProps) => {
     }
 
     return result;
-  }, [words.length]); // Only regenerate if number of words changes
+  }, [guesses.length]); // Only regenerate if number of words changes
 
   return (
     <VStack
@@ -52,8 +52,8 @@ export const GameBoard = (props: GameBoardProps) => {
         aria-label={isPlayer ? 'Twoja plansza' : 'Plansza przeciwnika'}
         data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
-        {words.map((word) => (
-          <WordItem key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={false} />
+        {guesses.map(({ word, id }) => (
+          <WordItem key={id} word={word} isPlayer={isPlayer} isCurrentTurn={false} />
         ))}
 
         {emptyWords.map((word, idx) => (

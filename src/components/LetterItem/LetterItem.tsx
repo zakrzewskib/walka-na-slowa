@@ -20,6 +20,7 @@ export const LetterItem = (props: LetterItemProps) => {
 
   return (
     <VStack
+      data-testid={`letter-${value}-${isPlayer ? 'player' : 'enemy'}`}
       role="gridcell"
       aria-label={getLetterAriaLabel(letter, isCurrentTurn, isPlayer)}
       justifyContent="center"

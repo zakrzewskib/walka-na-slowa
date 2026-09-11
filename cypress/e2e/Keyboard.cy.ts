@@ -27,7 +27,7 @@ describe('Keyboard Display', () => {
     keyboard()
       .find('[role="gridcell"]')
       .then(($cells) => {
-        const texts = [...$cells].map((el) => el.textContent?.toLocaleLowerCase());
+        const texts = [...$cells].map((el) => el.textContent);
         POLISH_ALPHABET.forEach((letter) => {
           expect(texts).to.include(letter);
         });

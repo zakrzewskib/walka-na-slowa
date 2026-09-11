@@ -1,16 +1,17 @@
 import { Input } from '@chakra-ui/react';
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH } from '../constants';
-import type { Word } from '../types';
-import { getGuessResult } from '../utils/gameLogic';
+import { useAppStore } from '../store/store';
+import { getWordResult } from '../utils/gameLogic';
 
 interface WordInputProps {
-  onSubmit: (guessResult: Word) => void;
   correctWord: string;
 }
 
-export const WordInput = (props: WordInputProps) => {
+export const WordInput = ({ correctWord }: WordInputProps) => {
   const [value, setValue] = useState('');
+  const addGuess = useAppStore((state) => state.addGuess);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -26,11 +27,14 @@ export const WordInput = (props: WordInputProps) => {
 
     // tbd: Check if word exists in polish language
 
-    const guess = value.toUpperCase();
     // tbd: Think if it's a backend side logic
-    const result = getGuessResult(guess, props.correctWord);
-    props.onSubmit(result);
-
+    const wordResult = getWordResult(value, correctWord);
+    addGuess({
+      id: uuidv4(),
+      userId: 'user1', // todo: get that from the current session
+      word: wordResult,
+      createdAt: new Date(),
+    });
     // tbd: Add animation
     setValue('');
   }
