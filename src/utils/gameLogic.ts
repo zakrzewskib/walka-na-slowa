@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Letter, Word } from '../types';
 
-export function getWordResult(rawGuess: string, rawCorrectWorld: string): Word {
-  const correctWord = rawCorrectWorld.toUpperCase();
+export function getWordResult(rawGuess: string, rawCorrectWord: string): Word {
+  const correctWord = rawCorrectWord.toUpperCase();
   const guess = rawGuess.toUpperCase();
 
   if (!guess || guess.length === 0) {
