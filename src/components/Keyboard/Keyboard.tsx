@@ -1,4 +1,5 @@
 import { HStack, VStack } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { useAppStore } from '../../store/store';
 import type { KeyboardKey, PolishLetter } from '../../types';
 import { KeyboardKeyItem } from '../KeyboardKey/KeyboardKey';
@@ -11,7 +12,7 @@ const fourthRow: PolishLetter[] = ['Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź
 
 export const Keyboard = () => {
   const guesses = useAppStore((state) => state.guesses);
-  const keyboardState = calculateKeyboardState(guesses);
+  const keyboardState = useMemo(() => calculateKeyboardState(guesses), [guesses]);
 
   const rowsWithStatus = [firstRow, secondRow, thirdRow, fourthRow].map((row) => {
     return row.map((key) => {
