@@ -1,11 +1,15 @@
 import { Input } from '@chakra-ui/react';
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { MOCK_CORRECT_WORD, WORD_LENGTH } from '../constants';
+import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
 import { getWordResult } from '../utils/gameLogic';
 
-export const WordInput = () => {
+interface WordInputProps {
+  correctWord: string;
+}
+
+export const WordInput = ({ correctWord }: WordInputProps) => {
   const [value, setValue] = useState('');
   const addGuess = useAppStore((state) => state.addGuess);
 
@@ -24,10 +28,10 @@ export const WordInput = () => {
     // tbd: Check if word exists in polish language
 
     // tbd: Think if it's a backend side logic
-    const wordResult = getWordResult(value, MOCK_CORRECT_WORD);
+    const wordResult = getWordResult(value, correctWord);
     addGuess({
       id: uuidv4(),
-      userId: uuidv4(),
+      userId: 'user1', // todo: get that from the current session
       word: wordResult,
       createdAt: new Date(),
     });

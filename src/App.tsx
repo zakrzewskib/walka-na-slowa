@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard/Keyboard';
 import { WordInput } from './components/WordInput';
-import { HIDDEN_LETTER } from './constants';
+import { HIDDEN_LETTER, MOCK_CORRECT_WORD } from './constants';
 import Layout from './layout/Layout';
 import { useAppStore } from './store/store';
 import type { Guess } from './types';
@@ -57,7 +57,7 @@ function App() {
         </HStack>
 
         <Keyboard />
-        <WordInput />
+        <WordInput correctWord={MOCK_CORRECT_WORD} />
       </VStack>
     </Layout>
   );
