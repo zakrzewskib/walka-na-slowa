@@ -16,12 +16,13 @@ export interface Guess {
   createdAt: Date;
 }
 
-export interface GuessDTO {
-  id: string;
-  word: Word;
-  userId: string;
-  //  createdAt: Timestamp | FieldValue; // FieldValue when writing (serverTimestamp()), Timestamp when  - for the Firebase in the future <- todo
-}
+// todo: to be used in the future
+// export interface GuessDTO {
+//   id: string;
+//   word: Word;
+//   userId: string;
+//   //  createdAt: Timestamp | FieldValue; // FieldValue when writing (serverTimestamp()), Timestamp when  - for the Firebase in the future <- todo
+// }
 
 // prettier-ignore
 export type PolishLetter =
