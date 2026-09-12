@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { Letter, Word } from '../types';
+import type { LetterResult, Word } from '../types';
 
 export function getWordResult(rawGuess: string, rawCorrectWord: string): Word {
   const correctWord = rawCorrectWord.toUpperCase();
@@ -15,7 +15,7 @@ export function getWordResult(rawGuess: string, rawCorrectWord: string): Word {
     );
   }
 
-  const result: Letter[] = new Array(guess.length).fill(null);
+  const result: LetterResult[] = new Array(guess.length).fill(null);
   const correctLetterCounts: Record<string, number> = {};
 
   // First pass — mark greens and count remaining letters in correct word

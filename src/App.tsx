@@ -7,44 +7,6 @@ import { MOCK_CORRECT_WORD } from './constants';
 import Layout from './layout/Layout';
 import { useAppStore } from './store/store';
 
-// todo: to be deleted
-// const MOCK_OPPONENT_WORDS: Guess[] = [
-//   {
-//     userId: uuidv4(),
-//     createdAt: new Date(),
-//     id: uuidv4(),
-//     word: {
-//       letters: [
-//         {
-//           value: HIDDEN_LETTER,
-//           exists: true,
-//           correctPlace: true,
-//         },
-//         {
-//           value: HIDDEN_LETTER,
-//           exists: true,
-//           correctPlace: false,
-//         },
-//         {
-//           value: HIDDEN_LETTER,
-//           exists: false,
-//           correctPlace: false,
-//         },
-//         {
-//           value: HIDDEN_LETTER,
-//           exists: true,
-//           correctPlace: false,
-//         },
-//         {
-//           value: HIDDEN_LETTER,
-//           exists: false,
-//           correctPlace: false,
-//         },
-//       ],
-//     },
-//   },
-// ];
-
 function App() {
   const guesses = useAppStore((state) => state.guesses);
 

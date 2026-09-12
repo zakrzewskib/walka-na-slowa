@@ -1,15 +1,15 @@
 import { calculateKeyboardState } from '../src/components/Keyboard/Keyboard.utils';
 import { POLISH_ALPHABET } from '../src/constants';
-import type { Guess, Letter } from '../src/types';
+import type { Guess, LetterResult } from '../src/types';
 
 describe('calculateKeyboardState', () => {
-  const green = (value: string): Letter => ({ value, exists: true, correctPlace: true });
-  const yellow = (value: string): Letter => ({ value, exists: true, correctPlace: false });
-  const gray = (value: string): Letter => ({ value, exists: false, correctPlace: false });
+  const green = (value: string): LetterResult => ({ value, exists: true, correctPlace: true });
+  const yellow = (value: string): LetterResult => ({ value, exists: true, correctPlace: false });
+  const gray = (value: string): LetterResult => ({ value, exists: false, correctPlace: false });
 
   let guessCounter = 0;
 
-  function makeGuess(letters: Letter[]): Guess {
+  function makeGuess(letters: LetterResult[]): Guess {
     guessCounter++;
     return {
       id: `guess-${guessCounter}`,

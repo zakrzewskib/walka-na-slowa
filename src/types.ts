@@ -1,28 +1,45 @@
-export interface Letter {
+import type { FieldValue, Timestamp } from 'firebase/firestore';
+
+type FirebaseWriteReadTimeStamp = FieldValue | Timestamp;
+
+export interface LetterResult {
   value: string;
   exists: boolean;
   correctPlace: boolean;
 }
 
-export interface Word {
-  id?: string; // to be deleted
-  letters: Letter[];
+export interface EvaluatedGuess {
+  letters: LetterResult[];
 }
 
 export interface Guess {
   id: string;
-  word: Word;
   userId: string;
+  value: string;
+  evaluatedGuess: EvaluatedGuess;
   createdAt: Date;
 }
 
-// todo: to be used in the future
-// export interface GuessDTO {
-//   id: string;
-//   word: Word;
-//   userId: string;
-//   //  createdAt: Timestamp | FieldValue; // FieldValue when writing (serverTimestamp()), Timestamp when  - for the Firebase in the future <- todo
-// }
+export interface Game {
+  id: string;
+  userId: string;
+  guesses: Guess[];
+}
+
+export interface GuessDTO {
+  id: string;
+  userId: string;
+  value: string;
+  evaluatedGuess: EvaluatedGuess;
+  createdAt: FirebaseWriteReadTimeStamp;
+}
+
+export interface GameDTO {
+  id: string;
+  userId: string;
+  guesses: GuessDTO[];
+  createdAt: FirebaseWriteReadTimeStamp;
+}
 
 // prettier-ignore
 export type PolishLetter =
@@ -33,6 +50,6 @@ export type PolishLetter =
 
 export type KeyboardKey = PolishLetter | 'Backspace' | 'Enter';
 
-export type LetterStatus = 'unused' | 'correct' | 'present' | 'absent';
+export type KeyboardLetterStatus = 'unused' | 'correct' | 'present' | 'absent';
 
-export type LetterStatusMap = Record<PolishLetter, { status: LetterStatus }>;
+export type KeyboardLetterStatusMap = Record<PolishLetter, { status: KeyboardLetterStatus }>;

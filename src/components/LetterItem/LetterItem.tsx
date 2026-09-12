@@ -1,5 +1,5 @@
 import { VStack } from '@chakra-ui/react';
-import type { Letter } from '../../types';
+import type { LetterResult } from '../../types';
 import { getLetterAriaLabel } from '../../utils/accessibility';
 import {
   calculateBackgroundColor,
@@ -8,7 +8,7 @@ import {
 } from './LetterItem.utils';
 
 interface LetterItemProps {
-  letter: Letter;
+  letter: LetterResult;
   isCurrentTurn: boolean;
   isPlayer: boolean;
 }

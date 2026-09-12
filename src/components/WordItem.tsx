@@ -1,15 +1,15 @@
 import { HStack } from '@chakra-ui/react';
-import type { Word } from '../types';
+import type { EvaluatedGuess } from '../types';
 import { LetterItem } from './LetterItem/LetterItem';
 
 interface WordItemProps {
-  word: Word;
+  guess: EvaluatedGuess;
   isPlayer: boolean;
   isCurrentTurn: boolean;
 }
 
 export const WordItem = (props: WordItemProps) => {
-  const { word, isPlayer, isCurrentTurn } = props;
+  const { guess, isPlayer, isCurrentTurn } = props;
 
   return (
     <HStack
@@ -22,13 +22,8 @@ export const WordItem = (props: WordItemProps) => {
       }}
       role="row"
     >
-      {word.letters.map((letter, idx) => (
-        <LetterItem
-          key={`${word.id}-${idx}`}
-          letter={letter}
-          isPlayer={isPlayer}
-          isCurrentTurn={isCurrentTurn}
-        />
+      {guess.letters.map((letter) => (
+        <LetterItem letter={letter} isPlayer={isPlayer} isCurrentTurn={isCurrentTurn} />
       ))}
     </HStack>
   );

@@ -1,22 +1,24 @@
 import { Button, Dialog, Portal, Spinner } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useAppStore } from '../../store/store';
 
 export const CreateGameDialog = () => {
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [, setError] = useState('');
+  const createGame = useAppStore((state) => state.createGame);
 
   async function handleCreateGame() {
     setLoading(true);
-    // create game
 
-    // timeout - to be deleted
-    await new Promise((resolve) => {
-      setTimeout(resolve, 1000);
-    });
-
-    // setLoading(false); // <- only set loading to false on error to prevent flashing
-
-    setOpen(false);
+    try {
+      await createGame();
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false); // only set loading to false on error to prevent flashing
+      setError('Nie udało się stworzyć gry. Proszę odświeżyć stronę.');
+    }
   }
 
   // todo: Add button to handle login

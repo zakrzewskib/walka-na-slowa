@@ -28,11 +28,12 @@ export const WordInput = ({ correctWord }: WordInputProps) => {
     // tbd: Check if word exists in polish language
 
     // tbd: Think if it's a backend side logic
-    const wordResult = getWordResult(value, correctWord);
+    const evaluatedGuess = getWordResult(value, correctWord);
     addGuess({
       id: uuidv4(),
+      value: value,
       userId: 'user1', // todo: get that from the current session
-      word: wordResult,
+      evaluatedGuess: evaluatedGuess,
       createdAt: new Date(),
     });
     // tbd: Add animation
