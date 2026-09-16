@@ -1,7 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
-import type { LetterResult, Word } from '../types';
+import type { EvaluatedGuess, LetterResult } from '../types';
 
-export function getWordResult(rawGuess: string, rawCorrectWord: string): Word {
+export function getWordResult(rawGuess: string, rawCorrectWord: string): EvaluatedGuess {
   const correctWord = rawCorrectWord.toUpperCase();
   const guess = rawGuess.toUpperCase();
 
@@ -41,7 +40,6 @@ export function getWordResult(rawGuess: string, rawCorrectWord: string): Word {
   }
 
   return {
-    id: uuidv4(),
     letters: result,
   };
 }

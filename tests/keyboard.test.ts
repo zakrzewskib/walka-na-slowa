@@ -9,13 +9,14 @@ describe('calculateKeyboardState', () => {
 
   let guessCounter = 0;
 
-  function makeGuess(letters: LetterResult[]): Guess {
+  function makeGuess(value: string, letters: LetterResult[]): Guess {
     guessCounter++;
     return {
       id: `guess-${guessCounter}`,
       userId: 'test-user',
       createdAt: new Date(),
-      word: { letters },
+      value: value,
+      evaluatedGuess: { letters },
     };
   }
 
@@ -31,7 +32,7 @@ describe('calculateKeyboardState', () => {
 
   describe('single guess', () => {
     it('marks statuses correctly for a mix of green/yellow/gray', () => {
-      const guess = makeGuess([green('L'), yellow('A'), gray('X'), gray('Y'), green('K')]);
+      const guess = makeGuess('LAXYK', [green('L'), yellow('A'), gray('X'), gray('Y'), green('K')]);
 
       const result = calculateKeyboardState([guess]);
 
@@ -43,7 +44,7 @@ describe('calculateKeyboardState', () => {
     });
 
     it('leaves untouched letters as unused', () => {
-      const guess = makeGuess([green('L')]);
+      const guess = makeGuess('L', [green('L')]);
 
       const result = calculateKeyboardState([guess]);
 
@@ -55,7 +56,7 @@ describe('calculateKeyboardState', () => {
     it('duplicate letter: correct wins over absent (e.g. "EEEEE" vs "LEVEL")', () => {
       // mirrors the LEVEL/EEEEE case: same letter is green at two spots,
       // gray at the other three, all within one guess
-      const guess = makeGuess([gray('E'), green('E'), gray('E'), green('E'), gray('E')]);
+      const guess = makeGuess('EEEEE', [gray('E'), green('E'), gray('E'), green('E'), gray('E')]);
 
       const result = calculateKeyboardState([guess]);
 
@@ -63,7 +64,7 @@ describe('calculateKeyboardState', () => {
     });
 
     it('duplicate letter: correct wins over present', () => {
-      const guess = makeGuess([yellow('A'), green('A'), gray('X')]);
+      const guess = makeGuess('AAX', [yellow('A'), green('A'), gray('X')]);
 
       const result = calculateKeyboardState([guess]);
 
@@ -71,7 +72,7 @@ describe('calculateKeyboardState', () => {
     });
 
     it('duplicate letter: present wins over absent', () => {
-      const guess = makeGuess([gray('A'), yellow('A')]);
+      const guess = makeGuess('AA', [gray('A'), yellow('A')]);
 
       const result = calculateKeyboardState([guess]);
 
@@ -81,8 +82,8 @@ describe('calculateKeyboardState', () => {
 
   describe('priority merging across multiple guesses', () => {
     it('upgrades present to correct on a later guess', () => {
-      const guess1 = makeGuess([yellow('A')]);
-      const guess2 = makeGuess([green('A')]);
+      const guess1 = makeGuess('A', [yellow('A')]);
+      const guess2 = makeGuess('A', [green('A')]);
 
       const result = calculateKeyboardState([guess1, guess2]);
 
@@ -90,8 +91,8 @@ describe('calculateKeyboardState', () => {
     });
 
     it('does not downgrade correct when a later guess shows the letter as absent', () => {
-      const guess1 = makeGuess([green('A')]);
-      const guess2 = makeGuess([gray('A')]);
+      const guess1 = makeGuess('A', [green('A')]);
+      const guess2 = makeGuess('A', [gray('A')]);
 
       const result = calculateKeyboardState([guess1, guess2]);
 
@@ -99,8 +100,8 @@ describe('calculateKeyboardState', () => {
     });
 
     it('does not downgrade present when a later guess shows the letter as absent', () => {
-      const guess1 = makeGuess([yellow('A')]);
-      const guess2 = makeGuess([gray('A')]);
+      const guess1 = makeGuess('A', [yellow('A')]);
+      const guess2 = makeGuess('A', [gray('A')]);
 
       const result = calculateKeyboardState([guess1, guess2]);
 
@@ -109,8 +110,8 @@ describe('calculateKeyboardState', () => {
 
     it('does not downgrade correct when the same letter is absent elsewhere in a later guess', () => {
       // e.g. turn 1 nails the "L", turn 2 guesses "L" in the wrong word entirely (still gray)
-      const guess1 = makeGuess([green('L')]);
-      const guess2 = makeGuess([gray('L'), gray('X')]);
+      const guess1 = makeGuess('L', [green('L')]);
+      const guess2 = makeGuess('LX', [gray('L'), gray('X')]);
 
       const result = calculateKeyboardState([guess1, guess2]);
 
@@ -118,8 +119,8 @@ describe('calculateKeyboardState', () => {
     });
 
     it('aggregates independently across many different letters', () => {
-      const guess1 = makeGuess([green('L'), gray('X')]);
-      const guess2 = makeGuess([yellow('K'), gray('Y')]);
+      const guess1 = makeGuess('LX', [green('L'), gray('X')]);
+      const guess2 = makeGuess('KY', [yellow('K'), gray('Y')]);
 
       const result = calculateKeyboardState([guess1, guess2]);
 
@@ -133,7 +134,7 @@ describe('calculateKeyboardState', () => {
 
   describe('edge cases', () => {
     it('handles lowercase input by normalizing to uppercase', () => {
-      const guess = makeGuess([green('l'), yellow('a')]);
+      const guess = makeGuess('la', [green('l'), yellow('a')]);
 
       const result = calculateKeyboardState([guess]);
 
@@ -142,7 +143,7 @@ describe('calculateKeyboardState', () => {
     });
 
     it('ignores letters that are not part of the Polish alphabet without throwing', () => {
-      const guess = makeGuess([green('1'), green('#')]);
+      const guess = makeGuess('1#', [green('1'), green('#')]);
 
       expect(() => calculateKeyboardState([guess])).not.to.throw();
 
@@ -153,7 +154,7 @@ describe('calculateKeyboardState', () => {
     });
 
     it('handles Polish diacritic letters', () => {
-      const guess = makeGuess([green('ą'), yellow('ż'), gray('ł')]);
+      const guess = makeGuess('ążł', [green('ą'), yellow('ż'), gray('ł')]);
 
       const result = calculateKeyboardState([guess]);
 
