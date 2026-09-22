@@ -16,7 +16,8 @@
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "e2e": "cypress run",
-    "e2e:ci": "start-server-and-test dev http://localhost:5173 e2e"
+    "e2e:ci": "start-server-and-test dev http://localhost:5173 e2e",
+    "test:e2e": "firebase emulators:exec --only firestore 'npm run e2e:ci'"
   },
   "dependencies": {
     "@chakra-ui/cli": "^3.32.0",

@@ -28,3 +28,9 @@ coverage/
 cypress/screenshots
 
 .env
+
+.agents/
+.claude/
+agent/
+.firebaserc
+skills-lock.json

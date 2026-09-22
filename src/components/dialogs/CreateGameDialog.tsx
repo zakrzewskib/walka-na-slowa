@@ -41,7 +41,11 @@ export const CreateGameDialog = () => {
               <Dialog.Title>Walka na słowa</Dialog.Title>
             </Dialog.Header>
             <Dialog.Footer>
-              <Button onClick={handleCreateGame}>
+              <Button
+                onClick={handleCreateGame}
+                data-testid="create-game-dialog-btn"
+                colorPalette="blackAlpha" // better for accessibility
+              >
                 {loading ? <Spinner size="sm" /> : 'Stwórz grę bez logowania'}
               </Button>
             </Dialog.Footer>

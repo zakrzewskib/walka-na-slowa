@@ -3,8 +3,6 @@ import { initializeApp } from 'firebase/app';
 import { addDoc, collection, getFirestore, serverTimestamp } from 'firebase/firestore';
 import type { GameDTO } from './types';
 
-console.log(import.meta.env.VITE_FIREBASE_API_KEY);
-
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
