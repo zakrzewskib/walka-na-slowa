@@ -1,6 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, getFirestore, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  connectFirestoreEmulator,
+  getFirestore,
+  serverTimestamp,
+} from 'firebase/firestore';
 import type { GameDTO } from './types';
 
 const firebaseConfig = {
@@ -29,4 +35,8 @@ export async function firebaseCreateGame() {
   const docRef = await addDoc(collection(db, 'games'), newGame);
   console.log('Game created');
   console.log(docRef);
+}
+
+if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true') {
+  connectFirestoreEmulator(db, 'localhost', 8080);
 }

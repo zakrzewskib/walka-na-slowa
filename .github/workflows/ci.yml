@@ -15,6 +15,13 @@ jobs:
           # Using the same node version as in the project
           node-version-file: '.nvmrc'
 
+      # Java is required for the Firestore emulator
+      - name: Set up Java (required for Firebase emulators)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
       # Cache
       - name: Cache pnpm store
         uses: actions/cache@v3
@@ -32,6 +39,12 @@ jobs:
           restore-keys: |
             cypress-binary-
 
+      - name: Cache Firebase emulators
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ runner.os }}
+
       # Dependencies
       - run: corepack enable
       - run: pnpm install
@@ -40,16 +53,21 @@ jobs:
       - run: pnpm exec cypress install
 
       # Checks:
-      - run: npm run lint
-      - run: npm run typecheck
+      - run: pnpm run lint
+      - run: pnpm run typecheck
 
       # Build:
-      - run: npm run build
+      - run: pnpm run build
 
       # Tests
-      - run: npm run coverage
+      - run: pnpm run coverage
 
-      - run: npm run e2e:ci
+      - run: pnpm run test:e2e
+        env:
+          VITE_USE_FIREBASE_EMULATOR: 'true'
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
 
       # Coverage artifact upload
       - name: Upload coverage report
