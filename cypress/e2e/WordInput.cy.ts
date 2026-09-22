@@ -10,7 +10,8 @@ describe('Word Input - Color Results', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('[data-testid="create-game-dialog-btn"]').click();
-    cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('be.visible');
+    cy.get('[role="dialog"]').should('not.exist'); // wait for Chakra dialog to fully close
+    cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('not.be.disabled');
   });
 
   function submitWord(word: string) {
@@ -130,7 +131,8 @@ describe('Word Input - Keyboard Colors', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('[data-testid="create-game-dialog-btn"]').click();
-    cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('be.visible');
+    cy.get('[role="dialog"]').should('not.exist'); // wait for Chakra dialog to fully close
+    cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('not.be.disabled');
   });
 
   function submitWord(word: string) {
