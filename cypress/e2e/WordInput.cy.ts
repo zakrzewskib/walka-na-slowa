@@ -6,12 +6,16 @@ const COLORS = {
   UNUSED: 'rgb(228, 228, 231)', // gray.200 - key not yet guessed
 } as const;
 
+function createGame() {
+  cy.get('[data-testid="create-game-dialog-btn"]').click();
+  cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist');
+  cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('not.be.disabled');
+}
+
 describe('Word Input - Color Results', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.get('[data-testid="create-game-dialog-btn"]').click();
-    cy.get('[role="dialog"]').should('not.exist'); // wait for Chakra dialog to fully close
-    cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('not.be.disabled');
+    createGame();
   });
 
   function submitWord(word: string) {
@@ -130,9 +134,7 @@ describe('Word Input - Color Results', () => {
 describe('Word Input - Keyboard Colors', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.get('[data-testid="create-game-dialog-btn"]').click();
-    cy.get('[role="dialog"]').should('not.exist'); // wait for Chakra dialog to fully close
-    cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('not.be.disabled');
+    createGame();
   });
 
   function submitWord(word: string) {

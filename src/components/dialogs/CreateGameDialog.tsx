@@ -32,6 +32,7 @@ export const CreateGameDialog = () => {
       closeOnInteractOutside={false}
       placement="center"
       aria-label="Dialog pozwalający stworzyć grę"
+      data-testid="create-game-dialog"
     >
       <Portal>
         <Dialog.Backdrop />
