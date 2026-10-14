@@ -1,4 +1,4 @@
-import { Button, Dialog, Portal, Spinner } from '@chakra-ui/react';
+import { Button, Dialog, Portal } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useAppStore } from '../../store/store';
 
@@ -15,14 +15,14 @@ export const CreateGameDialog = () => {
     try {
       await createGame();
       setOpen(false);
-    } catch (error) {
-      console.log(error);
+    } catch {
       setLoading(false); // only set loading to false on error to prevent flashing
       setError('Nie udało się stworzyć gry. Proszę odświeżyć stronę.');
     }
   }
 
   // todo: Add button to handle login
+  // todo: Add error handling
 
   return (
     <Dialog.Root
@@ -33,12 +33,11 @@ export const CreateGameDialog = () => {
       closeOnInteractOutside={false}
       placement="center"
       aria-label="Dialog pozwalający stworzyć grę"
-      data-testid="create-game-dialog"
     >
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content>
+          <Dialog.Content data-testid="create-game-dialog">
             <Dialog.Header>
               <Dialog.Title>Walka na słowa</Dialog.Title>
             </Dialog.Header>
@@ -47,8 +46,10 @@ export const CreateGameDialog = () => {
                 onClick={handleCreateGame}
                 data-testid="create-game-dialog-btn"
                 colorPalette="blackAlpha" // better for accessibility
+                loading={loading}
+                loadingText="Tworzenie..."
               >
-                {loading ? <Spinner size="sm" /> : 'Stwórz grę bez logowania'}
+                Stwórz grę bez logowania
               </Button>
             </Dialog.Footer>
           </Dialog.Content>
