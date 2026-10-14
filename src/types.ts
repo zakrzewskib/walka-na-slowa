@@ -17,27 +17,24 @@ export interface Guess {
   userId: string;
   value: string;
   evaluatedGuess: EvaluatedGuess;
-  createdAt: Date;
+  // createdAt: Date; // todo: delete/add created at mapping
+}
+
+export type GuessSubmit = Omit<Guess, 'evaluatedGuess' | 'createdAt'>;
+
+export interface GuessDTO extends Guess {
+  createdAt: FirebaseWriteReadTimeStamp;
 }
 
 export interface Game {
   id: string;
   userId: string;
   guesses: Guess[];
+  correctWord: string;
+  // todo: Hide correct word: either a Cloud Function that validates guesses server-side and never sends the word to the client, or Firestore security rules that hide the field until the game is over.
 }
 
-export interface GuessDTO {
-  id: string;
-  userId: string;
-  value: string;
-  evaluatedGuess: EvaluatedGuess;
-  createdAt: FirebaseWriteReadTimeStamp;
-}
-
-export interface GameDTO {
-  id: string;
-  userId: string;
-  guesses: GuessDTO[];
+export interface GameDTO extends Game {
   createdAt: FirebaseWriteReadTimeStamp;
 }
 

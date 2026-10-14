@@ -3,21 +3,16 @@ import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
-import { getWordResult } from '../utils/gameLogic';
 
-interface WordInputProps {
-  correctWord: string;
-}
-
-export const WordInput = ({ correctWord }: WordInputProps) => {
+export const WordInput = () => {
   const [value, setValue] = useState('');
-  const addGuess = useAppStore((state) => state.addGuess);
+  const submitGuess = useAppStore((state) => state.submitGuess);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
   }
 
-  function handleSubmit(e: SubmitEvent) {
+  async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
 
     if (value.length !== WORD_LENGTH) {
@@ -27,15 +22,12 @@ export const WordInput = ({ correctWord }: WordInputProps) => {
 
     // tbd: Check if word exists in polish language
 
-    // tbd: Think if it's a backend side logic
-    const evaluatedGuess = getWordResult(value, correctWord);
-    addGuess({
+    await submitGuess({
       id: uuidv4(),
       value: value,
       userId: 'user1', // todo: get that from the current session
-      evaluatedGuess: evaluatedGuess,
-      createdAt: new Date(),
     });
+
     // tbd: Add animation
     setValue('');
   }
