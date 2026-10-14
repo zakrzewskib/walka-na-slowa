@@ -7,6 +7,8 @@ import { useAppStore } from '../store/store';
 export const WordInput = () => {
   const [value, setValue] = useState('');
   const submitGuess = useAppStore((state) => state.submitGuess);
+  const gameId = useAppStore((state) => state.gameId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -22,11 +24,16 @@ export const WordInput = () => {
 
     // tbd: Check if word exists in polish language
 
+    setIsSubmitting(true);
+
+    // todo: Add error handling
     await submitGuess({
       id: uuidv4(),
-      value: value,
+      value,
       userId: 'user1', // todo: get that from the current session
     });
+
+    setIsSubmitting(false);
 
     // tbd: Add animation
     setValue('');
@@ -49,6 +56,7 @@ export const WordInput = () => {
         maxLength={WORD_LENGTH}
         autoFocus
         textTransform="uppercase"
+        disabled={isSubmitting || !gameId}
       />
     </form>
   );
