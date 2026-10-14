@@ -6,13 +6,20 @@ import {
   CollectionReference,
   connectFirestoreEmulator,
   doc,
+  FieldValue,
   getDoc,
   getFirestore,
   serverTimestamp,
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
-import type { GameDTO, Guess } from './types';
+import type { Game, Guess } from './types';
+
+type FirebaseWriteReadTimeStamp = FieldValue | Timestamp;
+
+interface GameDTO extends Game {
+  createdAt: FirebaseWriteReadTimeStamp;
+}
 
 export const HARDCODED_CORRECT_WORD = 'LALKA'; // todo: Add choosing correct word in the backend
 

@@ -1,7 +1,3 @@
-import type { FieldValue, Timestamp } from 'firebase/firestore';
-
-type FirebaseWriteReadTimeStamp = FieldValue | Timestamp;
-
 export interface LetterResult {
   value: string;
   exists: boolean;
@@ -22,20 +18,12 @@ export interface Guess {
 
 export type GuessSubmit = Omit<Guess, 'evaluatedGuess' | 'createdAt'>;
 
-export interface GuessDTO extends Guess {
-  createdAt: FirebaseWriteReadTimeStamp;
-}
-
 export interface Game {
   id: string;
   userId: string;
   guesses: Guess[];
   correctWord: string;
   // todo: Hide correct word: either a Cloud Function that validates guesses server-side and never sends the word to the client, or Firestore security rules that hide the field until the game is over.
-}
-
-export interface GameDTO extends Game {
-  createdAt: FirebaseWriteReadTimeStamp;
 }
 
 // prettier-ignore
