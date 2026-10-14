@@ -1,17 +1,20 @@
 import { Text, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
-import type { EvaluatedGuess, Guess } from '../types';
+import { useAppStore } from '../store/store';
+import type { EvaluatedGuess } from '../types';
 import { WordItem } from './WordItem';
 
 interface GameBoardProps {
-  guesses: Guess[];
   isPlayer: boolean;
   playerName: string;
 }
 
 export const GameBoard = (props: GameBoardProps) => {
-  const { guesses, isPlayer, playerName } = props;
+  // todo: Change it to users/enemy guesses
+  const guesses = useAppStore((state) => state.guesses);
+  const { isPlayer, playerName } = props;
 
   const emptyGuesses: EvaluatedGuess[] = useMemo(() => {
     const result: EvaluatedGuess[] = [];
@@ -50,11 +53,21 @@ export const GameBoard = (props: GameBoardProps) => {
         data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
         {guesses.map(({ evaluatedGuess }) => (
-          <WordItem guess={evaluatedGuess} isPlayer={isPlayer} isCurrentTurn={false} />
+          <WordItem
+            key={uuidv4()}
+            guess={evaluatedGuess}
+            isPlayer={isPlayer}
+            isCurrentTurn={false}
+          />
         ))}
 
         {emptyGuesses.map((evaluatedGuess, idx) => (
-          <WordItem guess={evaluatedGuess} isPlayer={isPlayer} isCurrentTurn={idx === 0} />
+          <WordItem
+            key={uuidv4()}
+            guess={evaluatedGuess}
+            isPlayer={isPlayer}
+            isCurrentTurn={idx === 0}
+          />
         ))}
       </VStack>
     </VStack>

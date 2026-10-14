@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useAppStore } from '../../store/store';
 
 export const CreateGameDialog = () => {
-  const [open, setOpen] = useState(true);
+  const gameId = useAppStore((state) => state.gameId);
+  const [open, setOpen] = useState(!gameId);
   const [loading, setLoading] = useState(false);
   const [, setError] = useState('');
   const createGame = useAppStore((state) => state.createGame);

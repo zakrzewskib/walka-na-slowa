@@ -4,18 +4,15 @@ import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard/Keyboard';
 import { WordInput } from './components/WordInput';
 import Layout from './layout/Layout';
-import { useAppStore } from './store/store';
 
 function App() {
-  const guesses = useAppStore((state) => state.guesses);
-
   return (
     <Layout>
       <CreateGameDialog />
       <VStack w="full" flex="1" justifyContent="space-between">
         <HStack gap="24px" justifyContent="center" w="full">
-          <GameBoard guesses={guesses} isPlayer={true} playerName="Gracz 1" />
-          <GameBoard guesses={[]} isPlayer={false} playerName="Gracz 2" />
+          <GameBoard isPlayer={true} playerName="Gracz 1" />
+          <GameBoard isPlayer={false} playerName="Gracz 2" />
         </HStack>
 
         <Keyboard />

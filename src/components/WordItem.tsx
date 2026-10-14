@@ -1,4 +1,5 @@
 import { HStack } from '@chakra-ui/react';
+import { v4 as uuidv4 } from 'uuid';
 import type { EvaluatedGuess } from '../types';
 import { LetterItem } from './LetterItem/LetterItem';
 
@@ -23,7 +24,12 @@ export const WordItem = (props: WordItemProps) => {
       role="row"
     >
       {guess.letters.map((letter) => (
-        <LetterItem letter={letter} isPlayer={isPlayer} isCurrentTurn={isCurrentTurn} />
+        <LetterItem
+          key={uuidv4()}
+          letter={letter}
+          isPlayer={isPlayer}
+          isCurrentTurn={isCurrentTurn}
+        />
       ))}
     </HStack>
   );

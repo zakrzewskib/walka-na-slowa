@@ -6,8 +6,10 @@ import {
   CollectionReference,
   connectFirestoreEmulator,
   doc,
+  getDoc,
   getFirestore,
   serverTimestamp,
+  Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 import type { GameDTO, GuessDTO } from './types';
@@ -40,10 +42,15 @@ export async function firebaseCreateGame(): Promise<string> {
     correctWord: HARDCODED_CORRECT_WORD,
   };
 
-  const docRef = await addDoc(collection(db, 'games'), newGame);
+  let gameId = '';
+  try {
+    const docRef = await addDoc(collection(db, 'games'), newGame);
+    gameId = docRef.id;
+    console.log('Game created', gameId);
+  } catch (error) {
+    console.log('Could not create game', error);
+  }
 
-  const gameId = docRef.id;
-  console.log('Game created', gameId);
   return gameId;
 }
 
@@ -51,11 +58,34 @@ export async function firebaseSubmitGuess(gameId: string, guess: GuessDTO): Prom
   const gameRef = doc(gamesCollection, gameId);
 
   // https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array
-  await updateDoc(gameRef, {
-    guesses: arrayUnion(guess),
-  });
+  try {
+    await updateDoc(gameRef, {
+      guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
+    });
 
-  console.log('Added new guess', guess);
+    console.log('Added new guess', guess);
+  } catch (error) {
+    console.log('Could not add guess', error);
+  }
+}
+
+export async function firebaseGetGame(gameId: string): Promise<GameDTO | null> {
+  const gameRef = doc(gamesCollection, gameId);
+
+  try {
+    const snap = await getDoc(gameRef);
+    if (!snap.exists()) {
+      console.log('Could not load game', snap);
+      return null;
+    }
+
+    const game: GameDTO = { ...snap.data(), id: snap.id };
+    console.log('Game loaded', game);
+    return game;
+  } catch (error) {
+    console.log('Could not load game', error);
+    return null;
+  }
 }
 
 // Emulators for testing, VITE_USE_FIREBASE_EMULATOR is set to true in CI pipeline
