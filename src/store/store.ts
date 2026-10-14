@@ -75,7 +75,6 @@ export const useAppStore = create<AppState>()(
 
       // load game after
       onRehydrateStorage: () => (state) => {
-        console.log('State on rehydrate: ', state);
         if (state?.gameId) {
           state.loadGame(state.gameId);
         }
