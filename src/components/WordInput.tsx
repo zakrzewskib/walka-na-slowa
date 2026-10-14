@@ -27,16 +27,17 @@ export const WordInput = () => {
     setIsSubmitting(true);
 
     // todo: Add error handling
-    await submitGuess({
-      id: uuidv4(),
-      value,
-      userId: 'user1', // todo: get that from the current session
-    });
-
-    setIsSubmitting(false);
-
-    // tbd: Add animation
-    setValue('');
+    try {
+      await submitGuess({
+        id: uuidv4(),
+        value,
+        userId: 'user1', // todo: get that from the current session
+      });
+      // tbd: Add animation
+      setValue('');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // tbd: Hide the input and auto focus

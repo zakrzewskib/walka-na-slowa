@@ -16,6 +16,7 @@ const TOTAL_GRIDCELLS = BOARDS_COUNT * CELLS_PER_BOARD + KEYBOARD_CELLS;
 describe('Accessibility', () => {
   beforeEach(() => {
     cy.visit('/');
+    cy.createGame();
     cy.injectAxe();
   });
 
@@ -24,7 +25,10 @@ describe('Accessibility', () => {
   const keyboard = () => cy.get('[data-testid="keyboard"]');
 
   it('should not have any accessibility violations', () => {
-    // cy.checkA11y(); // todo: to be fixed - contrast violations
+    // todo: fix contrast violations, then remove this rule override
+    cy.checkA11y(undefined, {
+      rules: { 'color-contrast': { enabled: false } },
+    });
   });
 
   it('has proper semantic HTML structure', () => {

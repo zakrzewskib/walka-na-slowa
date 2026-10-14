@@ -6,22 +6,27 @@ const COLORS = {
   UNUSED: 'rgb(228, 228, 231)', // gray.200 - key not yet guessed
 } as const;
 
-function createGame() {
-  cy.get('[data-testid="create-game-dialog-btn"]').click();
-  cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist');
-  cy.get('[data-testid="word-input"]', { timeout: 10000 }).should('not.be.disabled');
+const wordInput = () => cy.get('[data-testid="word-input"]');
+
+// Types a word and presses Enter without waiting for the result.
+function typeAndEnter(word: string) {
+  wordInput().type(word);
+  wordInput().type('{enter}');
+}
+
+// Submits a valid word and waits until the submission is finished:
+// the input is disabled while submitting, then re-enabled and cleared.
+// This keeps consecutive submissions deterministic.
+function submitWord(word: string) {
+  typeAndEnter(word);
+  wordInput().should('be.enabled').and('have.value', '');
 }
 
 describe('Word Input - Color Results', () => {
   beforeEach(() => {
     cy.visit('/');
-    createGame();
+    cy.createGame();
   });
-
-  function submitWord(word: string) {
-    cy.get('[data-testid="word-input"]').type(word);
-    cy.get('[data-testid="word-input"]').type('{enter}');
-  }
 
   // LALKA is the correct word
   // Colors: green = correct position, yellow = wrong position, gray = not in word
@@ -88,11 +93,14 @@ describe('Word Input - Color Results', () => {
 
   it('input clears after submission', () => {
     submitWord('LALKA');
-    cy.get('[data-testid="word-input"]').should('have.value', '');
+    wordInput().should('have.value', '');
   });
 
   it('does not submit words shorter than 5 letters', () => {
-    submitWord('LA');
+    typeAndEnter('LA');
+
+    // The input keeps the typed value, so nothing was submitted
+    wordInput().should('have.value', 'LA');
 
     // Board should still show no guesses (all empty rows)
     cy.get('[role="grid"]')
@@ -134,13 +142,8 @@ describe('Word Input - Color Results', () => {
 describe('Word Input - Keyboard Colors', () => {
   beforeEach(() => {
     cy.visit('/');
-    createGame();
+    cy.createGame();
   });
-
-  function submitWord(word: string) {
-    cy.get('[data-testid="word-input"]').type(word);
-    cy.get('[data-testid="word-input"]').type('{enter}');
-  }
 
   function keyColor(letter: string) {
     return cy.get(`[data-testid="key-${letter}"]`);
