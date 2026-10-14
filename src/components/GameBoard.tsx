@@ -1,6 +1,5 @@
 import { Text, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
 import type { EvaluatedGuess } from '../types';
@@ -52,18 +51,13 @@ export const GameBoard = (props: GameBoardProps) => {
         aria-label={isPlayer ? 'Twoja plansza' : 'Plansza przeciwnika'}
         data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
-        {guesses.map(({ evaluatedGuess }) => (
-          <WordItem
-            key={uuidv4()}
-            guess={evaluatedGuess}
-            isPlayer={isPlayer}
-            isCurrentTurn={false}
-          />
+        {guesses.map(({ id, evaluatedGuess }) => (
+          <WordItem key={id} guess={evaluatedGuess} isPlayer={isPlayer} isCurrentTurn={false} />
         ))}
 
         {emptyGuesses.map((evaluatedGuess, idx) => (
           <WordItem
-            key={uuidv4()}
+            key={`empty-${idx}`}
             guess={evaluatedGuess}
             isPlayer={isPlayer}
             isCurrentTurn={idx === 0}
