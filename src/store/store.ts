@@ -1,4 +1,3 @@
-import { serverTimestamp } from 'firebase/firestore';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
@@ -7,7 +6,7 @@ import {
   firebaseSubmitGuess,
   HARDCODED_CORRECT_WORD,
 } from '../firebase';
-import type { Guess, GuessDTO, GuessSubmit } from '../types';
+import type { Guess, GuessSubmit } from '../types';
 import { getWordResult } from '../utils/gameLogic';
 
 interface AppState {
@@ -44,10 +43,9 @@ export const useAppStore = create<AppState>()(
         // todo: Move evaluation to backend
         const evaluatedGuess = getWordResult(guessSubmit.value, correctWord);
 
-        const guess: GuessDTO = {
+        const guess: Guess = {
           ...guessSubmit,
           evaluatedGuess,
-          createdAt: serverTimestamp(),
         };
 
         // optimistic update — show it locally immediately

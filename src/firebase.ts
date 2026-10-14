@@ -12,14 +12,29 @@ import {
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
-import type { GameDTO, GuessDTO } from './types';
+import type { GameDTO, Guess } from './types';
 
 export const HARDCODED_CORRECT_WORD = 'LALKA'; // todo: Add choosing correct word in the backend
 
+// Module state is reset on every Vite HMR re-evaluation, so the "already connected"
+// flag has to live on globalThis to survive it.
+declare global {
+  var __firestoreEmulatorConnected: boolean | undefined;
+}
+
+function requireEnv(name: string, value: string | undefined): string {
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable ${name}. Copy .env.example to .env and fill it in.`,
+    );
+  }
+  return value;
+}
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  apiKey: requireEnv('VITE_FIREBASE_API_KEY', import.meta.env.VITE_FIREBASE_API_KEY),
+  authDomain: requireEnv('VITE_FIREBASE_AUTH_DOMAIN', import.meta.env.VITE_FIREBASE_AUTH_DOMAIN),
+  projectId: requireEnv('VITE_FIREBASE_PROJECT_ID', import.meta.env.VITE_FIREBASE_PROJECT_ID),
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
@@ -28,33 +43,51 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Emulators for testing, VITE_USE_FIREBASE_EMULATOR is set to true in CI pipeline.
+// Must run right after getFirestore() and before anything uses `db`.
+if (
+  import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true' &&
+  !globalThis.__firestoreEmulatorConnected
+) {
+  const host = import.meta.env.VITE_FIREBASE_EMULATOR_HOST ?? '127.0.0.1';
+  const port = Number(import.meta.env.VITE_FIREBASE_EMULATOR_PORT ?? 8080);
+
+  if (!Number.isInteger(port) || port <= 0) {
+    throw new Error(
+      `Invalid VITE_FIREBASE_EMULATOR_PORT: ${import.meta.env.VITE_FIREBASE_EMULATOR_PORT}`,
+    );
+  }
+
+  connectFirestoreEmulator(db, host, port);
+  globalThis.__firestoreEmulatorConnected = true;
+}
+
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
 
 export async function firebaseCreateGame(): Promise<string> {
   console.log('Creating game...');
   const userId = 'user1'; // todo: Add auth
 
-  const newGame: GameDTO = {
-    id: '', // empty id to auto create it by firebase
+  // Omit id to autogenerate it
+  const newGame: Omit<GameDTO, 'id'> = {
     userId: userId,
     guesses: [],
     createdAt: serverTimestamp(),
     correctWord: HARDCODED_CORRECT_WORD,
   };
 
-  let gameId = '';
   try {
-    const docRef = await addDoc(collection(db, 'games'), newGame);
-    gameId = docRef.id;
+    const docRef = await addDoc(gamesCollection, newGame);
+    const gameId = docRef.id;
     console.log('Game created', gameId);
+    return gameId;
   } catch (error) {
     console.log('Could not create game', error);
+    throw error;
   }
-
-  return gameId;
 }
 
-export async function firebaseSubmitGuess(gameId: string, guess: GuessDTO): Promise<void> {
+export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise<void> {
   const gameRef = doc(gamesCollection, gameId);
 
   // https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array
@@ -66,6 +99,7 @@ export async function firebaseSubmitGuess(gameId: string, guess: GuessDTO): Prom
     console.log('Added new guess', guess);
   } catch (error) {
     console.log('Could not add guess', error);
+    throw error;
   }
 }
 
@@ -80,15 +114,10 @@ export async function firebaseGetGame(gameId: string): Promise<GameDTO | null> {
     }
 
     const game: GameDTO = { ...snap.data(), id: snap.id };
-    console.log('Game loaded', game);
+    console.log('Game loaded', game); // todo: hide correct word
     return game;
   } catch (error) {
     console.log('Could not load game', error);
-    return null;
+    throw error;
   }
-}
-
-// Emulators for testing, VITE_USE_FIREBASE_EMULATOR is set to true in CI pipeline
-if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true') {
-  connectFirestoreEmulator(db, 'localhost', 8080);
 }
