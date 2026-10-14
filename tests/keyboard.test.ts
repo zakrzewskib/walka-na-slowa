@@ -14,7 +14,6 @@ describe('calculateKeyboardState', () => {
     return {
       id: `guess-${guessCounter}`,
       userId: 'test-user',
-      createdAt: new Date(),
       value: value,
       evaluatedGuess: { letters },
     };
