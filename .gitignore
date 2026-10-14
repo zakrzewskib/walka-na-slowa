@@ -23,14 +23,21 @@ dist-ssr
 *.sln
 *.sw?
 
+# Tests
 coverage/
-
 cypress/screenshots
 
+# Env
 .env
 
+# AI
 .agents/
 .claude/
 agent/
+
+#Firebase
 .firebaserc
 skills-lock.json
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
