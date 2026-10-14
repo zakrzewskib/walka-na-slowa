@@ -16,7 +16,7 @@ export interface Guess {
   // createdAt: Date; // todo: delete/add created at mapping
 }
 
-export type GuessSubmit = Omit<Guess, 'evaluatedGuess' | 'createdAt'>;
+export type GuessSubmit = Omit<Guess, 'evaluatedGuess'>;
 
 export interface Game {
   id: string;
