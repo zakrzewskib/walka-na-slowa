@@ -4,40 +4,41 @@ import { useAppStore } from '../../store/store';
 
 export const CreateGameDialog = () => {
   const gameId = useAppStore((state) => state.gameId);
-  const [open, setOpen] = useState(!gameId);
+  const createGame = useAppStore((state) => state.createGame);
   const [loading, setLoading] = useState(false);
   const [, setError] = useState('');
-  const createGame = useAppStore((state) => state.createGame);
 
   async function handleCreateGame() {
     setLoading(true);
 
     try {
+      // On success the store sets gameId, which closes the dialog (open={!gameId})
       await createGame();
-      setOpen(false);
     } catch {
       setLoading(false); // only set loading to false on error to prevent flashing
       setError('Nie udało się stworzyć gry. Proszę odświeżyć stronę.');
     }
   }
-
   // todo: Add button to handle login
   // todo: Add error handling
 
   return (
     <Dialog.Root
       lazyMount
-      open={open}
-      onOpenChange={(e) => setOpen(e.open)}
+      open={!gameId}
+      // Reset only after the close animation, so the button doesn't flash back
+      onExitComplete={() => setLoading(false)}
       closeOnEscape={false}
       closeOnInteractOutside={false}
       placement="center"
-      aria-label="Dialog pozwalający stworzyć grę"
     >
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content data-testid="create-game-dialog">
+          <Dialog.Content
+            data-testid="create-game-dialog"
+            aria-label="Dialog pozwalający stworzyć grę"
+          >
             <Dialog.Header>
               <Dialog.Title>Walka na słowa</Dialog.Title>
             </Dialog.Header>
