@@ -1,6 +1,12 @@
 // @vitest-environment jsdom
+import { Timestamp } from 'firebase/firestore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { firebaseCreateGame, firebaseGetGame, firebaseSubmitGuess } from '../src/firebase';
+import {
+  firebaseCreateGame,
+  firebaseGetGame,
+  firebaseSubmitGuess,
+  type GameDTO,
+} from '../src/firebase';
 import { useAppStore } from '../src/store/store';
 import type { Guess, GuessSubmit } from '../src/types';
 
@@ -31,6 +37,15 @@ const makeGuess = (value: string): Guess => ({
       correctPlace: true,
     })),
   },
+});
+
+const makeGame = (overrides: Partial<GameDTO> = {}): GameDTO => ({
+  id: 'game-123',
+  userId: 'test-user',
+  correctWord: 'LALKA',
+  guesses: [],
+  createdAt: Timestamp.now(),
+  ...overrides,
 });
 
 function resetStore() {
@@ -176,13 +191,7 @@ describe('submitGuess', () => {
 describe('loadGame', () => {
   it('loads gameId, correctWord and guesses from firebase', async () => {
     const guesses = [makeGuess('BRTGW'), makeGuess('LALKA')];
-    vi.mocked(firebaseGetGame).mockResolvedValue({
-      id: 'game-123',
-      userId: 'test-user',
-      correctWord: 'LALKA',
-      guesses,
-    } as unknown as LoadedGame);
-
+    vi.mocked(firebaseGetGame).mockResolvedValue(makeGame({ guesses }));
     await useAppStore.getState().loadGame('game-123');
 
     expect(firebaseGetGame).toHaveBeenCalledWith('game-123');

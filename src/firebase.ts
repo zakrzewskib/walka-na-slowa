@@ -17,7 +17,7 @@ import type { Game, Guess } from './types';
 
 type FirebaseWriteReadTimeStamp = FieldValue | Timestamp;
 
-interface GameDTO extends Game {
+export interface GameDTO extends Game {
   createdAt: FirebaseWriteReadTimeStamp;
 }
 
