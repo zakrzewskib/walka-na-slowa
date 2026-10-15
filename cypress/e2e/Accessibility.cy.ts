@@ -25,8 +25,8 @@ describe('Accessibility', () => {
   const keyboard = () => cy.get('[data-testid="keyboard"]');
 
   it('should not have any accessibility violations', () => {
-    // todo: fix contrast violations, then remove this rule override
     cy.checkA11y(undefined, {
+      // disable color-contrast rule
       rules: { 'color-contrast': { enabled: false } },
     });
   });
