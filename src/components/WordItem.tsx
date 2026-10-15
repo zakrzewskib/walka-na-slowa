@@ -23,12 +23,7 @@ export const WordItem = (props: WordItemProps) => {
       role="row"
     >
       {guess.letters.map((letter, idx) => (
-        <LetterItem
-          key={`${letter.value}-${idx}`}
-          letter={letter}
-          isPlayer={isPlayer}
-          isCurrentTurn={isCurrentTurn}
-        />
+        <LetterItem key={idx} letter={letter} isPlayer={isPlayer} isCurrentTurn={isCurrentTurn} />
       ))}
     </HStack>
   );

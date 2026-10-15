@@ -16,7 +16,3 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_EMULATOR_HOST?: string;
   readonly VITE_FIREBASE_EMULATOR_PORT?: string;
 }
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
