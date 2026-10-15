@@ -1,27 +1,34 @@
 import { Text, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useShallow } from 'zustand/shallow';
 import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
-import type { Guess, Word } from '../types';
+import { useAppStore } from '../store/store';
+import type { EvaluatedGuess } from '../types';
 import { WordItem } from './WordItem';
 
 interface GameBoardProps {
-  guesses: Guess[];
   isPlayer: boolean;
   playerName: string;
 }
 
-export const GameBoard = (props: GameBoardProps) => {
-  const { guesses, isPlayer, playerName } = props;
+// todo: add auth and storing user and separate guesses
+const CURRENT_USER_ID = 'user1';
 
-  const emptyWords: Word[] = useMemo(() => {
-    const result: Word[] = [];
+export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
+  const guesses = useAppStore(
+    useShallow((state) =>
+      state.guesses.filter((guess) =>
+        isPlayer ? guess.userId == CURRENT_USER_ID : guess.userId !== CURRENT_USER_ID,
+      ),
+    ),
+  );
+
+  const emptyGuesses: EvaluatedGuess[] = useMemo(() => {
+    const result: EvaluatedGuess[] = [];
 
     for (let i = 0; i < WORDS_LENGTH - guesses.length; i++) {
       result.push({
-        id: uuidv4(),
         letters: Array.from({ length: WORD_LENGTH }, () => ({
-          id: uuidv4(),
           value: '',
           exists: false,
           correctPlace: false,
@@ -52,12 +59,17 @@ export const GameBoard = (props: GameBoardProps) => {
         aria-label={isPlayer ? 'Twoja plansza' : 'Plansza przeciwnika'}
         data-testid={isPlayer ? 'player-board' : 'opponent-board'}
       >
-        {guesses.map(({ word, id }) => (
-          <WordItem key={id} word={word} isPlayer={isPlayer} isCurrentTurn={false} />
+        {guesses.map(({ id, evaluatedGuess }) => (
+          <WordItem key={id} guess={evaluatedGuess} isPlayer={isPlayer} isCurrentTurn={false} />
         ))}
 
-        {emptyWords.map((word, idx) => (
-          <WordItem key={word.id} word={word} isPlayer={isPlayer} isCurrentTurn={idx === 0} />
+        {emptyGuesses.map((evaluatedGuess, idx) => (
+          <WordItem
+            key={`empty-${idx}`}
+            guess={evaluatedGuess}
+            isPlayer={isPlayer}
+            isCurrentTurn={idx === 0}
+          />
         ))}
       </VStack>
     </VStack>

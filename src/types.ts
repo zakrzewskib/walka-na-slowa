@@ -1,28 +1,30 @@
-export interface Letter {
+export interface LetterResult {
   value: string;
   exists: boolean;
   correctPlace: boolean;
 }
 
-export interface Word {
-  id?: string; // to be deleted
-  letters: Letter[];
+export interface EvaluatedGuess {
+  letters: LetterResult[];
 }
 
 export interface Guess {
   id: string;
-  word: Word;
   userId: string;
-  createdAt: Date;
+  value: string;
+  evaluatedGuess: EvaluatedGuess;
+  // createdAt: Date; // todo: delete/add created at mapping
 }
 
-// todo: to be used in the future
-// export interface GuessDTO {
-//   id: string;
-//   word: Word;
-//   userId: string;
-//   //  createdAt: Timestamp | FieldValue; // FieldValue when writing (serverTimestamp()), Timestamp when  - for the Firebase in the future <- todo
-// }
+export type GuessSubmit = Omit<Guess, 'evaluatedGuess'>;
+
+export interface Game {
+  id: string;
+  userId: string;
+  guesses: Guess[];
+  correctWord: string;
+  // todo: Hide correct word: either a Cloud Function that validates guesses server-side and never sends the word to the client, or Firestore security rules that hide the field until the game is over.
+}
 
 // prettier-ignore
 export type PolishLetter =
@@ -33,6 +35,6 @@ export type PolishLetter =
 
 export type KeyboardKey = PolishLetter | 'Backspace' | 'Enter';
 
-export type LetterStatus = 'unused' | 'correct' | 'present' | 'absent';
+export type KeyboardLetterStatus = 'unused' | 'correct' | 'present' | 'absent';
 
-export type LetterStatusMap = Record<PolishLetter, { status: LetterStatus }>;
+export type KeyboardLetterStatusMap = Record<PolishLetter, { status: KeyboardLetterStatus }>;

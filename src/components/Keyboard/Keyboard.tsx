@@ -10,6 +10,7 @@ const secondRow: PolishLetter[] = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
 const thirdRow: KeyboardKey[] = ['Backspace', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Enter'];
 const fourthRow: PolishLetter[] = ['Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź', 'Ż'];
 
+// todo: add auth and storing user and separate guesses
 export const Keyboard = () => {
   const guesses = useAppStore((state) => state.guesses);
   const keyboardState = useMemo(() => calculateKeyboardState(guesses), [guesses]);

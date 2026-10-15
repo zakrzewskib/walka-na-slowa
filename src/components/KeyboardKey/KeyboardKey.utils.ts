@@ -1,4 +1,4 @@
-import type { KeyboardKey, LetterStatus } from '../../types';
+import type { KeyboardKey, KeyboardLetterStatus } from '../../types';
 
 // 2 * SPECIAL_KEY_WIDTH + 7 * LETTER_KEY_WIDTH = 10 * FIRST_ROW_KEY_WIDTH (600px)
 const FIRST_ROW_KEY_WIDTH = '60px';
@@ -6,7 +6,7 @@ const SECOND_AND_FOURTH_ROW_KEY_WIDTH = '67px'; // 10 * 60px / 9 rounded
 const THIRD_ROW_SPECIAL_KEY_WIDTH = '85px'; // Enter / Backspace
 const THIRD_ROW_LETTER_WIDTH = '62px'; // remaining letter keys
 
-export function calculateBackgroundAndBorderColor(status: LetterStatus) {
+export function calculateBackgroundAndBorderColor(status: KeyboardLetterStatus) {
   if (status === 'correct') {
     return 'green.500';
   }
@@ -20,7 +20,7 @@ export function calculateBackgroundAndBorderColor(status: LetterStatus) {
   return 'gray.200';
 }
 
-export function calculateColor(status: LetterStatus) {
+export function calculateColor(status: KeyboardLetterStatus) {
   return status === 'unused' ? 'black' : 'white';
 }
 

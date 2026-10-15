@@ -1,11 +1,11 @@
 import { HIDDEN_LETTER } from '../../constants';
-import type { Letter } from '../../types';
+import type { LetterResult } from '../../types';
 
-export function calculateDisplayValue(value: Letter['value']) {
+export function calculateDisplayValue(value: LetterResult['value']) {
   return value === HIDDEN_LETTER ? '' : value;
 }
 
-export function calculateBackgroundColor(letter: Letter) {
+export function calculateBackgroundColor(letter: LetterResult) {
   const { correctPlace, exists, value } = letter;
 
   if (correctPlace) {
@@ -27,6 +27,6 @@ export function calculateBorderColor(isCurrentTurn: boolean, isPlayer: boolean) 
   return 'gray.400';
 }
 
-export function calculateBorderWidth(value: Letter['value']) {
+export function calculateBorderWidth(value: LetterResult['value']) {
   return value ? '0px' : '2px';
 }

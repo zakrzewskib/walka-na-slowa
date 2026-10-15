@@ -1,5 +1,5 @@
 import { VStack } from '@chakra-ui/react';
-import type { KeyboardKey, LetterStatus } from '../../types';
+import type { KeyboardKey, KeyboardLetterStatus } from '../../types';
 import { getKeyboardLetterAriaLabel } from '../../utils/accessibility';
 import {
   calculateBackgroundAndBorderColor,
@@ -12,7 +12,7 @@ import {
 
 interface KeyboardKeyItemProps {
   value: KeyboardKey;
-  status: LetterStatus;
+  status: KeyboardLetterStatus;
   row: number;
 }
 

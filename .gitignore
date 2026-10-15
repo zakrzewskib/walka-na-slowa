@@ -23,6 +23,25 @@ dist-ssr
 *.sln
 *.sw?
 
+# Tests
 coverage/
-
 cypress/screenshots
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# AI
+.agents/
+.claude/
+agent/
+
+# Firebase
+.firebaserc
+skills-lock.json
+firebase-debug.log
+firestore-debug.log
+*-debug.log.
+# firebase cache:
+.firebase/ 

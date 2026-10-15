@@ -1,8 +1,8 @@
 import { HIDDEN_LETTER } from '../constants';
-import type { KeyboardKey, Letter, LetterStatus } from '../types';
+import type { KeyboardKey, KeyboardLetterStatus, LetterResult } from '../types';
 
 export function getLetterAriaLabel(
-  letter: Letter,
+  letter: LetterResult,
   isCurrentTurn: boolean,
   isPlayer: boolean,
 ): string {
@@ -29,14 +29,17 @@ export function getLetterAriaLabel(
   return `Litera ${value}, brak w słowie`;
 }
 
-const KEYBOARD_STATUS_TO_POLISH: Record<LetterStatus, string> = {
+const KEYBOARD_STATUS_TO_POLISH: Record<KeyboardLetterStatus, string> = {
   absent: 'nieobecna',
   correct: 'obecna, na poprawnym miejscu',
   present: 'obecna, na niepoprawnym miejscu',
   unused: 'nieużyta',
 };
 
-export function getKeyboardLetterAriaLabel(value: KeyboardKey, status: LetterStatus): string {
+export function getKeyboardLetterAriaLabel(
+  value: KeyboardKey,
+  status: KeyboardLetterStatus,
+): string {
   if (value === 'Backspace' || value === 'Enter') {
     return `Klawisz ${value}`;
   }

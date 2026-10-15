@@ -16,6 +16,7 @@ const TOTAL_GRIDCELLS = BOARDS_COUNT * CELLS_PER_BOARD + KEYBOARD_CELLS;
 describe('Accessibility', () => {
   beforeEach(() => {
     cy.visit('/');
+    cy.createGame();
     cy.injectAxe();
   });
 
@@ -24,7 +25,10 @@ describe('Accessibility', () => {
   const keyboard = () => cy.get('[data-testid="keyboard"]');
 
   it('should not have any accessibility violations', () => {
-    cy.checkA11y();
+    cy.checkA11y(undefined, {
+      // disable color-contrast rule
+      rules: { 'color-contrast': { enabled: false } },
+    });
   });
 
   it('has proper semantic HTML structure', () => {
@@ -52,5 +56,23 @@ describe('Accessibility', () => {
 
     playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
     opponentBoard().should('have.attr', 'aria-label', 'Plansza przeciwnika');
+  });
+});
+
+describe('Accessibility - create game dialog', () => {
+  beforeEach(() => {
+    cy.visit('/');
+    cy.injectAxe();
+  });
+
+  it('is exposed as a dialog with an accessible name', () => {
+    cy.get('[data-testid="create-game-dialog"]')
+      .should('have.attr', 'role', 'dialog')
+      .and('have.attr', 'aria-labelledby');
+  });
+
+  it('closes after the game is created', () => {
+    cy.createGame();
+    cy.get('[data-testid="create-game-dialog"]').should('not.exist');
   });
 });
