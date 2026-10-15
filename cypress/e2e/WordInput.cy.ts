@@ -8,7 +8,6 @@ const COLORS = {
 
 const wordInput = () => cy.get('[data-testid="word-input"]');
 
-// Types a word and presses Enter without waiting for the result.
 function typeAndEnter(word: string) {
   wordInput().type(word);
   wordInput().type('{enter}');
@@ -16,7 +15,6 @@ function typeAndEnter(word: string) {
 
 // Submits a valid word and waits until the submission is finished:
 // the input is disabled while submitting, then re-enabled and cleared.
-// This keeps consecutive submissions deterministic.
 function submitWord(word: string) {
   typeAndEnter(word);
   wordInput().should('be.enabled').and('have.value', '');

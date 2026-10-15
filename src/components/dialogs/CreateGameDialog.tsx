@@ -12,10 +12,9 @@ export const CreateGameDialog = () => {
     setLoading(true);
 
     try {
-      // On success the store sets gameId, which closes the dialog (open={!gameId})
+      // On success the store sets gameId, which closes the dialog
       await createGame();
     } catch {
-      setLoading(false); // only set loading to false on error to prevent flashing
       setError('Nie udało się stworzyć gry. Proszę odświeżyć stronę.');
     }
   }
