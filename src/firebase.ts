@@ -120,6 +120,7 @@ export async function firebaseGetGame(gameId: string): Promise<GameDTO | null> {
       return null;
     }
 
+    // todo: split guesses: current player and enemy
     const game: GameDTO = { ...snap.data(), id: snap.id };
     console.log('Game loaded', game); // todo: hide correct word
     return game;
