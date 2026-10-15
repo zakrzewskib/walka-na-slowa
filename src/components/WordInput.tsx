@@ -1,5 +1,5 @@
 import { Input } from '@chakra-ui/react';
-import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { useRef, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
@@ -9,6 +9,7 @@ export const WordInput = () => {
   const submitGuess = useAppStore((state) => state.submitGuess);
   const gameId = useAppStore((state) => state.gameId);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -26,16 +27,19 @@ export const WordInput = () => {
 
     setIsSubmitting(true);
 
+    const normalizedValue = value.trim().toUpperCase();
+
     // todo: Add error handling
     try {
       await submitGuess({
         id: uuidv4(),
-        value,
+        value: normalizedValue,
         userId: 'user1', // todo: get that from the current session
       });
       // tbd: Add animation
       setValue('');
     } finally {
+      inputRef.current?.focus();
       setIsSubmitting(false);
     }
   }
@@ -44,6 +48,7 @@ export const WordInput = () => {
   return (
     <form onSubmit={handleSubmit}>
       <Input
+        ref={inputRef}
         type="text"
         value={value}
         onChange={handleInputChange}
