@@ -9,6 +9,8 @@ react: ^19.2.0
 ## Development
 
 How to start: pnpm run dev
+How to test: pnpm run test
+How to run e2e tests with firebase emulators: pnpm run test:e2e
 
 ## Git strategy
 
@@ -62,3 +64,7 @@ story-point:<value>
 3 points → 3h
 5 points → 5h
 8 points -> 8h
+
+## Useful links
+
+- https://stackoverflow.com/questions/8981194/changing-git-commit-message-after-push-given-that-no-one-pulled-from-remote

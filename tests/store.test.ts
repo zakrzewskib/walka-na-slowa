@@ -90,6 +90,17 @@ describe('createGame', () => {
     expect(correctWord).toBe('');
     expect(guesses).toEqual([]);
   });
+
+  it('rethrows and leaves state unchanged when firebase fails', async () => {
+    const error = new Error('boom');
+    vi.mocked(firebaseCreateGame).mockRejectedValue(error);
+
+    await expect(useAppStore.getState().createGame()).rejects.toThrow('boom');
+
+    const { gameId, guesses } = useAppStore.getState();
+    expect(gameId).toEqual('');
+    expect(guesses).toEqual([]);
+  });
 });
 
 describe('submitGuess', () => {

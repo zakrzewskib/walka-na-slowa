@@ -27,13 +27,13 @@ export const CreateGameDialog = () => {
 
   return (
     <Dialog.Root
-      lazyMount
       open={!gameId}
       // Reset only after the close animation, so the button doesn't flash back
       onExitComplete={() => setLoading(false)}
       closeOnEscape={false}
       closeOnInteractOutside={false}
       placement="center"
+      unmountOnExit
     >
       <Portal>
         <Dialog.Backdrop />
