@@ -10,6 +10,7 @@ export const WordInput = () => {
   const gameId = useAppStore((state) => state.gameId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  // const [error, setError] = useState('');
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -29,7 +30,6 @@ export const WordInput = () => {
 
     const normalizedValue = value.trim().toUpperCase();
 
-    // todo: Add error handling
     try {
       await submitGuess({
         id: uuidv4(),
@@ -38,13 +38,18 @@ export const WordInput = () => {
       });
       // tbd: Add animation
       setValue('');
+    } catch {
+      // todo: Add toast
+      console.error(
+        'Nie udało się dodać kolejnego zgadnięcia. Proszę odświezyć stronę lub spróbować ponownie później.',
+      );
     } finally {
       inputRef.current?.focus();
       setIsSubmitting(false);
     }
   }
 
-  // tbd: Hide the input and auto focus
+  // todo: Hide the input and auto focus
   return (
     <form onSubmit={handleSubmit}>
       <Input

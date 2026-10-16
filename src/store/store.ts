@@ -36,8 +36,7 @@ export const useAppStore = create<AppState>()(
         const { gameId, correctWord } = get();
 
         if (!gameId || !correctWord) {
-          // todo: Add error handling
-          return;
+          throw new Error('Nie udało się dodać zgadnięcia, proszę spróbować później.');
         }
 
         // todo: Move evaluation to backend
@@ -48,13 +47,22 @@ export const useAppStore = create<AppState>()(
           evaluatedGuess,
         };
 
+        const { guesses: prevGuesses } = get();
+
         // optimistic update — show it locally immediately
         set((state) => ({
           guesses: [...state.guesses, guess],
         }));
 
-        await firebaseSubmitGuess(gameId, guess);
-        // todo: roll back the optimistic update, or show an error toast/retry
+        try {
+          await firebaseSubmitGuess(gameId, guess);
+        } catch (error) {
+          // undo optimistic update
+          set(() => ({
+            guesses: prevGuesses,
+          }));
+          throw error;
+        }
       },
 
       loadGame: async (gameId: string) => {

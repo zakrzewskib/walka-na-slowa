@@ -122,6 +122,15 @@ describe('submitGuess', () => {
       expect(useAppStore.getState().guesses).toEqual([]);
       expect(firebaseSubmitGuess).not.toHaveBeenCalled();
     });
+
+    it('throws error when there gameId/correctWord is not set correctly', async () => {
+      useAppStore.setState({ gameId: '', correctWord: '' });
+
+      await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
+
+      expect(useAppStore.getState().guesses).toEqual([]);
+      expect(firebaseSubmitGuess).not.toHaveBeenCalled();
+    });
   });
 
   describe('with an active game', () => {

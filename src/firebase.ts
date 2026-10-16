@@ -96,7 +96,7 @@ export async function firebaseCreateGame(): Promise<string> {
 
 export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise<void> {
   const gameRef = doc(gamesCollection, gameId);
-
+  // throw new Error('hello there this is error');
   try {
     await updateDoc(gameRef, {
       guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
@@ -104,7 +104,7 @@ export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise
 
     console.log('Added new guess', guess);
   } catch (error) {
-    console.log('Could not add guess', error);
+    console.error('Could not add guess', error);
     throw error;
   }
 }
