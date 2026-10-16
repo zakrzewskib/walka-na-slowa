@@ -1,21 +1,25 @@
 import { Button, Dialog, Portal } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useAppStore } from '../../store/store';
+import ErrorAlert from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
   const gameId = useAppStore((state) => state.gameId);
   const createGame = useAppStore((state) => state.createGame);
   const [loading, setLoading] = useState(false);
-  const [, setError] = useState('');
+  const [error, setError] = useState('');
 
   async function handleCreateGame() {
     setLoading(true);
+    setError('');
 
     try {
       // On success the store sets gameId, which closes the dialog
       await createGame();
     } catch {
-      setError('Nie udało się stworzyć gry. Proszę odświeżyć stronę.');
+      setError('Nie udało się stworzyć gry. Proszę spróbować ponownie lub odświeżyć stronę.');
+    } finally {
+      setLoading(false);
     }
   }
   // todo: Add button to handle login
@@ -41,6 +45,13 @@ export const CreateGameDialog = () => {
             <Dialog.Header>
               <Dialog.Title>Walka na słowa</Dialog.Title>
             </Dialog.Header>
+
+            {error && (
+              <Dialog.Footer>
+                <ErrorAlert text={error} />
+              </Dialog.Footer>
+            )}
+
             <Dialog.Footer>
               <Button
                 onClick={handleCreateGame}

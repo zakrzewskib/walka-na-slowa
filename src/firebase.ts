@@ -89,15 +89,14 @@ export async function firebaseCreateGame(): Promise<string> {
     console.log('Game created', gameId);
     return gameId;
   } catch (error) {
-    console.log('Could not create game', error);
-    throw error;
+    console.error('Could not create game', error);
+    throw error as Error;
   }
 }
 
 export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise<void> {
   const gameRef = doc(gamesCollection, gameId);
 
-  // https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array
   try {
     await updateDoc(gameRef, {
       guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
