@@ -135,6 +135,33 @@ describe('Word Input - Color Results', () => {
         cy.wrap(cell).should('have.css', 'background-color', COLORS.GREEN);
       });
   });
+
+  it('shows toast error when submitting fails', () => {
+    cy.window().then((win) => {
+      win.useAppStore!.setState({
+        submitGuess: () => Promise.reject(new Error('boom')),
+      });
+    });
+
+    typeAndEnter('BBBBB');
+
+    // The input keeps the typed value, so nothing was submitted
+    wordInput().should('have.value', 'BBBBB');
+
+    // Board should still show no guesses (all empty rows)
+    cy.get('[role="grid"]')
+      .first()
+      .find('[role="row"]')
+      .first()
+      .find('[role="gridcell"]')
+      .each((cell) => {
+        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.GREEN);
+        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.YELLOW);
+        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.GRAY);
+      });
+
+    cy.get('[role="alert"]').should('contain.text', 'Nie udało się dodać kolejnego zgadnięcia');
+  });
 });
 
 describe('Word Input - Keyboard Colors', () => {

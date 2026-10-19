@@ -105,27 +105,17 @@ describe('createGame', () => {
 
 describe('submitGuess', () => {
   describe('without a game', () => {
-    it('does nothing when there is no gameId', async () => {
+    it('does throws error when there is no gameId', async () => {
       useAppStore.setState({ gameId: '', correctWord: 'LALKA' });
 
-      await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
+      await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
 
       expect(useAppStore.getState().guesses).toEqual([]);
       expect(firebaseSubmitGuess).not.toHaveBeenCalled();
     });
 
-    it('does nothing when there is no correctWord', async () => {
+    it('does throws error when there is no correctWord', async () => {
       useAppStore.setState({ gameId: 'game-123', correctWord: '' });
-
-      await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
-
-      expect(useAppStore.getState().guesses).toEqual([]);
-      expect(firebaseSubmitGuess).not.toHaveBeenCalled();
-    });
-
-    it('throws error when there gameId/correctWord is not set correctly', async () => {
-      useAppStore.setState({ gameId: '', correctWord: '' });
-
       await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
 
       expect(useAppStore.getState().guesses).toEqual([]);

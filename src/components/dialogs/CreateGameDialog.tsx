@@ -33,6 +33,7 @@ export const CreateGameDialog = () => {
       closeOnEscape={false}
       closeOnInteractOutside={false}
       placement="center"
+      lazyMount
       unmountOnExit
     >
       <Portal>

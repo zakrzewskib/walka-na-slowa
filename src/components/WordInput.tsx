@@ -3,6 +3,7 @@ import { useRef, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
+import { toaster } from './ui/toaster';
 
 export const WordInput = () => {
   const [value, setValue] = useState('');
@@ -39,10 +40,13 @@ export const WordInput = () => {
       // tbd: Add animation
       setValue('');
     } catch {
-      // todo: Add toast
-      console.error(
-        'Nie udało się dodać kolejnego zgadnięcia. Proszę odświezyć stronę lub spróbować ponownie później.',
-      );
+      toaster.create({
+        title: 'Błąd',
+        description:
+          'Nie udało się dodać kolejnego zgadnięcia. Proszę odświezyć stronę lub spróbować ponownie później.',
+        type: 'error',
+        closable: true,
+      });
     } finally {
       inputRef.current?.focus();
       setIsSubmitting(false);

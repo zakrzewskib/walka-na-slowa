@@ -91,6 +91,7 @@ export const useAppStore = create<AppState>()(
   ),
 );
 
+// For testing
 declare global {
   interface Window {
     Cypress?: unknown;
