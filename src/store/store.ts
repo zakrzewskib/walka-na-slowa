@@ -16,8 +16,8 @@ interface AppState {
   createGame: () => Promise<void>;
   submitGuess: (guess: GuessSubmit) => Promise<void>;
   loadGame: (gameId: string) => Promise<void>;
+  finishGame: () => Promise<void>;
   // todo: Add loading state
-  // todo: Add clearing game/making it finished
 }
 
 export const useAppStore = create<AppState>()(
@@ -67,18 +67,26 @@ export const useAppStore = create<AppState>()(
 
       loadGame: async (gameId: string) => {
         const game = await firebaseGetGame(gameId);
-        if (!game) {
-          // todo: Add error handling when cannot load game
-          return;
-        }
+
         // todo: Add loading only user's guesses
         set({ gameId: gameId, correctWord: game.correctWord, guesses: game.guesses });
+      },
+
+      finishGame: async () => {
+        const { gameId } = get();
+        if (!gameId) {
+          // todo: Add error handling when there is not game
+          return;
+        }
+        // todo: Add setting game status
+        // todo: Add firebase game update
+        set({ gameId: '', correctWord: '', guesses: [] });
       },
     }),
     {
       name: 'walka-na-slowa-storage',
 
-      // only save gameId in the storage gameId is persisted
+      // only save gameId in the local storage
       partialize: (state) => ({ gameId: state.gameId }),
 
       // load game after

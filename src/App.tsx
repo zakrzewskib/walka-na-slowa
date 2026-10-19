@@ -2,6 +2,7 @@ import { HStack, VStack } from '@chakra-ui/react';
 import { CreateGameDialog } from './components/dialogs/CreateGameDialog';
 import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard/Keyboard';
+import SurrenderButton from './components/SurrenderButton';
 import { Toaster } from './components/ui/toaster';
 import { WordInput } from './components/WordInput';
 import Layout from './layout/Layout';
@@ -19,7 +20,10 @@ function App() {
           </HStack>
 
           <Keyboard />
-          <WordInput />
+          <HStack width="full" justifyContent="center" position="relative">
+            <SurrenderButton position="absolute" left="0.5" translateX="-0.5" />
+            <WordInput />
+          </HStack>
         </VStack>
       </Layout>
     </>

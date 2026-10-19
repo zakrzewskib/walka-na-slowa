@@ -1,11 +1,11 @@
-import { Input } from '@chakra-ui/react';
+import { Input, type InputProps } from '@chakra-ui/react';
 import { useRef, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
 import { toaster } from './ui/toaster';
 
-export const WordInput = () => {
+export const WordInput = ({ ...props }: InputProps) => {
   const [value, setValue] = useState('');
   const submitGuess = useAppStore((state) => state.submitGuess);
   const gameId = useAppStore((state) => state.gameId);
@@ -57,6 +57,7 @@ export const WordInput = () => {
   return (
     <form onSubmit={handleSubmit}>
       <Input
+        {...props}
         ref={inputRef}
         type="text"
         value={value}

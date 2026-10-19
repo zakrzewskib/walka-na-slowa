@@ -10,7 +10,15 @@ react: ^19.2.0
 
 How to start: pnpm run dev
 How to test: pnpm run test
+
+### Testing
+
 How to run e2e tests with firebase emulators: pnpm run test:e2e
+If you want to run only e2e tests of specific file modify your package.json:
+
+```json
+"e2e": "cypress run --spec cypress/e2e/SurrenderButton.cy.ts",
+```
 
 ## Git strategy
 
