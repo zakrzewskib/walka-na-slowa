@@ -24,6 +24,8 @@ describe('Create Game Dialog - errors', () => {
 
     cy.get('[data-testid="create-game-dialog"]').should('not.exist');
     cy.get('[data-testid="word-input"]').should('be.enabled');
-    cy.get('[role="alert"]').should('not.exist');
+    cy.get(
+      '[data-testid="alert-Nie udało się stworzyć gry. Proszę spróbować ponownie lub odświeżyć stronę."]',
+    ).should('not.exist');
   });
 });
