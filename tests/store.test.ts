@@ -193,8 +193,7 @@ describe('submitGuess', () => {
       );
     });
 
-    // Rollback is a todo in the store; enable this once it is implemented.
-    it.todo('rolls back the optimistic guess when firebase fails');
+    expect(useAppStore.getState().guesses).toEqual([]);
   });
 });
 

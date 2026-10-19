@@ -23,7 +23,6 @@ export const CreateGameDialog = () => {
     }
   }
   // todo: Add button to handle login
-  // todo: Add error handling
 
   return (
     <Dialog.Root
