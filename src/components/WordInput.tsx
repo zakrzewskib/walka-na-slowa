@@ -11,7 +11,6 @@ export const WordInput = ({ ...props }: InputProps) => {
   const gameId = useAppStore((state) => state.gameId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  // const [error, setError] = useState('');
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -25,7 +24,7 @@ export const WordInput = ({ ...props }: InputProps) => {
       return;
     }
 
-    // tbd: Check if word exists in polish language
+    // tbd: Check if word exists in polish language - separate backend endpoint?
 
     setIsSubmitting(true);
 
