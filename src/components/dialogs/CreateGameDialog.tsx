@@ -46,9 +46,9 @@ export const CreateGameDialog = () => {
             </Dialog.Header>
 
             {error && (
-              <Dialog.Footer>
+              <Dialog.Body>
                 <ErrorAlert text={error} />
-              </Dialog.Footer>
+              </Dialog.Body>
             )}
 
             <Dialog.Footer>
