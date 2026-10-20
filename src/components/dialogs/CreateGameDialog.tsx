@@ -17,9 +17,8 @@ export const CreateGameDialog = () => {
       // On success the store sets gameId, which closes the dialog
       await createGame();
     } catch {
-      setError('Nie udało się stworzyć gry. Proszę spróbować ponownie lub odświeżyć stronę.');
-    } finally {
       setLoading(false);
+      setError('Nie udało się stworzyć gry. Proszę spróbować ponownie lub odświeżyć stronę.');
     }
   }
   // todo: Add button to handle login
