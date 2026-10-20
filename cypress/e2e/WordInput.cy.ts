@@ -160,7 +160,10 @@ describe('Word Input - Color Results', () => {
         cy.wrap(cell).should('not.have.css', 'background-color', COLORS.GRAY);
       });
 
-    cy.get('[role="alert"]').should('contain.text', 'Nie udało się dodać kolejnego zgadnięcia');
+    cy.get('[data-testid="toaster"]').should(
+      'contain.text',
+      'Nie udało się dodać kolejnego zgadnięcia',
+    );
   });
 });
 

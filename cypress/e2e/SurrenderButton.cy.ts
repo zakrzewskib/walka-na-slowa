@@ -20,6 +20,6 @@ describe('Surrender Button', () => {
     cy.get('[data-testid="surrender-button"]').click();
 
     cy.get('[data-testid="create-game-dialog"]').should('not.exist');
-    cy.get('[role="alert"]').should('contain.text', 'Nie udało się zakończyć gry');
+    cy.get('[data-testid="toaster"]').should('contain.text', 'Nie udało się zakończyć gry');
   });
 });
