@@ -17,7 +17,13 @@ How to run e2e tests with firebase emulators: pnpm run test:e2e
 If you want to run only e2e tests of specific file modify your package.json:
 
 ```json
-"e2e": "cypress run --spec cypress/e2e/SurrenderButton.cy.ts",
+"e2e": "cypress run --spec cypress/e2e/<name>.cy.ts",
+```
+
+If you want to run only tests of specific file modify your package.json:
+
+```json
+"test": "vitest run tests/<name>.test.ts"
 ```
 
 ## Git strategy

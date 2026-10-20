@@ -213,9 +213,10 @@ describe('loadGame', () => {
   it('keeps the current state when the game cannot be loaded', async () => {
     const existing = [makeGuess('BRTGW')];
     useAppStore.setState({ gameId: 'old-game', correctWord: 'LALKA', guesses: existing });
-    vi.mocked(firebaseGetGame).mockResolvedValue(null);
 
-    await expect(useAppStore.getState().loadGame('missing-game')).resolves.toBeUndefined();
+    vi.mocked(firebaseGetGame).mockRejectedValue(new Error('boom'));
+
+    await expect(useAppStore.getState().loadGame('missing-game')).rejects.toThrow('boom');
 
     const state = useAppStore.getState();
     expect(state.gameId).toBe('old-game');
@@ -224,9 +225,9 @@ describe('loadGame', () => {
   });
 
   it('does not set a gameId when there is no previous game and loading fails', async () => {
-    vi.mocked(firebaseGetGame).mockResolvedValue(null);
+    vi.mocked(firebaseGetGame).mockRejectedValue(new Error('boom'));
 
-    await useAppStore.getState().loadGame('missing-game');
+    await expect(useAppStore.getState().loadGame('missing-game')).rejects.toThrow('boom');
 
     expect(useAppStore.getState().gameId).toBe('');
   });
