@@ -17,7 +17,7 @@
     "coverage": "vitest run --coverage",
     "e2e": "cypress run",
     "e2e:ci": "start-server-and-test dev http://localhost:5173 e2e",
-    "test:e2e": "VITE_USE_FIREBASE_EMULATOR=true firebase emulators:exec --only firestore --project demo-walka-na-slowa \"pnpm run e2e:ci\""
+    "test:e2e": "cross-env VITE_USE_FIREBASE_EMULATOR=true firebase emulators:exec --only firestore --project demo-walka-na-slowa \"pnpm run e2e:ci\""
   },
   "dependencies": {
     "@chakra-ui/cli": "^3.32.0",
@@ -40,6 +40,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "4.0.18",
     "axe-core": "^4.11.1",
+    "cross-env": "^10.1.0",
     "cypress": "^15.10.0",
     "cypress-axe": "^1.7.0",
     "eslint": "^9.39.1",
