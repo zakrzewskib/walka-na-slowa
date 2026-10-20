@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAppStore } from '../store/store';
 import { toaster } from './ui/toaster';
 
-const SurrenderButton = (props: ButtonProps) => {
+export const SurrenderButton = (props: ButtonProps) => {
   const finishGame = useAppStore((state) => state.finishGame);
   const gameId = useAppStore((state) => state.gameId);
   const [loading, setLoading] = useState(false);
@@ -39,5 +39,3 @@ const SurrenderButton = (props: ButtonProps) => {
     </Button>
   );
 };
-
-export default SurrenderButton;

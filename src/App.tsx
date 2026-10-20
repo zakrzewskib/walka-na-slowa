@@ -2,10 +2,10 @@ import { HStack, VStack } from '@chakra-ui/react';
 import { CreateGameDialog } from './components/dialogs/CreateGameDialog';
 import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard/Keyboard';
-import SurrenderButton from './components/SurrenderButton';
+import { SurrenderButton } from './components/SurrenderButton';
 import { Toaster } from './components/ui/toaster';
 import { WordInput } from './components/WordInput';
-import Layout from './layout/Layout';
+import { Layout } from './layout/Layout';
 
 function App() {
   return (

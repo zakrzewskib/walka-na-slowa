@@ -4,7 +4,7 @@ interface ErrorAlertProps {
   text: string;
 }
 
-const ErrorAlert = ({ text }: ErrorAlertProps) => {
+export const ErrorAlert = ({ text }: ErrorAlertProps) => {
   return (
     <Alert.Root status="error" role="alert" data-testid="error-alert">
       <Alert.Indicator />
@@ -12,5 +12,3 @@ const ErrorAlert = ({ text }: ErrorAlertProps) => {
     </Alert.Root>
   );
 };
-
-export default ErrorAlert;

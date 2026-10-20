@@ -1,7 +1,7 @@
 import { Button, Dialog, Portal } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useAppStore } from '../../store/store';
-import ErrorAlert from '../alerts/ErrorAlert';
+import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
   const gameId = useAppStore((state) => state.gameId);
