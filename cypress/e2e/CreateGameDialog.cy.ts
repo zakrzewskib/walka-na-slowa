@@ -15,7 +15,7 @@ describe('Create Game Dialog - errors', () => {
     cy.get('[data-testid="create-game-dialog-btn"]').click();
 
     // show alert and reenable button
-    cy.get('[role="alert"]').should('contain.text', 'Nie udało się stworzyć gry');
+    cy.get('[data-testid="error-alert"]').should('contain.text', 'Nie udało się stworzyć gry');
     cy.get('[data-testid="create-game-dialog-btn"]').should('be.enabled');
   });
 
