@@ -20,11 +20,11 @@ export const WordInput = ({ ...props }: InputProps) => {
     e.preventDefault();
 
     if (value.length !== WORD_LENGTH) {
-      // tbd: Add info about wrong format, for example some kind of error animation would be enough
+      // todo: Add info about wrong format, for example some kind of error animation would be enough
       return;
     }
 
-    // tbd: Check if word exists in polish language - separate backend endpoint?
+    // todo: Check if word exists in polish language - separate backend endpoint?
 
     setIsSubmitting(true);
 
@@ -36,7 +36,7 @@ export const WordInput = ({ ...props }: InputProps) => {
         value: normalizedValue,
         userId: 'user1', // todo: get that from the current session
       });
-      // tbd: Add animation
+      // todo: Add animation
       setValue('');
     } catch {
       toaster.create({

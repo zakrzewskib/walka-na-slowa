@@ -18,7 +18,7 @@ export default function Header() {
           Walka na słowa
         </Text>
       </HStack>
-      {/* tbd: Add author etc. */}
+      {/* todo: Add author etc. */}
     </HStack>
   );
 }
