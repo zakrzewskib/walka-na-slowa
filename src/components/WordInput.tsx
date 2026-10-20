@@ -5,7 +5,7 @@ import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
 import { toaster } from './ui/toaster';
 
-export const WordInput = ({ ...props }: InputProps) => {
+export const WordInput = (props: InputProps) => {
   const [value, setValue] = useState('');
   const submitGuess = useAppStore((state) => state.submitGuess);
   const gameId = useAppStore((state) => state.gameId);
@@ -55,7 +55,6 @@ export const WordInput = ({ ...props }: InputProps) => {
   return (
     <form onSubmit={handleSubmit}>
       <Input
-        {...props}
         ref={inputRef}
         type="text"
         value={value}
@@ -71,6 +70,7 @@ export const WordInput = ({ ...props }: InputProps) => {
         autoFocus
         textTransform="uppercase"
         disabled={isSubmitting || !gameId}
+        {...props}
       />
     </form>
   );

@@ -2,7 +2,7 @@ import { Button, type ButtonProps } from '@chakra-ui/react';
 import { useAppStore } from '../store/store';
 import { toaster } from './ui/toaster';
 
-const SurrenderButton = ({ ...props }: ButtonProps) => {
+const SurrenderButton = (props: ButtonProps) => {
   const finishGame = useAppStore((state) => state.finishGame);
 
   async function handleSurrender() {
@@ -19,7 +19,7 @@ const SurrenderButton = ({ ...props }: ButtonProps) => {
   }
 
   return (
-    <Button {...props} onClick={handleSurrender} data-testid="surrender-button">
+    <Button onClick={handleSurrender} data-testid="surrender-button" {...props}>
       Poddaj się
     </Button>
   );
