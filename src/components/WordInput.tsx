@@ -41,8 +41,7 @@ export const WordInput = ({ ...props }: InputProps) => {
     } catch {
       toaster.create({
         title: 'Błąd',
-        description:
-          'Nie udało się dodać kolejnego zgadnięcia. Proszę odświezyć stronę lub spróbować ponownie później.',
+        description: 'Nie udało się zgadnąć. Proszę spróbować później',
         type: 'error',
         closable: true,
       });
