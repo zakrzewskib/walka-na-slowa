@@ -1,4 +1,4 @@
-import { HStack, VStack } from '@chakra-ui/react';
+import { Grid, GridItem, HStack, VStack } from '@chakra-ui/react';
 import { CreateGameDialog } from './components/dialogs/CreateGameDialog';
 import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard/Keyboard';
@@ -20,10 +20,24 @@ function App() {
           </HStack>
 
           <Keyboard />
-          <HStack width="full" justifyContent="center" position="relative">
-            <SurrenderButton position="absolute" left="0.5" translateX="-0.5" />
-            <WordInput />
-          </HStack>
+          <Grid
+            width="full"
+            gridTemplateColumns={{
+              base: 'repeat(2, minmax(0, 1fr))',
+              md: 'repeat(3, minmax(0, 1fr))',
+            }}
+            alignItems="center"
+          >
+            <GridItem justifySelf="start" minWidth="0">
+              <SurrenderButton />
+            </GridItem>
+
+            <GridItem justifySelf="center" width="full" minWidth="0">
+              <WordInput width="full" />
+            </GridItem>
+
+            <GridItem display={{ base: 'none', md: 'block' }} />
+          </Grid>
         </VStack>
       </Layout>
     </>
