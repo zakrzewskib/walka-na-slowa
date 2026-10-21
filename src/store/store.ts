@@ -47,8 +47,6 @@ export const useAppStore = create<AppState>()(
           evaluatedGuess,
         };
 
-        const { guesses: prevGuesses } = get();
-
         // optimistic update — show it locally immediately
         set((state) => ({
           guesses: [...state.guesses, guess],
@@ -58,9 +56,7 @@ export const useAppStore = create<AppState>()(
           await firebaseSubmitGuess(gameId, guess);
         } catch (error) {
           // undo optimistic update
-          set(() => ({
-            guesses: prevGuesses,
-          }));
+          set((s) => ({ guesses: s.guesses.filter((g) => g.id !== guess.id) }));
           throw error;
         }
       },
