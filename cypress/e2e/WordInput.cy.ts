@@ -1,3 +1,5 @@
+import { getStore, submitWord, typeAndEnter, wordInput } from '../support/helpers';
+
 // Color constants for Chakra UI palette
 const COLORS = {
   GREEN: 'rgb(34, 197, 94)', // green.500 - correct position
@@ -6,18 +8,11 @@ const COLORS = {
   UNUSED: 'rgb(228, 228, 231)', // gray.200 - key not yet guessed
 } as const;
 
-const wordInput = () => cy.get('[data-testid="word-input"]');
-
-function typeAndEnter(word: string) {
-  wordInput().type(word);
-  wordInput().type('{enter}');
-}
-
-// Submits a valid word and waits until the submission is finished:
-// the input is disabled while submitting, then re-enabled and cleared.
-function submitWord(word: string) {
-  typeAndEnter(word);
-  wordInput().should('be.enabled').and('have.value', '');
+// No guess is on the player's board: none of the cells contains a letter
+function expectBoardEmpty() {
+  cy.get('[data-testid="player-board"] [role="gridcell"]').should(($cells) => {
+    expect($cells.text().trim()).to.equal('');
+  });
 }
 
 describe('Word Input - Color Results', () => {
@@ -100,17 +95,7 @@ describe('Word Input - Color Results', () => {
     // The input keeps the typed value, so nothing was submitted
     wordInput().should('have.value', 'LA');
 
-    // Board should still show no guesses (all empty rows)
-    cy.get('[role="grid"]')
-      .first()
-      .find('[role="row"]')
-      .first()
-      .find('[role="gridcell"]')
-      .each((cell) => {
-        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.GREEN);
-        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.YELLOW);
-        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.GRAY);
-      });
+    expectBoardEmpty();
   });
 
   it('appends new guess rows on each submission', () => {
@@ -136,31 +121,27 @@ describe('Word Input - Color Results', () => {
       });
   });
 
-  it('shows toast error when submitting fails', () => {
+  it('rolls back the guess and shows a toast when saving fails', () => {
+    // The store keeps its real submitGuess (optimistic update + rollback), but points to a game
+    // that does not exist in Firestore. The real firebase write is rejected with "not found".
+    // correctWord is still set, so the guard in submitGuess passes and the only failure
+    // is the firebase write.
     cy.window().then((win) => {
-      win.useAppStore!.setState({
-        submitGuess: () => Promise.reject(new Error('boom')),
-      });
+      getStore(win).setState({ gameId: 'missing-game' });
     });
 
     typeAndEnter('BBBBB');
 
-    // The input keeps the typed value, so nothing was submitted
-    wordInput().should('have.value', 'BBBBB');
-
-    // Board should still show no guesses (all empty rows)
-    cy.get('[role="grid"]')
-      .first()
-      .find('[role="row"]')
-      .first()
-      .find('[role="gridcell"]')
-      .each((cell) => {
-        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.GREEN);
-        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.YELLOW);
-        cy.wrap(cell).should('not.have.css', 'background-color', COLORS.GRAY);
-      });
-
+    // The toast is shown after the rollback, so the checks below run after the guess was removed
     cy.get('[data-testid="toaster"]').should('contain.text', 'Nie udało się zgadnąć');
+
+    // The input keeps the typed value, so the user can retry
+    wordInput().should('be.enabled').and('have.value', 'BBBBB');
+
+    expectBoardEmpty();
+    cy.window().then((win) => {
+      expect(getStore(win).getState().guesses).to.have.length(0);
+    });
   });
 });
 
