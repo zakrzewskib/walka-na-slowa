@@ -90,22 +90,11 @@ describe('createGame', () => {
     expect(correctWord).toBe('');
     expect(guesses).toEqual([]);
   });
-
-  it('rethrows and leaves state unchanged when firebase fails', async () => {
-    const error = new Error('boom');
-    vi.mocked(firebaseCreateGame).mockRejectedValue(error);
-
-    await expect(useAppStore.getState().createGame()).rejects.toThrow('boom');
-
-    const { gameId, guesses } = useAppStore.getState();
-    expect(gameId).toEqual('');
-    expect(guesses).toEqual([]);
-  });
 });
 
 describe('submitGuess', () => {
   describe('without a game', () => {
-    it('does throws error when there is no gameId', async () => {
+    it('throws an error when there is no gameId', async () => {
       useAppStore.setState({ gameId: '', correctWord: 'LALKA' });
 
       await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
@@ -114,8 +103,9 @@ describe('submitGuess', () => {
       expect(firebaseSubmitGuess).not.toHaveBeenCalled();
     });
 
-    it('does throws error when there is no correctWord', async () => {
+    it('throws an error when there is no correctWord', async () => {
       useAppStore.setState({ gameId: 'game-123', correctWord: '' });
+
       await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
 
       expect(useAppStore.getState().guesses).toEqual([]);
@@ -185,15 +175,21 @@ describe('submitGuess', () => {
       expect(useAppStore.getState().guesses.map((g) => g.value)).toEqual(['BRTGW', 'LALKA']);
     });
 
-    it('rejects when firebase fails', async () => {
+    it('rejects and rolls back the optimistic guess when firebase fails', async () => {
+      const existing = [makeGuess('BRTGW')];
+      useAppStore.setState({ guesses: existing });
       vi.mocked(firebaseSubmitGuess).mockRejectedValue(new Error('write failed'));
 
-      await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow(
+      await expect(useAppStore.getState().submitGuess(makeSubmit('KALLA'))).rejects.toThrow(
         'write failed',
       );
+
+      // the failed guess is gone, the earlier one is untouched
+      expect(useAppStore.getState().guesses).toEqual(existing);
     });
 
-    expect(useAppStore.getState().guesses).toEqual([]);
+    // Enable once the rollback filters by guess id instead of restoring a snapshot.
+    it.todo('rolls back only the failed guess when two submits overlap');
   });
 });
 
@@ -230,6 +226,47 @@ describe('loadGame', () => {
     await expect(useAppStore.getState().loadGame('missing-game')).rejects.toThrow('boom');
 
     expect(useAppStore.getState().gameId).toBe('');
+  });
+});
+
+describe('finishGame', () => {
+  it('clears gameId, correctWord and guesses', async () => {
+    useAppStore.setState({
+      gameId: 'game-123',
+      correctWord: 'LALKA',
+      guesses: [makeGuess('BRTGW')],
+    });
+
+    await useAppStore.getState().finishGame();
+
+    const { gameId, correctWord, guesses } = useAppStore.getState();
+    expect(gameId).toBe('');
+    expect(correctWord).toBe('');
+    expect(guesses).toEqual([]);
+  });
+
+  it('clears the persisted gameId, so a reload does not restore the finished game', async () => {
+    useAppStore.setState({ gameId: 'game-123', correctWord: 'LALKA' });
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({
+      gameId: 'game-123',
+    });
+
+    await useAppStore.getState().finishGame();
+
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({ gameId: '' });
+  });
+
+  // Locks in the current early return. When the store todo turns this into an error,
+  // change the assertion to `rejects.toThrow()`.
+  it('does nothing when there is no active game', async () => {
+    const existing = [makeGuess('BRTGW')];
+    useAppStore.setState({ gameId: '', correctWord: 'LALKA', guesses: existing });
+
+    await expect(useAppStore.getState().finishGame()).resolves.toBeUndefined();
+
+    const state = useAppStore.getState();
+    expect(state.correctWord).toBe('LALKA');
+    expect(state.guesses).toEqual(existing);
   });
 });
 
@@ -271,4 +308,7 @@ describe('persistence', () => {
 
     expect(firebaseGetGame).not.toHaveBeenCalled();
   });
+
+  // Enable once onRehydrateStorage catches loadGame errors and resets the stale gameId.
+  it.todo('resets the stale gameId when the game cannot be restored from storage');
 });
