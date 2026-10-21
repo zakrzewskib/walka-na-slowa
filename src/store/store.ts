@@ -106,13 +106,6 @@ export const useAppStore = create<AppState>()(
 );
 
 // For testing
-declare global {
-  interface Window {
-    Cypress?: unknown;
-    useAppStore?: typeof useAppStore;
-  }
-}
-
-if (typeof window !== 'undefined' && window.Cypress) {
+if (import.meta.env.DEV && typeof window !== 'undefined' && window.Cypress) {
   window.useAppStore = useAppStore;
 }
