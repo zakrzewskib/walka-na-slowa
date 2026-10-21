@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { Timestamp } from 'firebase/firestore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { toaster } from '../src/components/ui/toaster';
 import {
   firebaseCreateGame,
   firebaseGetGame,
@@ -16,6 +17,10 @@ vi.mock('../src/firebase', () => ({
   firebaseCreateGame: vi.fn(),
   firebaseGetGame: vi.fn(),
   firebaseSubmitGuess: vi.fn(),
+}));
+
+vi.mock('../src/components/ui/toaster', () => ({
+  toaster: { create: vi.fn() },
 }));
 
 const STORAGE_KEY = 'walka-na-slowa-storage';
@@ -309,6 +314,24 @@ describe('persistence', () => {
     expect(firebaseGetGame).not.toHaveBeenCalled();
   });
 
-  // Enable once onRehydrateStorage catches loadGame errors and resets the stale gameId.
-  it.todo('resets the stale gameId when the game cannot be restored from storage');
+  it('shows an error toast when the stored game cannot be restored', async () => {
+    vi.mocked(firebaseGetGame).mockRejectedValue(new Error('boom'));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ state: { gameId: 'stale-game' }, version: 0 }),
+    );
+
+    await useAppStore.persist.rehydrate();
+
+    // loadGame is fired from the rehydrate callback without being awaited
+    await vi.waitFor(() =>
+      expect(toaster.create).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'error', closable: true }),
+      ),
+    );
+
+    // nothing was loaded
+    expect(useAppStore.getState().correctWord).toBe('');
+    expect(useAppStore.getState().guesses).toEqual([]);
+  });
 });

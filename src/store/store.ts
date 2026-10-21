@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { toaster } from '../components/ui/toaster';
 import {
   firebaseCreateGame,
   firebaseGetGame,
@@ -88,9 +89,17 @@ export const useAppStore = create<AppState>()(
 
       // load game after
       onRehydrateStorage: () => (state) => {
-        if (state?.gameId) {
-          state.loadGame(state.gameId);
-        }
+        if (!state?.gameId) return;
+
+        state.loadGame(state.gameId).catch(() => {
+          toaster.create({
+            title: 'Błąd',
+            description:
+              'Nie udało się wczytać poprzedniej gry. Odśwież stronę lub stwórz nową grę',
+            type: 'error',
+            closable: true,
+          });
+        });
       },
     },
   ),
