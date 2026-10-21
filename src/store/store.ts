@@ -36,7 +36,8 @@ export const useAppStore = create<AppState>()(
         const { gameId, correctWord } = get();
 
         if (!gameId || !correctWord) {
-          throw new Error('Nie udało się dodać zgadnięcia, proszę spróbować później.');
+          throw new Error('gameId or correct  Word does not exist!');
+          // will be caught by UI
         }
 
         // todo: Move evaluation to backend
