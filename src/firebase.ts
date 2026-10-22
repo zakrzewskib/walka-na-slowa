@@ -83,49 +83,33 @@ export async function firebaseCreateGame(): Promise<string> {
     correctWord: HARDCODED_CORRECT_WORD,
   };
 
-  try {
-    const docRef = await addDoc(gamesCollection, newGame);
-    const gameId = docRef.id;
-    console.log('Game created', gameId);
-    return gameId;
-  } catch (error) {
-    console.log('Could not create game', error);
-    throw error;
-  }
+  const docRef = await addDoc(gamesCollection, newGame);
+  const gameId = docRef.id;
+  console.log('Game created', gameId);
+  return gameId;
 }
 
 export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise<void> {
+  // todo: Offline/flaky network: write may hang (no error/rollback) or be saved twice on retry (new id + createdAt defeat arrayUnion dedupe)
+
   const gameRef = doc(gamesCollection, gameId);
+  await updateDoc(gameRef, {
+    guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
+  });
 
-  // https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array
-  try {
-    await updateDoc(gameRef, {
-      guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
-    });
-
-    console.log('Added new guess', guess);
-  } catch (error) {
-    console.log('Could not add guess', error);
-    throw error;
-  }
+  console.log('Added new guess', guess);
 }
 
-export async function firebaseGetGame(gameId: string): Promise<GameDTO | null> {
+export async function firebaseGetGame(gameId: string): Promise<GameDTO> {
   const gameRef = doc(gamesCollection, gameId);
 
-  try {
-    const snap = await getDoc(gameRef);
-    if (!snap.exists()) {
-      console.log('Could not load game', snap);
-      return null;
-    }
-
-    // todo: split guesses: current player and enemy
-    const game: GameDTO = { ...snap.data(), id: snap.id };
-    console.log('Game loaded', game); // todo: hide correct word
-    return game;
-  } catch (error) {
-    console.log('Could not load game', error);
-    throw error;
+  const snap = await getDoc(gameRef);
+  if (!snap.exists()) {
+    throw new Error('Could not load game.');
   }
+
+  // todo: split guesses: current player and enemy
+  const game: GameDTO = { ...snap.data(), id: snap.id };
+  console.log('Game loaded', game); // todo: hide correct word
+  return game;
 }

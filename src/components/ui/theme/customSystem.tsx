@@ -13,4 +13,10 @@ export const customSystem = createSystem(defaultConfig, {
       },
     },
   },
+  // for example: toaster close trigger
+  globalCss: {
+    'button:not(:disabled), [role="button"]:not([aria-disabled="true"])': {
+      cursor: 'pointer',
+    },
+  },
 });

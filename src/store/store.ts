@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { toaster } from '../components/ui/toaster';
 import {
   firebaseCreateGame,
   firebaseGetGame,
@@ -16,8 +17,8 @@ interface AppState {
   createGame: () => Promise<void>;
   submitGuess: (guess: GuessSubmit) => Promise<void>;
   loadGame: (gameId: string) => Promise<void>;
+  finishGame: () => Promise<void>;
   // todo: Add loading state
-  // todo: Add clearing game/making it finished
 }
 
 export const useAppStore = create<AppState>()(
@@ -36,8 +37,8 @@ export const useAppStore = create<AppState>()(
         const { gameId, correctWord } = get();
 
         if (!gameId || !correctWord) {
-          // todo: Add error handling
-          return;
+          throw new Error('gameId or correct  Word does not exist!');
+          // will be caught by UI
         }
 
         // todo: Move evaluation to backend
@@ -53,32 +54,58 @@ export const useAppStore = create<AppState>()(
           guesses: [...state.guesses, guess],
         }));
 
-        await firebaseSubmitGuess(gameId, guess);
-        // todo: roll back the optimistic update, or show an error toast/retry
+        try {
+          await firebaseSubmitGuess(gameId, guess);
+        } catch (error) {
+          // undo optimistic update
+          set((s) => ({ guesses: s.guesses.filter((g) => g.id !== guess.id) }));
+          throw error;
+        }
       },
 
       loadGame: async (gameId: string) => {
         const game = await firebaseGetGame(gameId);
-        if (!game) {
-          // todo: Add error handling when cannot load game
-          return;
-        }
+
         // todo: Add loading only user's guesses
         set({ gameId: gameId, correctWord: game.correctWord, guesses: game.guesses });
+      },
+
+      finishGame: async () => {
+        const { gameId } = get();
+        if (!gameId) {
+          // todo: Add error handling when there is not game
+          return;
+        }
+        // todo: Add setting game status
+        // todo: Add firebase game update
+        set({ gameId: '', correctWord: '', guesses: [] });
       },
     }),
     {
       name: 'walka-na-slowa-storage',
 
-      // only save gameId in the storage gameId is persisted
+      // only save gameId in the local storage
       partialize: (state) => ({ gameId: state.gameId }),
 
       // load game after
       onRehydrateStorage: () => (state) => {
-        if (state?.gameId) {
-          state.loadGame(state.gameId);
-        }
+        if (!state?.gameId) return;
+
+        state.loadGame(state.gameId).catch(() => {
+          toaster.create({
+            title: 'Błąd',
+            description:
+              'Nie udało się wczytać poprzedniej gry. Odśwież stronę lub stwórz nową grę',
+            type: 'error',
+            closable: true,
+          });
+        });
       },
     },
   ),
 );
+
+// For testing
+if (import.meta.env.DEV && typeof window !== 'undefined' && window.Cypress) {
+  window.useAppStore = useAppStore;
+}

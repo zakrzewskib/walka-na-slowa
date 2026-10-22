@@ -1,10 +1,11 @@
-import { Input } from '@chakra-ui/react';
+import { Input, type InputProps } from '@chakra-ui/react';
 import { useRef, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
+import { toaster } from './ui/toaster';
 
-export const WordInput = () => {
+export const WordInput = (props: InputProps) => {
   const [value, setValue] = useState('');
   const submitGuess = useAppStore((state) => state.submitGuess);
   const gameId = useAppStore((state) => state.gameId);
@@ -19,32 +20,38 @@ export const WordInput = () => {
     e.preventDefault();
 
     if (value.length !== WORD_LENGTH) {
-      // tbd: Add info about wrong format, for example some kind of error animation would be enough
+      // todo: Add info about wrong format, for example some kind of error animation would be enough
       return;
     }
 
-    // tbd: Check if word exists in polish language
+    // todo: Check if word exists in polish language - separate backend endpoint?
 
     setIsSubmitting(true);
 
     const normalizedValue = value.trim().toUpperCase();
 
-    // todo: Add error handling
     try {
       await submitGuess({
         id: uuidv4(),
         value: normalizedValue,
         userId: 'user1', // todo: get that from the current session
       });
-      // tbd: Add animation
+      // todo: Add animation
       setValue('');
+    } catch {
+      toaster.create({
+        title: 'Błąd',
+        description: 'Nie udało się zgadnąć. Proszę spróbować później',
+        type: 'error',
+        closable: true,
+      });
     } finally {
       inputRef.current?.focus();
       setIsSubmitting(false);
     }
   }
 
-  // tbd: Hide the input and auto focus
+  // todo: Hide the input and auto focus
   return (
     <form onSubmit={handleSubmit}>
       <Input
@@ -63,6 +70,7 @@ export const WordInput = () => {
         autoFocus
         textTransform="uppercase"
         disabled={isSubmitting || !gameId}
+        {...props}
       />
     </form>
   );

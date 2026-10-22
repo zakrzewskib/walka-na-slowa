@@ -9,6 +9,22 @@ react: ^19.2.0
 ## Development
 
 How to start: pnpm run dev
+How to test: pnpm run test
+
+### Testing
+
+How to run e2e tests with firebase emulators: pnpm run test:e2e
+If you want to run only e2e tests of specific file modify your package.json:
+
+```json
+"e2e": "cypress run --spec cypress/e2e/<name>.cy.ts",
+```
+
+If you want to run only tests of specific file modify your package.json:
+
+```json
+"test": "vitest run tests/<name>.test.ts"
+```
 
 ## Git strategy
 
@@ -62,3 +78,7 @@ story-point:<value>
 3 points → 3h
 5 points → 5h
 8 points -> 8h
+
+## Useful links
+
+- https://stackoverflow.com/questions/8981194/changing-git-commit-message-after-push-given-that-no-one-pulled-from-remote

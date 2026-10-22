@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { Timestamp } from 'firebase/firestore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { toaster } from '../src/components/ui/toaster';
 import {
   firebaseCreateGame,
   firebaseGetGame,
@@ -16,6 +17,10 @@ vi.mock('../src/firebase', () => ({
   firebaseCreateGame: vi.fn(),
   firebaseGetGame: vi.fn(),
   firebaseSubmitGuess: vi.fn(),
+}));
+
+vi.mock('../src/components/ui/toaster', () => ({
+  toaster: { create: vi.fn() },
 }));
 
 const STORAGE_KEY = 'walka-na-slowa-storage';
@@ -94,19 +99,19 @@ describe('createGame', () => {
 
 describe('submitGuess', () => {
   describe('without a game', () => {
-    it('does nothing when there is no gameId', async () => {
+    it('throws an error when there is no gameId', async () => {
       useAppStore.setState({ gameId: '', correctWord: 'LALKA' });
 
-      await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
+      await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
 
       expect(useAppStore.getState().guesses).toEqual([]);
       expect(firebaseSubmitGuess).not.toHaveBeenCalled();
     });
 
-    it('does nothing when there is no correctWord', async () => {
+    it('throws an error when there is no correctWord', async () => {
       useAppStore.setState({ gameId: 'game-123', correctWord: '' });
 
-      await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
+      await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
 
       expect(useAppStore.getState().guesses).toEqual([]);
       expect(firebaseSubmitGuess).not.toHaveBeenCalled();
@@ -175,16 +180,21 @@ describe('submitGuess', () => {
       expect(useAppStore.getState().guesses.map((g) => g.value)).toEqual(['BRTGW', 'LALKA']);
     });
 
-    it('rejects when firebase fails', async () => {
+    it('rejects and rolls back the optimistic guess when firebase fails', async () => {
+      const existing = [makeGuess('BRTGW')];
+      useAppStore.setState({ guesses: existing });
       vi.mocked(firebaseSubmitGuess).mockRejectedValue(new Error('write failed'));
 
-      await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow(
+      await expect(useAppStore.getState().submitGuess(makeSubmit('KALLA'))).rejects.toThrow(
         'write failed',
       );
+
+      // the failed guess is gone, the earlier one is untouched
+      expect(useAppStore.getState().guesses).toEqual(existing);
     });
 
-    // Rollback is a todo in the store; enable this once it is implemented.
-    it.todo('rolls back the optimistic guess when firebase fails');
+    // Enable once the rollback filters by guess id instead of restoring a snapshot.
+    it.todo('rolls back only the failed guess when two submits overlap');
   });
 });
 
@@ -204,9 +214,10 @@ describe('loadGame', () => {
   it('keeps the current state when the game cannot be loaded', async () => {
     const existing = [makeGuess('BRTGW')];
     useAppStore.setState({ gameId: 'old-game', correctWord: 'LALKA', guesses: existing });
-    vi.mocked(firebaseGetGame).mockResolvedValue(null);
 
-    await expect(useAppStore.getState().loadGame('missing-game')).resolves.toBeUndefined();
+    vi.mocked(firebaseGetGame).mockRejectedValue(new Error('boom'));
+
+    await expect(useAppStore.getState().loadGame('missing-game')).rejects.toThrow('boom');
 
     const state = useAppStore.getState();
     expect(state.gameId).toBe('old-game');
@@ -215,11 +226,52 @@ describe('loadGame', () => {
   });
 
   it('does not set a gameId when there is no previous game and loading fails', async () => {
-    vi.mocked(firebaseGetGame).mockResolvedValue(null);
+    vi.mocked(firebaseGetGame).mockRejectedValue(new Error('boom'));
 
-    await useAppStore.getState().loadGame('missing-game');
+    await expect(useAppStore.getState().loadGame('missing-game')).rejects.toThrow('boom');
 
     expect(useAppStore.getState().gameId).toBe('');
+  });
+});
+
+describe('finishGame', () => {
+  it('clears gameId, correctWord and guesses', async () => {
+    useAppStore.setState({
+      gameId: 'game-123',
+      correctWord: 'LALKA',
+      guesses: [makeGuess('BRTGW')],
+    });
+
+    await useAppStore.getState().finishGame();
+
+    const { gameId, correctWord, guesses } = useAppStore.getState();
+    expect(gameId).toBe('');
+    expect(correctWord).toBe('');
+    expect(guesses).toEqual([]);
+  });
+
+  it('clears the persisted gameId, so a reload does not restore the finished game', async () => {
+    useAppStore.setState({ gameId: 'game-123', correctWord: 'LALKA' });
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({
+      gameId: 'game-123',
+    });
+
+    await useAppStore.getState().finishGame();
+
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({ gameId: '' });
+  });
+
+  // Locks in the current early return. When the store todo turns this into an error,
+  // change the assertion to `rejects.toThrow()`.
+  it('does nothing when there is no active game', async () => {
+    const existing = [makeGuess('BRTGW')];
+    useAppStore.setState({ gameId: '', correctWord: 'LALKA', guesses: existing });
+
+    await expect(useAppStore.getState().finishGame()).resolves.toBeUndefined();
+
+    const state = useAppStore.getState();
+    expect(state.correctWord).toBe('LALKA');
+    expect(state.guesses).toEqual(existing);
   });
 });
 
@@ -260,5 +312,26 @@ describe('persistence', () => {
     await useAppStore.persist.rehydrate();
 
     expect(firebaseGetGame).not.toHaveBeenCalled();
+  });
+
+  it('shows an error toast when the stored game cannot be restored', async () => {
+    vi.mocked(firebaseGetGame).mockRejectedValue(new Error('boom'));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ state: { gameId: 'stale-game' }, version: 0 }),
+    );
+
+    await useAppStore.persist.rehydrate();
+
+    // loadGame is fired from the rehydrate callback without being awaited
+    await vi.waitFor(() =>
+      expect(toaster.create).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'error', closable: true }),
+      ),
+    );
+
+    // nothing was loaded
+    expect(useAppStore.getState().correctWord).toBe('');
+    expect(useAppStore.getState().guesses).toEqual([]);
   });
 });

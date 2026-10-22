@@ -1,6 +1,6 @@
 import { HStack, Image, Text } from '@chakra-ui/react';
 
-export default function Header() {
+export const Header = () => {
   return (
     <HStack
       as="header"
@@ -18,7 +18,7 @@ export default function Header() {
           Walka na słowa
         </Text>
       </HStack>
-      {/* tbd: Add author etc. */}
+      {/* todo: Add author etc. */}
     </HStack>
   );
-}
+};
