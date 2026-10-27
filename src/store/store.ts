@@ -96,7 +96,7 @@ export const useAppStore = create<AppState>()(
         if (!state?.gameId) return;
 
         state.loadGame(state.gameId).catch((error) => {
-          logger.error('Store: Could not load game on rehydrate', { error });
+          logger.error('Store: Could not load game on rehydrate', error);
 
           toaster.create({
             title: 'Błąd',

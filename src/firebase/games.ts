@@ -41,7 +41,7 @@ export async function firebaseCreateGame(): Promise<string> {
     logger.debug('Firebase: Game created', { gameId });
     return gameId;
   } catch (error) {
-    logger.error('Firebase: Error creating game', { error });
+    logger.error('Firebase: Error creating game', error);
     throw error;
   }
 }
@@ -56,7 +56,7 @@ export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise
     });
     logger.debug('Firebase: Added new guess', { gameId, guess });
   } catch (error) {
-    logger.error('Firebase: Error adding guess', { error });
+    logger.error('Firebase: Error adding guess', error);
     throw error;
   }
 }
