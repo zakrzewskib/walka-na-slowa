@@ -37,7 +37,7 @@ if (
   const host = import.meta.env.VITE_FIREBASE_EMULATOR_HOST ?? '127.0.0.1';
   const port = Number(import.meta.env.VITE_FIREBASE_EMULATOR_PORT ?? 8080);
 
-  if (!Number.isInteger(port) || port <= 0) {
+  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
     throw new Error(
       `Invalid VITE_FIREBASE_EMULATOR_PORT: ${import.meta.env.VITE_FIREBASE_EMULATOR_PORT}`,
     );
