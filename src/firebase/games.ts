@@ -38,10 +38,10 @@ export async function firebaseCreateGame(): Promise<string> {
   try {
     const docRef = await addDoc(gamesCollection, newGame);
     const gameId = docRef.id;
-    logger.debug('Firebase: Game created', { gameId });
+    logger.debug('Game created', { gameId });
     return gameId;
   } catch (error) {
-    logger.error('Firebase: Error creating game', error);
+    logger.error('Error creating game', error);
     throw error;
   }
 }
@@ -54,9 +54,9 @@ export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise
     await updateDoc(gameRef, {
       guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
     });
-    logger.debug('Firebase: Added new guess', { gameId, guess });
+    logger.debug('Added new guess', { gameId, guess });
   } catch (error) {
-    logger.error('Firebase: Error adding guess', error);
+    logger.error('Error adding guess', error);
     throw error;
   }
 }
@@ -64,21 +64,21 @@ export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise
 export async function firebaseGetGame(gameId: string): Promise<GameDTO> {
   const gameRef = doc(gamesCollection, gameId);
 
-  const snap = await getDoc(gameRef);
-
-  if (!snap.exists()) {
-    logger.error('Firebase: gameRef does not exist', { gameRef, snap });
-    throw new Error('Firebase: Could not load game.');
-  }
-
   // todo: split guesses: current player and enemy
   // todo: hide correct word
   try {
+    const snap = await getDoc(gameRef);
+
+    if (!snap.exists()) {
+      logger.warn('gameRef does not exist', { gameId });
+      throw new Error('Could not load game.');
+    }
+
     const game: GameDTO = { ...snap.data(), id: snap.id };
-    logger.debug('Firebase: Game loaded', { gameId, game });
+    logger.debug('Game loaded', { gameId, game });
     return game;
   } catch (error) {
-    logger.error('Firebase: Error creating game', { gameId, error });
+    logger.error('Error creating game', { gameId, error });
     throw error;
   }
 }

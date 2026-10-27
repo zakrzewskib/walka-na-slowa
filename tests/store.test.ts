@@ -11,7 +11,6 @@ import {
 import { useAppStore } from '../src/store/store';
 import type { Guess, GuessSubmit } from '../src/types';
 
-// Replaces the whole module, so the real firebase.ts (and its env var checks) is never loaded.
 vi.mock('../src/firebase/games', () => ({
   HARDCODED_CORRECT_WORD: 'LALKA',
   firebaseCreateGame: vi.fn(),
