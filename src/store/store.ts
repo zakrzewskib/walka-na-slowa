@@ -6,7 +6,8 @@ import {
   firebaseGetGame,
   firebaseSubmitGuess,
   HARDCODED_CORRECT_WORD,
-} from '../firebase';
+} from '../firebase/games';
+import { logger } from '../logger/logger';
 import type { Guess, GuessSubmit } from '../types';
 import { getWordResult } from '../utils/gameLogic';
 
@@ -37,8 +38,11 @@ export const useAppStore = create<AppState>()(
         const { gameId, correctWord } = get();
 
         if (!gameId || !correctWord) {
-          throw new Error('gameId or correct  Word does not exist!');
-          // will be caught by UI
+          logger.error('Store: Could not submit guess to empty gameId or correct word', {
+            gameId,
+            correctWord,
+          });
+          throw new Error('Store: gameId or correct word does not exist!');
         }
 
         // todo: Move evaluation to backend
@@ -91,7 +95,9 @@ export const useAppStore = create<AppState>()(
       onRehydrateStorage: () => (state) => {
         if (!state?.gameId) return;
 
-        state.loadGame(state.gameId).catch(() => {
+        state.loadGame(state.gameId).catch((error) => {
+          logger.error('Store: Could not load game on rehydrate', error);
+
           toaster.create({
             title: 'Błąd',
             description:
