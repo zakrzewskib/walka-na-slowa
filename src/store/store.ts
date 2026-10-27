@@ -6,7 +6,7 @@ import {
   firebaseGetGame,
   firebaseSubmitGuess,
   HARDCODED_CORRECT_WORD,
-} from '../firebase';
+} from '../firebase/games';
 import type { Guess, GuessSubmit } from '../types';
 import { getWordResult } from '../utils/gameLogic';
 
