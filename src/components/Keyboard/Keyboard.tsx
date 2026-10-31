@@ -6,8 +6,13 @@ import { KeyboardKeyItem } from '../KeyboardKey/KeyboardKey';
 import { KEYBOARD_ROWS } from './Keyboard.constants';
 import { calculateKeyboardState, isPolishLetter } from './Keyboard.utils';
 
+interface KeyboardProps {
+  onKeyPress: (key: KeyboardKey) => void;
+  disabled?: boolean;
+}
+
 // todo: add auth and storing user and separate guesses
-export const Keyboard = () => {
+export const Keyboard = (props: KeyboardProps) => {
   const guesses = useAppStore((state) => state.guesses);
   const keyboardState = useMemo(() => calculateKeyboardState(guesses), [guesses]);
 
@@ -15,7 +20,7 @@ export const Keyboard = () => {
     isPolishLetter(key) ? keyboardState[key].status : 'unused';
 
   function onKeyPress(key: KeyboardKey) {
-    console.log(key);
+    props.onKeyPress(key);
   }
 
   return (
@@ -34,7 +39,7 @@ export const Keyboard = () => {
               value={key}
               status={getStatus(key)}
               row={rowIndex}
-              disabled={false} // todo: change
+              disabled={props.disabled}
               onPress={onKeyPress}
             />
           ))}
