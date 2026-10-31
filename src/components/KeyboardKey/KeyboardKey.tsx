@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import type { KeyboardKey, KeyboardLetterStatus } from '../../types';
 import { getKeyboardLetterAriaLabel } from '../../utils/accessibility';
 import {
@@ -14,17 +14,34 @@ interface KeyboardKeyItemProps {
   value: KeyboardKey;
   status: KeyboardLetterStatus;
   row: number;
+  disabled?: boolean;
+  onPress: (key: KeyboardKey) => void;
 }
 
-export const KeyboardKeyItem = (props: KeyboardKeyItemProps) => {
-  const { value, status, row } = props;
-
+export const KeyboardKeyItem = ({
+  value,
+  status,
+  row,
+  disabled,
+  onPress,
+}: KeyboardKeyItemProps) => {
   return (
-    <VStack
+    <Button
+      type="button"
       data-testid={`key-${value}`}
-      role="gridcell"
       aria-label={getKeyboardLetterAriaLabel(value, status)}
+      disabled={disabled}
+      onClick={() => onPress(value)}
+      // Keep focus where it is, so a later Enter doesn't re-press this key
+      onMouseDown={(e) => e.preventDefault()}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
       justifyContent="center"
+      cursor="pointer"
+      userSelect="none"
+      touchAction="manipulation"
+      _disabled={{ cursor: 'not-allowed', opacity: 0.6 }}
       rounded="sm"
       width={calculateWidth(row, value)}
       height="52px"
@@ -42,6 +59,6 @@ export const KeyboardKeyItem = (props: KeyboardKeyItemProps) => {
       }}
     >
       {calculateValue(value)}
-    </VStack>
+    </Button>
   );
 };

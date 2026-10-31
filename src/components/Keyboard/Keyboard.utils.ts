@@ -5,6 +5,7 @@ import type {
   KeyboardLetterStatusMap,
   PolishLetter,
 } from '../../types';
+import { LETTERS } from './Keyboard.constants';
 
 const STATUS_PRIORITY: Record<KeyboardLetterStatus, number> = {
   unused: 0,
@@ -19,8 +20,8 @@ function getLetterStatus(letter: { exists: boolean; correctPlace: boolean }): Ke
   return 'absent';
 }
 
-function isPolishLetter(value: string, map: KeyboardLetterStatusMap): value is PolishLetter {
-  return value in map;
+export function isPolishLetter(value: string): value is PolishLetter {
+  return LETTERS.has(value);
 }
 
 export function calculateKeyboardState(guesses: Guess[]): KeyboardLetterStatusMap {
@@ -32,7 +33,7 @@ export function calculateKeyboardState(guesses: Guess[]): KeyboardLetterStatusMa
     for (const letter of guess.evaluatedGuess.letters) {
       const key = letter.value.toUpperCase();
 
-      if (!isPolishLetter(key, map)) continue; // guard against unexpected characters
+      if (!isPolishLetter(key)) continue; // guard against unexpected characters
 
       const current = map[key];
       const newStatus = getLetterStatus(letter);
