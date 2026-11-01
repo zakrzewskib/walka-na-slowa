@@ -5,7 +5,6 @@ import type {
   KeyboardLetterStatusMap,
   PolishLetter,
 } from '../../types';
-import { LETTERS } from './Keyboard.constants';
 
 const STATUS_PRIORITY: Record<KeyboardLetterStatus, number> = {
   unused: 0,
@@ -21,7 +20,7 @@ function getLetterStatus(letter: { exists: boolean; correctPlace: boolean }): Ke
 }
 
 export function isPolishLetter(value: string): value is PolishLetter {
-  return LETTERS.has(value);
+  return new Set<string>(POLISH_ALPHABET).has(value);
 }
 
 export function calculateKeyboardState(guesses: Guess[]): KeyboardLetterStatusMap {
