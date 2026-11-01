@@ -1,21 +1,31 @@
-// cypress/support/helpers.ts
+const keyTestId = (key: string) => `[data-testid="key-${key}"]`;
 
-export const wordInput = () => cy.get('[data-testid="word-input"]');
+export const key = (value: string) => cy.get(keyTestId(value));
+export const keyboard = () => cy.get('[data-testid="keyboard"]');
+
+// Clicks the on-screen keys, one per letter
+export function typeWord(word: string) {
+  for (const letter of word.toLocaleUpperCase('pl-PL')) {
+    key(letter).click();
+  }
+}
+
+export const pressEnter = () => key('Enter').click();
+export const pressBackspace = () => key('Backspace').click();
 
 export function typeAndEnter(word: string) {
-  wordInput().type(word);
-  wordInput().type('{enter}');
+  typeWord(word);
+  pressEnter();
 }
 
 // Submits a valid word and waits until the submission is finished:
-// the input is disabled while submitting, then re-enabled and cleared.
+// the keys are disabled while submitting, then re-enabled and the typed word is cleared.
 export function submitWord(word: string) {
   typeAndEnter(word);
-  wordInput().should('be.enabled').and('have.value', '');
+  key('Enter').should('be.enabled');
+  cy.window().its('useAppStore').invoke('getState').its('currentGuess').should('eq', '');
 }
 
-// Returns the store exposed in src/store/store.ts.
-// Fails with a clear message instead of a vague "undefined" error when it is not exposed.
 export function getStore(win: Window) {
   if (!win.useAppStore) {
     throw new Error(
@@ -24,3 +34,5 @@ export function getStore(win: Window) {
   }
   return win.useAppStore;
 }
+
+export const storeState = () => cy.window().then((win) => getStore(win).getState());
