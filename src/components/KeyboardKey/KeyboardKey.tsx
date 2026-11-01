@@ -31,6 +31,7 @@ export const KeyboardKeyItem = ({
       data-testid={`key-${value}`}
       aria-label={getKeyboardLetterAriaLabel(value, status)}
       disabled={disabled}
+      // todo: Add animation when typing specific key
       onClick={() => onPress(value)}
       // Keep focus where it is, so a later Enter doesn't re-press this key
       onMouseDown={(e) => e.preventDefault()}

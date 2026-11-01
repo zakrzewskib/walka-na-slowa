@@ -14,31 +14,32 @@ function isEditableTarget(target: EventTarget | null) {
 }
 
 export function useGuessInput() {
-  const submitGuess = useAppStore((state) => state.submitGuess);
   const gameId = useAppStore((state) => state.gameId);
-  const [guess, setGuess] = useState('');
+  const typeLetter = useAppStore((state) => state.typeLetter);
+  const deleteLetter = useAppStore((state) => state.deleteLetter);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isDisabled = isSubmitting || !gameId;
+  const isDisabled = isSubmitting || !gameId; // todo: think about moving it to store
 
   const submit = useCallback(async () => {
-    if (guess.length !== WORD_LENGTH) {
+    // read the latest values from the store, so this callback never goes stale
+    const { currentGuess, submitGuess } = useAppStore.getState();
+
+    if (currentGuess.length !== WORD_LENGTH) {
       // todo: error animation (word too short)
       return;
     }
-
-    // todo: check if the word exists in Polish - separate backend endpoint?
 
     setIsSubmitting(true);
 
     try {
       await submitGuess({
         id: uuidv4(),
-        value: guess,
+        value: currentGuess,
         userId: 'user1', // todo: get from the current session
       });
-      setGuess('');
     } catch {
+      // the store already restored the word, so we only need to tell the user
       toaster.create({
         title: 'Błąd',
         description: 'Nie udało się zgadnąć. Proszę spróbować później',
@@ -48,39 +49,47 @@ export function useGuessInput() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [guess, submitGuess]);
+  }, []);
 
   const handleKey = useCallback(
     (key: KeyboardKey) => {
       if (isDisabled) return;
 
       if (key === 'Enter') {
-        void submit();
+        void submit(); // Ignore promise
       } else if (key === 'Backspace') {
-        setGuess((g) => g.slice(0, -1));
+        deleteLetter();
       } else {
-        setGuess((g) => (g.length < WORD_LENGTH ? g + key : g));
+        typeLetter(key);
       }
     },
-    [isDisabled, submit],
+    [isDisabled, submit, typeLetter, deleteLetter],
   );
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      // Allow AltGr (reported as Ctrl+Alt on Windows) - needed for ą, ę, ł...
-      if (e.metaKey || (e.ctrlKey && !e.getModifierState('AltGraph'))) return;
-
-      // Prevent onkeydown of user is in editable element
-      if (isEditableTarget(e.target)) return;
-
-      if (e.key === 'Enter' || e.key === 'Backspace') {
-        e.preventDefault(); // stops Enter from "clicking" a focused button
-        if (!e.repeat || e.key === 'Backspace') handleKey(e.key);
+      // Add polish letters: ą ę etc.
+      if (e.metaKey || (e.ctrlKey && !e.getModifierState('AltGraph'))) {
+        return;
+      }
+      if (isEditableTarget(e.target)) {
         return;
       }
 
-      const letter = e.key.toUpperCase();
-      if (isPolishLetter(letter)) handleKey(letter);
+      if (e.key === 'Enter' || e.key === 'Backspace') {
+        e.preventDefault();
+
+        if (!e.repeat || e.key === 'Backspace') {
+          handleKey(e.key);
+        }
+        return;
+      }
+
+      const letter = e.key.toLocaleUpperCase('pl-PL');
+
+      if (isPolishLetter(letter)) {
+        handleKey(letter);
+      }
     }
 
     window.addEventListener('keydown', onKeyDown);
@@ -88,5 +97,5 @@ export function useGuessInput() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleKey]);
 
-  return { guess, isDisabled, handleKey };
+  return { isDisabled, handleKey };
 }
