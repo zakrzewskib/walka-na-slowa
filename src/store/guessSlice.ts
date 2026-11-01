@@ -14,16 +14,21 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
   currentGuess: '',
   isSubmittingGuess: false,
 
-  typeLetter: (letter) =>
+  typeLetter: (letter) => {
     set((state) =>
       state.currentGuess.length < WORD_LENGTH
         ? { currentGuess: state.currentGuess + letter }
         : state,
-    ),
+    );
+  },
 
-  deleteLetter: () => set((state) => ({ currentGuess: state.currentGuess.slice(0, -1) })),
+  deleteLetter: () => {
+    set((state) => ({ currentGuess: state.currentGuess.slice(0, -1) }));
+  },
 
-  resetGuesses: (guesses = []) => set({ guesses, currentGuess: '' }),
+  resetGuesses: (guesses = []) => {
+    set({ guesses, currentGuess: '' });
+  },
 
   submitGuess: async (guessSubmit) => {
     const { gameId, correctWord } = get();
