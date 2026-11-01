@@ -1,4 +1,5 @@
 import { HStack, Image, Text } from '@chakra-ui/react';
+import { responsiveInlinePadding } from '../components/ui/constants';
 
 export const Header = () => {
   return (
@@ -7,8 +8,7 @@ export const Header = () => {
       maxW="7xl"
       w="full"
       mx="auto"
-      // todo: unify paddings into some constant
-      paddingInline={{ base: '1', sm: '4', md: '6' }}
+      paddingInline={responsiveInlinePadding}
       paddingBottom={{ base: '0', md: '2' }}
       paddingTop="2"
       justifyContent="space-between"
