@@ -14,7 +14,6 @@ export interface GuessSlice {
   isSubmittingGuess: boolean;
   typeLetter: (letter: string) => void;
   deleteLetter: () => void;
-  resetGuesses: (guesses?: Guess[]) => void;
   submitGuess: (guess: GuessSubmit) => Promise<void>;
 }
 

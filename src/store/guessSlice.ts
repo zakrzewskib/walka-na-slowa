@@ -26,10 +26,6 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
     set((state) => ({ currentGuess: state.currentGuess.slice(0, -1) }));
   },
 
-  resetGuesses: (guesses = []) => {
-    set({ guesses, currentGuess: '' });
-  },
-
   submitGuess: async (guessSubmit) => {
     const { gameId, correctWord } = get();
 
