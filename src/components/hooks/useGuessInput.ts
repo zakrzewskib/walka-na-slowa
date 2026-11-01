@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { WORD_LENGTH } from '../../constants';
 import { useAppStore } from '../../store/store';
@@ -14,12 +14,13 @@ function isEditableTarget(target: EventTarget | null) {
 }
 
 export function useGuessInput() {
-  const gameId = useAppStore((state) => state.gameId);
   const typeLetter = useAppStore((state) => state.typeLetter);
   const deleteLetter = useAppStore((state) => state.deleteLetter);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isDisabled = isSubmitting || !gameId; // todo: think about moving it to store
+  const gameId = useAppStore((state) => state.gameId);
+  const isSubmittingGuess = useAppStore((state) => state.isSubmittingGuess);
+
+  const isDisabled = isSubmittingGuess || !gameId;
 
   const submit = useCallback(async () => {
     // read the latest values from the store, so this callback never goes stale
@@ -29,8 +30,6 @@ export function useGuessInput() {
       // todo: error animation (word too short)
       return;
     }
-
-    setIsSubmitting(true);
 
     try {
       await submitGuess({
@@ -46,8 +45,6 @@ export function useGuessInput() {
         type: 'error',
         closable: true,
       });
-    } finally {
-      setIsSubmitting(false);
     }
   }, []);
 
@@ -72,6 +69,8 @@ export function useGuessInput() {
       if (e.metaKey || (e.ctrlKey && !e.getModifierState('AltGraph'))) {
         return;
       }
+
+      // Do not perform keydown when user is in editable element
       if (isEditableTarget(e.target)) {
         return;
       }
@@ -85,7 +84,7 @@ export function useGuessInput() {
         return;
       }
 
-      const letter = e.key.toLocaleUpperCase('pl-PL');
+      const letter = e.key.toUpperCase();
 
       if (isPolishLetter(letter)) {
         handleKey(letter);
@@ -97,5 +96,5 @@ export function useGuessInput() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleKey]);
 
-  return { isDisabled, handleKey };
+  return { handleKey };
 }
