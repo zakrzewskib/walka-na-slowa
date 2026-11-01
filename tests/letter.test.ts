@@ -19,9 +19,18 @@ describe('calculateDisplayValue', () => {
 });
 
 describe('calculateBackgroundColor', () => {
-  it('correctPlace wins over everything', () => {
+  it('isCurrentTurn wins over everything', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(true, {
+        correctPlace: true,
+        exists: true,
+        value: 'a',
+      }),
+    ).toBe('gray.100');
+  });
+  it('correctPlace wins when not isCurrentTurn', () => {
+    expect(
+      calculateBackgroundColor(false, {
         correctPlace: true,
         exists: true,
         value: 'a',
@@ -30,7 +39,7 @@ describe('calculateBackgroundColor', () => {
   });
   it('exists wins when not correctPlace', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(false, {
         correctPlace: false,
         exists: true,
         value: 'a',
@@ -39,7 +48,7 @@ describe('calculateBackgroundColor', () => {
   });
   it('falls back to gray.400 when a value is guessed but wrong', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(false, {
         correctPlace: false,
         exists: false,
         value: 'a',
@@ -48,7 +57,7 @@ describe('calculateBackgroundColor', () => {
   });
   it('defaults to gray.100 when empty/unfilled', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(false, {
         correctPlace: false,
         exists: false,
         value: '',
