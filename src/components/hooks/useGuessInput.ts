@@ -96,5 +96,5 @@ export function useGuessInput() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleKey]);
 
-  return { handleKey };
+  return { isDisabled, handleKey };
 }

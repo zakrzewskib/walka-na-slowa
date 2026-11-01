@@ -11,19 +11,10 @@ import { calculateKeyboardState, isPolishLetter } from './Keyboard.utils';
 export const Keyboard = () => {
   const guesses = useAppStore((state) => state.guesses);
   const keyboardState = useMemo(() => calculateKeyboardState(guesses), [guesses]);
-  const { handleKey } = useGuessInput();
-
-  const gameId = useAppStore((state) => state.gameId);
-  const isSubmittingGuess = useAppStore((state) => state.isSubmittingGuess);
-
-  const isDisabled = isSubmittingGuess || !gameId;
+  const { isDisabled, handleKey } = useGuessInput();
 
   const getStatus = (key: KeyboardKey) =>
     isPolishLetter(key) ? keyboardState[key].status : 'unused';
-
-  function onKeyPress(key: KeyboardKey) {
-    handleKey(key);
-  }
 
   return (
     <VStack
@@ -42,7 +33,7 @@ export const Keyboard = () => {
               status={getStatus(key)}
               row={rowIndex}
               disabled={isDisabled}
-              onPress={onKeyPress}
+              onPress={handleKey}
             />
           ))}
         </HStack>
