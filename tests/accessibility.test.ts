@@ -5,12 +5,12 @@ import { getKeyboardLetterAriaLabel, getLetterAriaLabel } from '../src/utils/acc
 describe('getLetterAriaLabel', () => {
   it('returns correct label for empty cell on player turn', () => {
     const letter = { id: '1', value: '', exists: false, correctPlace: false };
-    expect(getLetterAriaLabel(letter, true, true)).toBe('Puste pole, twoja tura');
+    expect(getLetterAriaLabel(letter, true, true)).toBe('Twoja tura');
   });
 
   it('returns correct label for empty cell on opponent turn', () => {
     const letter = { id: '1', value: '', exists: false, correctPlace: false };
-    expect(getLetterAriaLabel(letter, true, false)).toBe('Puste pole, tura przeciwnika');
+    expect(getLetterAriaLabel(letter, true, false)).toBe('Tura przeciwnika');
   });
 
   it('returns correct label for empty cell when not current turn', () => {
