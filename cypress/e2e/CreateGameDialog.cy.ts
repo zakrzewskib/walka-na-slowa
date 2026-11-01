@@ -26,17 +26,17 @@ describe('Create Game Dialog - errors', () => {
     cy.get(createButton).should('be.enabled');
   });
 
-  it('closes the dialog and enables the word input after creating a game', () => {
+  it('closes the dialog and enables the keyboard after creating a game', () => {
     // before
     cy.get(dialog).should('be.visible');
-    cy.get('[data-testid="word-input"]').should('be.disabled');
+    cy.get('[data-testid="key-A"]').should('be.disabled');
 
     // action
     cy.get(createButton).click();
 
     // after
     cy.get(dialog).should('not.exist');
-    cy.get('[data-testid="word-input"]').should('be.enabled');
+    cy.get('[data-testid="key-A"]').should('be.enabled');
   });
 
   // Regression test: the button must not flash back to enabled while the dialog animates out.
