@@ -14,11 +14,7 @@ export const Header = () => {
       justifyContent="space-between"
     >
       <HStack>
-        <Image
-          src="/logo.webp"
-          height={{ base: '36px', sm: '48px' }}
-          alt="Logo gry walka na słowa"
-        />
+        <Image src="/logo.webp" height={{ base: '36px', sm: '48px' }} />
         <Text
           as="h1"
           textStyle={{ base: 'md', sm: 'xl' }}
