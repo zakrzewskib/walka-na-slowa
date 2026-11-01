@@ -22,13 +22,13 @@ export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
     ),
   );
 
-  const pendingRows = Array.from({ length: Math.max(0, WORDS_LENGTH - guesses.length) }, (_, i) =>
+  const pendingRows = Array.from({ length: WORDS_LENGTH - guesses.length }, (_, i) =>
     toPendingRow(isPlayer && i === 0 ? currentGuess : ''),
   );
 
   return (
     <VStack mdDown={{ width: 'full', alignItems: 'stretch' }}>
-      <Text alignSelf={isPlayer ? 'start' : 'end'} fontSize={{ base: '14px', sm: '16px' }}>
+      <Text alignSelf={isPlayer ? 'start' : 'end'}>
         {playerName} {isPlayer && '(Ty)'}
       </Text>
 
