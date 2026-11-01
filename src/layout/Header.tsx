@@ -1,5 +1,5 @@
 import { HStack, Image, Text } from '@chakra-ui/react';
-import { responsiveInlinePadding } from '../components/ui/constants';
+import { responsiveInlinePadding } from './constants';
 
 export const Header = () => {
   return (

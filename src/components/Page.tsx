@@ -1,6 +1,6 @@
 import { VStack } from '@chakra-ui/react';
 import type { ReactNode } from 'react';
-import { responsiveInlinePadding } from './ui/constants';
+import { responsiveInlinePadding } from '../layout/constants';
 
 export const Page = ({ children }: { children: ReactNode }) => {
   return (
