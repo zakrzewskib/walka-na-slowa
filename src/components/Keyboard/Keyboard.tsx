@@ -27,12 +27,13 @@ export const Keyboard = (props: KeyboardProps) => {
     <VStack
       gap="4px"
       mdDown={{ width: 'full', alignItems: 'stretch' }}
+      smDown={{ gap: '2px' }}
       role="group"
       aria-label="Klawiatura"
       data-testid="keyboard"
     >
       {KEYBOARD_ROWS.map((row, rowIndex) => (
-        <HStack key={rowIndex} gap="4px">
+        <HStack key={rowIndex} gap="4px" mdDown={{ gap: '2px' }}>
           {row.map((key) => (
             <KeyboardKeyItem
               key={key}

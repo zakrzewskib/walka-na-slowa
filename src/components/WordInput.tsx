@@ -5,6 +5,7 @@ import { WORD_LENGTH } from '../constants';
 import { useAppStore } from '../store/store';
 import { toaster } from './ui/toaster';
 
+// todo: Delete
 export const WordInput = (props: InputProps) => {
   const [value, setValue] = useState('');
   const submitGuess = useAppStore((state) => state.submitGuess);

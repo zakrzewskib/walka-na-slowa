@@ -36,7 +36,6 @@ export const KeyboardKeyItem = ({
       // Keep focus where it is, so a later Enter doesn't re-press this key
       onMouseDown={(e) => e.preventDefault()}
       display="flex"
-      flexDirection="column"
       alignItems="center"
       justifyContent="center"
       cursor="pointer"
@@ -52,6 +51,7 @@ export const KeyboardKeyItem = ({
       borderColor={calculateBackgroundAndBorderColor(status)}
       borderWidth="2px"
       color={calculateColor(status)}
+      size="xs" // only matters on sm breakpoint
       mdDown={{
         flex: '1',
         width: 'full',
