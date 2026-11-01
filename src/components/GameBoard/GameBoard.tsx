@@ -1,24 +1,13 @@
 import { Text, VStack } from '@chakra-ui/react';
 import { useShallow } from 'zustand/shallow';
-import { CURRENT_USER_ID, WORD_LENGTH, WORDS_LENGTH } from '../../constants';
+import { CURRENT_USER_ID, WORDS_LENGTH } from '../../constants';
 import { useAppStore } from '../../store/store';
-import type { EvaluatedGuess } from '../../types';
 import { WordItem } from '../WordItem';
+import { toPendingRow } from './GameBoard.utils';
 
 interface GameBoardProps {
   isPlayer: boolean;
   playerName: string;
-}
-
-// A not-yet-submitted row: typed letters first, the rest empty
-function toPendingRow(word = ''): EvaluatedGuess {
-  return {
-    letters: Array.from({ length: WORD_LENGTH }, (_, i) => ({
-      value: word[i] ?? '',
-      exists: false,
-      correctPlace: false,
-    })),
-  };
 }
 
 export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
