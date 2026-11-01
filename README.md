@@ -73,11 +73,11 @@ Github issues with tickets that have labels for story points:
 story-point:<value>
 ```
 
-1 story point ≈ 1h of focused work
-2 points → 2h
-3 points → 3h
-5 points → 5h
-8 points -> 8h
+1 story point ≈ 2h of focused work
+2 points → 4h
+3 points → 6h
+5 points → 10h
+8 points -> 16h
 
 ## Useful links
 
