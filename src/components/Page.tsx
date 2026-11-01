@@ -11,6 +11,7 @@ export const Page = ({ children }: { children: ReactNode }) => {
       w="full"
       mx="auto"
       paddingInline={responsiveInlinePadding}
+      paddingBottom="2"
     >
       {children}
     </VStack>

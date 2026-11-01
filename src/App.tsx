@@ -1,4 +1,4 @@
-import { GridItem, HStack, VStack } from '@chakra-ui/react';
+import { Box, HStack, VStack } from '@chakra-ui/react';
 import { CreateGameDialog } from './components/dialogs/CreateGameDialog';
 import { GameBoard } from './components/GameBoard/GameBoard';
 import { Keyboard } from './components/Keyboard/Keyboard';
@@ -21,9 +21,9 @@ function App() {
 
           <Keyboard />
 
-          <GridItem alignSelf="start">
+          <Box alignSelf="start">
             <SurrenderButton />
-          </GridItem>
+          </Box>
         </VStack>
       </Layout>
     </>
