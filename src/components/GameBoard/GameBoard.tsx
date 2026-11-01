@@ -1,9 +1,9 @@
 import { Text, VStack } from '@chakra-ui/react';
 import { useShallow } from 'zustand/shallow';
-import { WORD_LENGTH, WORDS_LENGTH } from '../constants';
-import { useAppStore } from '../store/store';
-import type { EvaluatedGuess } from '../types';
-import { WordItem } from './WordItem';
+import { WORD_LENGTH, WORDS_LENGTH } from '../../constants';
+import { useAppStore } from '../../store/store';
+import type { EvaluatedGuess } from '../../types';
+import { WordItem } from '../WordItem';
 
 interface GameBoardProps {
   isPlayer: boolean;

@@ -1,6 +1,6 @@
 import { GridItem, HStack, VStack } from '@chakra-ui/react';
 import { CreateGameDialog } from './components/dialogs/CreateGameDialog';
-import { GameBoard } from './components/GameBoard';
+import { GameBoard } from './components/GameBoard/GameBoard';
 import { Keyboard } from './components/Keyboard/Keyboard';
 import { SurrenderButton } from './components/SurrenderButton';
 import { Toaster } from './components/ui/toaster';
