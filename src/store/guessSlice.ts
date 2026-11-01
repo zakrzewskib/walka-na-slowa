@@ -14,10 +14,13 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
   currentGuess: '',
   isSubmittingGuess: false,
 
+  // typeLetter and deleteLetter only edit the typed word. They do not check for an active game
+  // or an in-flight submit: that is the job of the input layer (see useGuessInput), which
+  // ignores keys while the input is disabled.
   typeLetter: (letter) => {
     set((state) =>
       state.currentGuess.length < WORD_LENGTH
-        ? { currentGuess: state.currentGuess + letter }
+        ? { currentGuess: state.currentGuess + letter.toLocaleUpperCase('pl-PL') }
         : state,
     );
   },
@@ -27,6 +30,9 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
   },
 
   submitGuess: async (guessSubmit) => {
+    // the store must be safe on its own, even if the UI guard fails
+    if (get().isSubmittingGuess) return;
+
     const { gameId, correctWord } = get();
 
     if (!gameId || !correctWord) {
@@ -53,11 +59,15 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
     try {
       await firebaseSubmitGuess(gameId, guess);
     } catch (error) {
-      // undo the optimistic update and give the word back so the user can retry
-      set((state) => ({
-        guesses: state.guesses.filter((g) => g.id !== guess.id),
-        currentGuess: guessSubmit.value,
-      }));
+      // undo the optimistic update and give the word back so the user can retry - but only if
+      // the game did not change meanwhile (finishGame/createGame already reset the guesses,
+      // and the word must not leak into a different game)
+      if (get().gameId === gameId) {
+        set((state) => ({
+          guesses: state.guesses.filter((g) => g.id !== guess.id),
+          currentGuess: guessSubmit.value,
+        }));
+      }
       throw error;
     } finally {
       set({ isSubmittingGuess: false });
