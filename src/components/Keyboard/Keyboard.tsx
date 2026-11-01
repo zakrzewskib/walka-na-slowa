@@ -27,9 +27,8 @@ export const Keyboard = () => {
 
   return (
     <VStack
-      gap="4px"
+      gap={{ base: '2px', sm: '4px' }}
       mdDown={{ width: 'full', alignItems: 'stretch' }}
-      smDown={{ gap: '2px' }}
       role="group"
       aria-label="Klawiatura"
       data-testid="keyboard"

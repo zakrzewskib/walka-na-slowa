@@ -33,14 +33,13 @@ export const KeyboardKeyItem = ({
       disabled={disabled}
       // todo: Add animation when typing specific key
       onClick={() => onPress(value)}
-      // Keep focus where it is, so a later Enter doesn't re-press this key
-      onMouseDown={(e) => e.preventDefault()}
+      onMouseDown={(e) => e.preventDefault()} // Keep focus off the key, so a later Enter doesn't re-press it
       display="flex"
       alignItems="center"
       justifyContent="center"
       cursor="pointer"
-      userSelect="none"
-      touchAction="manipulation"
+      userSelect="none" // Stop the letter from being highlighted on double-click or long-press
+      touchAction="manipulation" // Disable double-tap zoom and the tap delay on mobile
       _disabled={{ cursor: 'not-allowed', opacity: 0.6 }}
       rounded="sm"
       width={calculateWidth(row, value)}
