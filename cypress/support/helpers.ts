@@ -36,3 +36,12 @@ export function getStore(win: Window) {
 }
 
 export const storeState = () => cy.window().then((win) => getStore(win).getState());
+
+const createButton = '[data-testid="create-game-dialog-btn"]';
+const dialog = '[data-testid="create-game-dialog"]';
+
+export const startGame = () => {
+  cy.get(createButton).click();
+  cy.get(dialog).should('not.exist');
+  key('A').should('be.enabled');
+};

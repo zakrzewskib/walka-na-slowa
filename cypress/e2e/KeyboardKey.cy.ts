@@ -1,12 +1,9 @@
-import { getStore, key, storeState } from '../support/helpers';
-
-const createButton = '[data-testid="create-game-dialog-btn"]';
+import { getStore, key, startGame, storeState } from '../support/helpers';
 
 describe('KeyboardKey', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.get(createButton).click();
-    key('A').should('be.enabled');
+    startGame();
   });
 
   it('is a real button that does not submit forms', () => {

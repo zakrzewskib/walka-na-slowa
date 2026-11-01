@@ -1,16 +1,14 @@
+import { WORD_LENGTH } from '../../src/constants';
 import {
   getStore,
   key,
   keyboard,
   pressBackspace,
   pressEnter,
+  startGame,
   storeState,
   typeWord,
 } from '../support/helpers';
-
-const createButton = '[data-testid="create-game-dialog-btn"]';
-const dialog = '[data-testid="create-game-dialog"]';
-const WORD_LENGTH = 5;
 
 const ALL_KEYS = [
   ...'QWERTYUIOP',
@@ -20,12 +18,6 @@ const ALL_KEYS = [
   'Backspace',
   'Enter',
 ];
-
-function startGame() {
-  cy.get(createButton).click();
-  cy.get(dialog).should('not.exist');
-  key('A').should('be.enabled');
-}
 
 describe('Keyboard - layout and state', () => {
   beforeEach(() => cy.visit('/'));
@@ -132,7 +124,7 @@ describe('Keyboard - submitting', () => {
     });
     typeWord('kotek');
     pressEnter();
-    cy.contains('Nie udało się zgadnąć').should('be.visible');
+    cy.get('[data-testid="toaster"]').should('contain.text', 'Nie udało się zgadnąć');
     key('Enter').should('be.enabled');
   });
 });
