@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useAppStore } from '../../store/store';
 import type { KeyboardKey } from '../../types';
 import { useGuessInput } from '../hooks/useGuessInput';
-import { KeyboardKeyItem } from '../KeyboardKey/KeyboardKey';
+import { KeyboardKeyItem } from '../KeyboardKeyItem/KeyboardKeyItem';
 import { KEYBOARD_ROWS } from './Keyboard.constants';
 import { calculateKeyboardState, isPolishLetter } from './Keyboard.utils';
 

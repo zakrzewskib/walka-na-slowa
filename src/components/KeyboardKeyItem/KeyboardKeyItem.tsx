@@ -8,7 +8,7 @@ import {
   calculateFontSizeMdDown,
   calculateValue,
   calculateWidth,
-} from './KeyboardKey.utils';
+} from './KeyboardKeyItem.utils';
 
 interface KeyboardKeyItemProps {
   value: KeyboardKey;
