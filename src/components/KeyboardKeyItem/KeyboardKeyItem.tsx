@@ -1,4 +1,5 @@
 import { Button } from '@chakra-ui/react';
+import { memo } from 'react';
 import type { KeyboardKey, KeyboardLetterStatus } from '../../types';
 import { getKeyboardLetterAriaLabel } from '../../utils/accessibility';
 import {
@@ -18,13 +19,13 @@ interface KeyboardKeyItemProps {
   onPress: (key: KeyboardKey) => void;
 }
 
-export const KeyboardKeyItem = ({
+export const KeyboardKeyItem = memo(function KeyboardKeyItem({
   value,
   status,
   row,
   disabled,
   onPress,
-}: KeyboardKeyItemProps) => {
+}: KeyboardKeyItemProps) {
   return (
     <Button
       type="button"
@@ -61,4 +62,4 @@ export const KeyboardKeyItem = ({
       {calculateValue(value)}
     </Button>
   );
-};
+});
