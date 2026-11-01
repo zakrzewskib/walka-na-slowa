@@ -1,4 +1,4 @@
-import type { Guess, GuessSubmit } from '../types';
+import type { Guess, GuessSubmit, PolishLetter } from '../types';
 
 export interface GameSlice {
   gameId: string;
@@ -12,7 +12,7 @@ export interface GuessSlice {
   guesses: Guess[];
   currentGuess: string;
   isSubmittingGuess: boolean;
-  typeLetter: (letter: string) => void;
+  typeLetter: (letter: PolishLetter) => void;
   deleteLetter: () => void;
   submitGuess: (guess: GuessSubmit) => Promise<void>;
 }
