@@ -55,15 +55,15 @@ Code review will be done by AI: by ChatGPT or Claude Sonnet etc.
 
 Prompt:
 
-```
-git diff develop...type/<branch-name> -- . ':(exclude)pnpm-lock.yaml' | pbcopy
+Please review the code like senior frontend dev - I'll give you git diff. Add -<yourName(which llm are you)> v.<your-version> at the end of the comments related to given file. Only add comments with fixes and improvements, list comments with '-', skip positive comments. Ignore todo comments in the code.
 
-Please review the code like senior frontend dev - I'll give you git diff. Add -<yourName(which llm are you)> v.<your-version> at the end of the comment related to given file. Only add comments with fixes and improvements, skip positive comments.
+How to get diff:
+
+```
+git diff "develop...$(git rev-parse --abbrev-ref HEAD)" -- . ':(exclude)pnpm-lock.yaml' | pbcopy
 ```
 
 Pull request will have CI (checks) and it will be merged with all commits preserved.
-
-You can use `git rev-parse --abbrev-ref HEAD` to get current branch name
 
 ## Issues strategy
 
@@ -77,7 +77,7 @@ story-point:<value>
 2 points → 4h
 3 points → 6h
 5 points → 10h
-8 points -> 16h
+8 points → 16h
 
 ## Useful links
 
