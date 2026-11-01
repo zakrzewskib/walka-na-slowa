@@ -41,7 +41,7 @@ export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
 
   return (
     <VStack mdDown={{ width: 'full', alignItems: 'stretch' }}>
-      <Text alignSelf={isPlayer ? 'start' : 'end'}>
+      <Text alignSelf={isPlayer ? 'start' : 'end'} fontSize={{ base: '14px', sm: '16px' }}>
         {playerName} {isPlayer && '(Ty)'}
       </Text>
 

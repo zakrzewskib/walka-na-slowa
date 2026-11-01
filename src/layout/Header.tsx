@@ -7,15 +7,28 @@ export const Header = () => {
       maxW="7xl"
       w="full"
       mx="auto"
-      paddingInline={{ base: '4', md: '6' }}
+      // todo: unify paddings into some constant
+      paddingInline={{ base: '1', sm: '4', md: '6' }}
       paddingBottom={{ base: '0', md: '2' }}
       paddingTop="2"
       justifyContent="space-between"
     >
       <HStack>
-        <Image src="/logo.webp" height="48px" alt="Logo gry walka na słowa" />
-        <Text as="h1" textStyle={{ base: 'md', sm: 'xl' }} fontWeight="bold">
-          Walka na słowa
+        <Image
+          src="/logo.webp"
+          height={{ base: '36px', sm: '48px' }}
+          alt="Logo gry walka na słowa"
+        />
+        <Text
+          as="h1"
+          textStyle={{ base: 'md', sm: 'xl' }}
+          fontWeight="bold"
+          lineHeight="1.05"
+          letterSpacing="tighter"
+          wordSpacing="-0.05em"
+          textWrap="balance"
+        >
+          walka na słowa
         </Text>
       </HStack>
       {/* todo: Add author etc. */}
