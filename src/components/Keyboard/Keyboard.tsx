@@ -25,7 +25,7 @@ export const Keyboard = () => {
       data-testid="keyboard"
     >
       {KEYBOARD_ROWS.map((row, rowIndex) => (
-        <HStack key={rowIndex} gap="4px" mdDown={{ gap: '2px' }}>
+        <HStack key={rowIndex} gap={{ base: '2px', sm: '4px' }}>
           {row.map((key) => (
             <KeyboardKeyItem
               key={key}
