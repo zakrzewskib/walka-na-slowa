@@ -3,6 +3,7 @@ import type { PolishLetter } from './types';
 export const WORD_LENGTH = 5;
 export const WORDS_LENGTH = 6;
 export const HIDDEN_LETTER = '-';
+export const CURRENT_USER_ID = 'user1';
 
 // prettier-ignore
 export const POLISH_ALPHABET: PolishLetter[] = [

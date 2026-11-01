@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { WORD_LENGTH } from '../../constants';
+import { CURRENT_USER_ID, WORD_LENGTH } from '../../constants';
 import { useAppStore } from '../../store/store';
 import type { KeyboardKey } from '../../types';
 import { isPolishLetter } from '../Keyboard/Keyboard.utils';
@@ -35,7 +35,7 @@ export function useGuessInput() {
       await submitGuess({
         id: uuidv4(),
         value: currentGuess,
-        userId: 'user1', // todo: get from the current session
+        userId: CURRENT_USER_ID, // todo: get from the current session
       });
     } catch {
       // the store already restored the word, so we only need to tell the user

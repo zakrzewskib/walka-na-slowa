@@ -10,6 +10,7 @@ import {
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
+import { CURRENT_USER_ID } from '../constants';
 import { logger } from '../logger/logger';
 import type { Game, Guess } from '../types';
 import { db } from './firebase';
@@ -25,11 +26,9 @@ export interface GameDTO extends Game {
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
 
 export async function firebaseCreateGame(): Promise<string> {
-  const userId = 'user1'; // todo: Add auth
-
   // Omit id to autogenerate it
   const newGame: Omit<GameDTO, 'id'> = {
-    userId: userId,
+    userId: CURRENT_USER_ID,
     guesses: [],
     createdAt: serverTimestamp(),
     correctWord: HARDCODED_CORRECT_WORD,

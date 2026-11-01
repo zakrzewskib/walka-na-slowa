@@ -1,6 +1,6 @@
 import { Text, VStack } from '@chakra-ui/react';
 import { useShallow } from 'zustand/shallow';
-import { WORD_LENGTH, WORDS_LENGTH } from '../../constants';
+import { CURRENT_USER_ID, WORD_LENGTH, WORDS_LENGTH } from '../../constants';
 import { useAppStore } from '../../store/store';
 import type { EvaluatedGuess } from '../../types';
 import { WordItem } from '../WordItem';
@@ -9,9 +9,6 @@ interface GameBoardProps {
   isPlayer: boolean;
   playerName: string;
 }
-
-// todo: add auth and storing user and separate guesses
-const CURRENT_USER_ID = 'user1';
 
 // A not-yet-submitted row: typed letters first, the rest empty
 function toPendingRow(word = ''): EvaluatedGuess {
@@ -27,6 +24,7 @@ function toPendingRow(word = ''): EvaluatedGuess {
 export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
   const currentGuess = useAppStore((state) => state.currentGuess);
 
+  // todo: separate players guesses on the backend side
   const guesses = useAppStore(
     useShallow((state) =>
       state.guesses.filter((guess) =>
