@@ -29,10 +29,10 @@ export const LetterItem = (props: LetterItemProps) => {
       height="60px"
       fontSize="24px"
       fontWeight="bolder"
-      background={calculateBackgroundColor(letter)}
+      background={calculateBackgroundColor(isCurrentTurn, letter)}
       borderColor={calculateBorderColor(isCurrentTurn, isPlayer)}
-      borderWidth={value ? '0px' : '2px'}
-      color="white"
+      borderWidth={value && !isCurrentTurn ? '0px' : '2px'}
+      color={isCurrentTurn ? 'black' : 'white'}
       mdDown={{
         flex: '1',
         width: 'full',

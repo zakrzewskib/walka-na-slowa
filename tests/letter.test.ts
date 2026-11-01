@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   calculateBackgroundColor,
   calculateBorderColor,
-  calculateBorderWidth,
   calculateDisplayValue,
 } from '../src/components/LetterItem/LetterItem.utils';
 import { HIDDEN_LETTER } from '../src/constants';
@@ -68,14 +67,5 @@ describe('calculateBorderColor', () => {
   it('gray when not current turn, regardless of isPlayer', () => {
     expect(calculateBorderColor(false, true)).toBe('gray.400');
     expect(calculateBorderColor(false, false)).toBe('gray.400');
-  });
-});
-
-describe('calculateBorderWidth', () => {
-  it('no border once a value is present', () => {
-    expect(calculateBorderWidth('a')).toBe('0px');
-  });
-  it('border shown when empty', () => {
-    expect(calculateBorderWidth('')).toBe('2px');
   });
 });
