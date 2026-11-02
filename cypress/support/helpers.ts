@@ -91,3 +91,7 @@ export const persistedState = () =>
     .then((raw) => JSON.parse(raw ?? '{}') as { state?: Partial<AppState> });
 
 export const surrender = () => cy.get(sel.surrenderBtn).click();
+
+/** The page must never scroll sideways: content width <= viewport width. */
+export const shouldNotOverflowHorizontally = (viewportWidth: number) =>
+  cy.get('html').invoke('prop', 'scrollWidth').should('be.lte', viewportWidth);

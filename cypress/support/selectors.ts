@@ -7,4 +7,6 @@ export const sel = {
   key: (value: string) => `[data-testid="key-${value}"]`,
   surrenderBtn: '[data-testid="surrender-button"]',
   toaster: '[data-testid="toaster"]',
+  grid: '[role="grid"]',
+  gridCell: '[role="gridcell"]',
 } as const;
