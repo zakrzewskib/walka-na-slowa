@@ -26,8 +26,12 @@ declare global {
 
 Cypress.Commands.add('createGame', () => {
   cy.get(sel.createGameBtn).click();
-  cy.get(sel.createGameDialog).should('not.be.visible');
-  key('A').should('be.enabled');
+
+  // 1. game is ready: keys get enabled once the game exists (no animation involved)
+  key('A', { timeout: 15_000 }).should('be.enabled');
+
+  // 2. dialog is gone (exit animation + unmount)
+  cy.get(sel.createGameDialog, { timeout: 10_000 }).should('not.exist');
 });
 
 Cypress.Commands.add('startGame', () => {

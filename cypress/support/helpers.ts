@@ -7,7 +7,9 @@ export type InputMode = 'click' | 'keyboard';
 const toEventKey = (value: string) =>
   value.length === 1 ? value.toLocaleLowerCase('pl-PL') : value; // 'Enter', 'Backspace'
 
-export const key = (value: string) => cy.get(sel.key(value));
+export const key = (value: string, options?: Partial<Cypress.Timeoutable>) =>
+  cy.get(sel.key(value), options);
+
 export const keyboard = () => cy.get(sel.keyboard);
 export const playerBoard = () => cy.get(sel.playerBoard);
 export const opponentBoard = () => cy.get(sel.opponentBoard);
