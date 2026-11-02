@@ -1,0 +1,52 @@
+import { Text, VStack } from '@chakra-ui/react';
+import { useShallow } from 'zustand/shallow';
+import { CURRENT_USER_ID, WORDS_LENGTH } from '../../constants';
+import { useAppStore } from '../../store/store';
+import { WordItem } from '../WordItem';
+import { toPendingRow } from './GameBoard.utils';
+
+interface GameBoardProps {
+  isPlayer: boolean;
+  playerName: string;
+}
+
+export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
+  const currentGuess = useAppStore((state) => state.currentGuess);
+
+  // todo: separate players guesses on the backend side
+  const guesses = useAppStore(
+    useShallow((state) =>
+      state.guesses.filter((guess) =>
+        isPlayer ? guess.userId === CURRENT_USER_ID : guess.userId !== CURRENT_USER_ID,
+      ),
+    ),
+  );
+
+  const pendingRows = Array.from({ length: WORDS_LENGTH - guesses.length }, (_, i) =>
+    toPendingRow(isPlayer && i === 0 ? currentGuess : ''),
+  );
+
+  return (
+    <VStack mdDown={{ width: 'full', alignItems: 'stretch' }}>
+      <Text alignSelf={isPlayer ? 'start' : 'end'}>
+        {playerName} {isPlayer && '(Ty)'}
+      </Text>
+
+      <VStack
+        gap="4px"
+        smDown={{ gap: '2px' }}
+        role="grid"
+        aria-label={isPlayer ? 'Twoja plansza' : 'Plansza przeciwnika'}
+        data-testid={isPlayer ? 'player-board' : 'opponent-board'}
+      >
+        {guesses.map(({ id, evaluatedGuess }) => (
+          <WordItem key={id} guess={evaluatedGuess} isPlayer={isPlayer} isCurrentTurn={false} />
+        ))}
+
+        {pendingRows.map((row, i) => (
+          <WordItem key={`pending-${i}`} guess={row} isPlayer={isPlayer} isCurrentTurn={i === 0} />
+        ))}
+      </VStack>
+    </VStack>
+  );
+};

@@ -6,7 +6,7 @@ import {
   calculateFontSizeMdDown,
   calculateValue,
   calculateWidth,
-} from '../src/components/KeyboardKey/KeyboardKey.utils';
+} from '../src/components/KeyboardKeyItem/KeyboardKeyItem.utils';
 
 describe('calculateBackgroundAndBorderColor', () => {
   it.each([
@@ -32,8 +32,8 @@ describe('calculateValue', () => {
   it('renders backspace icon', () => {
     expect(calculateValue('Backspace')).toBe('⌫');
   });
-  it('renders Enter as-is', () => {
-    expect(calculateValue('Enter')).toBe('Enter');
+  it('renders Enter icon', () => {
+    expect(calculateValue('Enter')).toBe('↵');
   });
   it('uppercases letters', () => {
     expect(calculateValue('A')).toBe('A');

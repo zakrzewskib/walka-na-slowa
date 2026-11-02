@@ -1,25 +1,34 @@
-describe('Responsive Design', () => {
-  const viewports = [
-    { device: 'iphone-6', width: 375, height: 667 },
-    { device: 'ipad-2', width: 768, height: 1024 },
-    { device: 'desktop', width: 1280, height: 720 },
-  ];
+import { key, keyboard, shouldNotOverflowHorizontally } from '../support/helpers';
+import { sel } from '../support/selectors';
+import { viewports } from '../support/viewports';
 
+describe('Responsive Design', () => {
   viewports.forEach(({ device, width, height }) => {
     describe(`${device} (${width}x${height})`, () => {
       beforeEach(() => {
         cy.viewport(width, height);
-        cy.visit('/');
+        cy.startGame();
       });
 
       it('displays boards correctly', () => {
-        cy.get('[role="grid"]').should('be.visible');
+        cy.get(sel.grid).should('be.visible');
         cy.contains('Gracz 1').should('be.visible');
         cy.contains('Gracz 2').should('be.visible');
       });
 
       it('has readable letter sizes', () => {
-        cy.get('[role="gridcell"]').first().should('be.visible');
+        cy.get(sel.gridCell).first().should('be.visible');
+      });
+
+      it('shows the whole on-screen keyboard', () => {
+        keyboard().should('be.visible');
+        key('A').should('be.visible');
+        key('Enter').should('be.visible');
+        key('Backspace').should('be.visible');
+      });
+
+      it('does not scroll horizontally', () => {
+        shouldNotOverflowHorizontally(width);
       });
     });
   });

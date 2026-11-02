@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   calculateBackgroundColor,
   calculateBorderColor,
-  calculateBorderWidth,
   calculateDisplayValue,
 } from '../src/components/LetterItem/LetterItem.utils';
 import { HIDDEN_LETTER } from '../src/constants';
@@ -20,9 +19,18 @@ describe('calculateDisplayValue', () => {
 });
 
 describe('calculateBackgroundColor', () => {
-  it('correctPlace wins over everything', () => {
+  it('isCurrentTurn wins over everything', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(true, {
+        correctPlace: true,
+        exists: true,
+        value: 'a',
+      }),
+    ).toBe('gray.100');
+  });
+  it('correctPlace wins when not isCurrentTurn', () => {
+    expect(
+      calculateBackgroundColor(false, {
         correctPlace: true,
         exists: true,
         value: 'a',
@@ -31,7 +39,7 @@ describe('calculateBackgroundColor', () => {
   });
   it('exists wins when not correctPlace', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(false, {
         correctPlace: false,
         exists: true,
         value: 'a',
@@ -40,7 +48,7 @@ describe('calculateBackgroundColor', () => {
   });
   it('falls back to gray.400 when a value is guessed but wrong', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(false, {
         correctPlace: false,
         exists: false,
         value: 'a',
@@ -49,7 +57,7 @@ describe('calculateBackgroundColor', () => {
   });
   it('defaults to gray.100 when empty/unfilled', () => {
     expect(
-      calculateBackgroundColor({
+      calculateBackgroundColor(false, {
         correctPlace: false,
         exists: false,
         value: '',
@@ -68,14 +76,5 @@ describe('calculateBorderColor', () => {
   it('gray when not current turn, regardless of isPlayer', () => {
     expect(calculateBorderColor(false, true)).toBe('gray.400');
     expect(calculateBorderColor(false, false)).toBe('gray.400');
-  });
-});
-
-describe('calculateBorderWidth', () => {
-  it('no border once a value is present', () => {
-    expect(calculateBorderWidth('a')).toBe('0px');
-  });
-  it('border shown when empty', () => {
-    expect(calculateBorderWidth('')).toBe('2px');
   });
 });

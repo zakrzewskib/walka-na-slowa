@@ -17,3 +17,14 @@
 import './commands';
 
 import 'cypress-axe';
+
+beforeEach(() => {
+  // Real emulation at the browser level, so CSS media queries see it too.
+  // CDP is only available in Chromium-based browsers (Chrome, Edge, Electron).
+  if (Cypress.isBrowser({ family: 'chromium' })) {
+    Cypress.automation('remote:debugger:protocol', {
+      command: 'Emulation.setEmulatedMedia',
+      params: { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] },
+    });
+  }
+});

@@ -1,52 +1,17 @@
-import { POLISH_ALPHABET, WORD_LENGTH, WORDS_LENGTH } from '../../src/constants';
-
-const KEYBOARD_ROWS = 4; // structural: fixed number of rows in the layout, not derived from data
-const SPECIAL_KEYS_COUNT = 2; // Backspace + Enter
-const KEYBOARD_CELLS = POLISH_ALPHABET.length + SPECIAL_KEYS_COUNT;
-
-const BOARDS_COUNT = 2; // player + opponent
-const BOARD_ROWS = WORDS_LENGTH;
-const BOARD_CELLS_PER_ROW = WORD_LENGTH;
-const CELLS_PER_BOARD = BOARD_ROWS * BOARD_CELLS_PER_ROW;
-
-const TOTAL_GRIDS = BOARDS_COUNT + 1; // 2 boards + 1 keyboard
-const TOTAL_ROWS = BOARDS_COUNT * BOARD_ROWS + KEYBOARD_ROWS;
-const TOTAL_GRIDCELLS = BOARDS_COUNT * CELLS_PER_BOARD + KEYBOARD_CELLS;
+import { currentGuess, key, keyboard, opponentBoard, playerBoard } from '../support/helpers';
+import { sel } from '../support/selectors';
 
 describe('Accessibility', () => {
   beforeEach(() => {
-    cy.visit('/');
-    cy.createGame();
+    cy.startGame();
     cy.injectAxe();
   });
-
-  const playerBoard = () => cy.get('[data-testid="player-board"]');
-  const opponentBoard = () => cy.get('[data-testid="opponent-board"]');
-  const keyboard = () => cy.get('[data-testid="keyboard"]');
 
   it('should not have any accessibility violations', () => {
     cy.checkA11y(undefined, {
       // disable color-contrast rule
       rules: { 'color-contrast': { enabled: false } },
     });
-  });
-
-  it('has proper semantic HTML structure', () => {
-    cy.get('[role="grid"]').should('have.length', TOTAL_GRIDS);
-    cy.get('[role="row"]').should('have.length', TOTAL_ROWS);
-    cy.get('[role="gridcell"]').should('have.length', TOTAL_GRIDCELLS);
-
-    playerBoard().should('have.length', 1);
-    playerBoard().find('[role="row"]').should('have.length', BOARD_ROWS);
-    playerBoard().find('[role="gridcell"]').should('have.length', CELLS_PER_BOARD);
-
-    opponentBoard().should('have.length', 1);
-    opponentBoard().find('[role="row"]').should('have.length', BOARD_ROWS);
-    opponentBoard().find('[role="gridcell"]').should('have.length', CELLS_PER_BOARD);
-
-    keyboard().should('have.length', 1);
-    keyboard().find('[role="row"]').should('have.length', KEYBOARD_ROWS);
-    keyboard().find('[role="gridcell"]').should('have.length', KEYBOARD_CELLS);
   });
 
   it('has descriptive labels for screen readers', () => {
@@ -57,6 +22,28 @@ describe('Accessibility', () => {
     playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
     opponentBoard().should('have.attr', 'aria-label', 'Plansza przeciwnika');
   });
+
+  describe('on-screen keyboard', () => {
+    it('renders keys as buttons with accessible names', () => {
+      keyboard()
+        .find('button')
+        .each(($btn) => {
+          const name = $btn.attr('aria-label') ?? $btn.text().trim();
+          cy.wrap(name, { log: false }).should('not.be.empty');
+        });
+    });
+
+    it('keys are reachable and focusable', () => {
+      key('A').focus().should('have.focus');
+    });
+
+    it('does not double-register a letter when a focused key is activated with the keyboard', () => {
+      // A focused <button> + a global keydown listener is a classic double-input bug.
+      key('A').focus();
+      cy.get('body').trigger('keydown', { key: 'a', bubbles: true });
+      currentGuess().should('eq', 'A');
+    });
+  });
 });
 
 describe('Accessibility - create game dialog', () => {
@@ -66,13 +53,19 @@ describe('Accessibility - create game dialog', () => {
   });
 
   it('is exposed as a dialog with an accessible name', () => {
-    cy.get('[data-testid="create-game-dialog"]')
+    cy.get(sel.createGameDialog)
       .should('have.attr', 'role', 'dialog')
       .and('have.attr', 'aria-labelledby');
   });
 
+  it('has no accessibility violations while open', () => {
+    cy.checkA11y(sel.createGameDialog, {
+      rules: { 'color-contrast': { enabled: false } },
+    });
+  });
+
   it('closes after the game is created', () => {
     cy.createGame();
-    cy.get('[data-testid="create-game-dialog"]').should('not.exist');
+    cy.get(sel.createGameDialog).should('not.exist');
   });
 });

@@ -30,7 +30,7 @@ export function calculateValue(value: KeyboardKey) {
   }
 
   if (value === 'Enter') {
-    return value;
+    return '↵';
   }
 
   return value.toLocaleUpperCase();
@@ -61,7 +61,7 @@ export function calculateFontSize(value: KeyboardKey) {
 }
 
 export function calculateFontSizeMdDown(value: KeyboardKey) {
-  if (value === 'Backspace') {
+  if (value === 'Backspace' || value === 'Enter') {
     return '20px';
   }
   return '16px';

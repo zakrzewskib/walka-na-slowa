@@ -10,7 +10,7 @@ export function getLetterAriaLabel(
 
   if (!value) {
     if (isCurrentTurn) {
-      return isPlayer ? 'Puste pole, twoja tura' : 'Puste pole, tura przeciwnika';
+      return isPlayer ? 'Twoja tura' : 'Tura przeciwnika';
     }
     return 'Puste pole';
   }
