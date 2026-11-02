@@ -1,29 +1,44 @@
-const keyTestId = (key: string) => `[data-testid="key-${key}"]`;
+import { sel } from './selectors';
 
-export const key = (value: string) => cy.get(keyTestId(value));
-export const keyboard = () => cy.get('[data-testid="keyboard"]');
+export type InputMode = 'click' | 'keyboard';
 
-// Clicks the on-screen keys, one per letter
-export function typeWord(word: string) {
-  for (const letter of word.toLocaleUpperCase('pl-PL')) {
-    key(letter).click();
+// Maps our key names to the KeyboardEvent.key value the app listens to
+const toEventKey = (value: string) =>
+  value.length === 1 ? value.toLocaleLowerCase('pl-PL') : value; // 'Enter', 'Backspace'
+
+export const key = (value: string) => cy.get(sel.key(value));
+export const keyboard = () => cy.get(sel.keyboard);
+export const playerBoard = () => cy.get(sel.playerBoard);
+export const opponentBoard = () => cy.get(sel.opponentBoard);
+
+/**
+ * Presses a single key either by clicking the on-screen button
+ * or by dispatching a real keydown event (what the physical keyboard does).
+ */
+export function pressKey(value: string, via: InputMode = 'click') {
+  if (via === 'click') {
+    key(value.length === 1 ? value.toLocaleUpperCase('pl-PL') : value).click();
+  } else {
+    // Listener is on document/window, the event bubbles up from body.
+    cy.get('body').trigger('keydown', {
+      key: toEventKey(value),
+      bubbles: true,
+    });
   }
 }
 
-export const pressEnter = () => key('Enter').click();
-export const pressBackspace = () => key('Backspace').click();
-
-export function typeAndEnter(word: string) {
-  typeWord(word);
-  pressEnter();
+export function typeWord(word: string, via: InputMode = 'click') {
+  for (const letter of word) {
+    pressKey(letter, via);
+  }
 }
 
-// Submits a valid word and waits until the submission is finished:
-// the keys are disabled while submitting, then re-enabled and the typed word is cleared.
-export function submitWord(word: string) {
-  typeAndEnter(word);
-  key('Enter').should('be.enabled');
-  cy.window().its('useAppStore').invoke('getState').its('currentGuess').should('eq', '');
+export const pressEnter = (via: InputMode = 'click') => pressKey('Enter', via);
+export const pressBackspace = (via: InputMode = 'click') => pressKey('Backspace', via);
+
+export function typeAndEnter(word: string, via: InputMode = 'click') {
+  typeWord(word, via);
+  pressEnter(via);
 }
 
 export function getStore(win: Window) {
@@ -37,11 +52,12 @@ export function getStore(win: Window) {
 
 export const storeState = () => cy.window().then((win) => getStore(win).getState());
 
-const createButton = '[data-testid="create-game-dialog-btn"]';
-const dialog = '[data-testid="create-game-dialog"]';
+export const currentGuess = () => storeState().its('currentGuess');
 
-export const startGame = () => {
-  cy.get(createButton).click();
-  cy.get(dialog).should('not.exist');
-  key('A').should('be.enabled');
-};
+// Submits a valid word and waits until the submission is finished:
+// keys are disabled while submitting, then re-enabled and the typed word is cleared.
+export function submitWord(word: string, via: InputMode = 'click') {
+  typeAndEnter(word, via);
+  key('Enter').should('be.enabled');
+  currentGuess().should('eq', '');
+}

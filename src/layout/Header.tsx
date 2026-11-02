@@ -14,7 +14,7 @@ export const Header = () => {
       justifyContent="space-between"
     >
       <HStack>
-        <Image src="/logo.webp" height={{ base: '36px', sm: '48px' }} />
+        <Image alt="logo" src="/logo.webp" height={{ base: '36px', sm: '48px' }} />
         <Text
           as="h1"
           textStyle={{ base: 'md', sm: 'xl' }}
