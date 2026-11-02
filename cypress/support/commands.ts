@@ -25,8 +25,16 @@ declare global {
 }
 
 Cypress.Commands.add('createGame', () => {
+  // Adjust the URL pattern/method to your create-game endpoint
+  cy.intercept('POST', '**/games*').as('createGame');
+
   cy.get(sel.createGameBtn).click();
-  cy.get(sel.createGameDialog).should('not.exist');
+
+  // 1. the request itself (slow on cold CI backends)
+  cy.wait('@createGame', { timeout: 15_000 });
+
+  // 2. the dialog's exit animation + the state update
+  cy.get(sel.createGameDialog, { timeout: 10_000 }).should('not.exist');
   key('A').should('be.enabled');
 });
 
