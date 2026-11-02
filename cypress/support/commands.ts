@@ -26,7 +26,7 @@ declare global {
 
 Cypress.Commands.add('createGame', () => {
   cy.get(sel.createGameBtn).click();
-  cy.get(sel.createGameDialog).should('not.exist');
+  cy.get(sel.createGameDialog).should('not.be.visible');
   key('A').should('be.enabled');
 });
 
