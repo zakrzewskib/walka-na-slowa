@@ -127,3 +127,10 @@ export function allKeysShouldBe(state: 'enabled' | 'disabled') {
     .find(state === 'enabled' ? 'button:disabled' : 'button:enabled')
     .should('not.exist');
 }
+
+/** Every row of the given board must contain exactly `count` cells. */
+export function eachRowShouldHaveCells(board: Cypress.Chainable<JQuery>, count: number) {
+  board.find(sel.row).each(($row) => {
+    cy.wrap($row, { log: false }).find(sel.gridCell).should('have.length', count);
+  });
+}

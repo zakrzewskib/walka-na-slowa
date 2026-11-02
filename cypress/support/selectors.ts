@@ -9,4 +9,5 @@ export const sel = {
   toaster: '[data-testid="toaster"]',
   grid: '[role="grid"]',
   gridCell: '[role="gridcell"]',
+  row: '[role="row"]',
 } as const;

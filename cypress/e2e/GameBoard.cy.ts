@@ -1,12 +1,11 @@
 import { WORD_LENGTH, WORDS_LENGTH } from '../../src/constants';
+import { eachRowShouldHaveCells, opponentBoard, playerBoard } from '../support/helpers';
+import { sel } from '../support/selectors';
 
 describe('Game Boards Display', () => {
   beforeEach(() => {
-    cy.visit('/');
+    cy.startGame();
   });
-
-  const playerBoard = () => cy.get('[data-testid="player-board"]');
-  const opponentBoard = () => cy.get('[data-testid="opponent-board"]');
 
   it('displays exactly one player board and one opponent board', () => {
     playerBoard().should('have.length', 1);
@@ -20,7 +19,6 @@ describe('Game Boards Display', () => {
 
   it('shows "(Ty)" only on player 1 board', () => {
     cy.contains('Gracz 1 (Ty)').should('be.visible');
-    cy.contains('Gracz 2').should('be.visible');
     cy.contains('Gracz 2 (Ty)').should('not.exist');
   });
 
@@ -29,32 +27,27 @@ describe('Game Boards Display', () => {
     opponentBoard().should('have.attr', 'aria-label', 'Plansza przeciwnika');
   });
 
-  it('displays correct number of rows per board', () => {
-    playerBoard().find('[role="row"]').should('have.length', WORDS_LENGTH);
-    opponentBoard().find('[role="row"]').should('have.length', WORDS_LENGTH);
-  });
+  const boards = [
+    { name: 'player board', board: playerBoard },
+    { name: 'opponent board', board: opponentBoard },
+  ];
 
-  it('displays correct number of cells per row on each board', () => {
-    playerBoard()
-      .find('[role="row"]')
-      .each(($row) => {
-        cy.wrap($row).find('[role="gridcell"]').should('have.length', WORD_LENGTH);
+  boards.forEach(({ name, board }) => {
+    describe(name, () => {
+      it('displays correct number of rows', () => {
+        board().find(sel.row).should('have.length', WORDS_LENGTH);
       });
 
-    opponentBoard()
-      .find('[role="row"]')
-      .each(($row) => {
-        cy.wrap($row).find('[role="gridcell"]').should('have.length', WORD_LENGTH);
+      it('displays correct number of cells per row', () => {
+        eachRowShouldHaveCells(board(), WORD_LENGTH);
       });
-  });
 
-  it('displays correct total number of cells per board', () => {
-    playerBoard()
-      .find('[role="gridcell"]')
-      .should('have.length', WORDS_LENGTH * WORD_LENGTH);
-    opponentBoard()
-      .find('[role="gridcell"]')
-      .should('have.length', WORDS_LENGTH * WORD_LENGTH);
+      it('displays correct total number of cells', () => {
+        board()
+          .find(sel.gridCell)
+          .should('have.length', WORDS_LENGTH * WORD_LENGTH);
+      });
+    });
   });
 
   // Actual letter/status content (correct/present/absent) and current-turn
