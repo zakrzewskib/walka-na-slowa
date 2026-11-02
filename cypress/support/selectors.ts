@@ -10,4 +10,5 @@ export const sel = {
   grid: '[role="grid"]',
   gridCell: '[role="gridcell"]',
   row: '[role="row"]',
+  errorAlert: '[data-testid="error-alert"]',
 } as const;

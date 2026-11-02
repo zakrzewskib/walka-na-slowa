@@ -134,3 +134,28 @@ export function eachRowShouldHaveCells(board: Cypress.Chainable<JQuery>, count: 
     cy.wrap($row, { log: false }).find(sel.gridCell).should('have.length', count);
   });
 }
+
+/**
+ * Starts recording `disabled` changes of the element matching `selector`.
+ * Cypress retries assertions until they pass, so "stays disabled" can't be asserted directly;
+ * the observer records what happened while the test did something else.
+ *
+ * Yields { record, stop }. Assert on `record` with `cy.wrap(record).its(...)`.
+ */
+export function observeDisabled(selector: string) {
+  return cy.get(selector, { log: false }).then(($el) => {
+    const button = $el[0] as HTMLButtonElement;
+    const record = { sawDisabled: false, flashedBackToEnabled: false };
+
+    const observer = new MutationObserver(() => {
+      if (button.disabled) {
+        record.sawDisabled = true;
+      } else if (record.sawDisabled) {
+        record.flashedBackToEnabled = true;
+      }
+    });
+    observer.observe(button, { attributes: true, attributeFilter: ['disabled'] });
+
+    return { record, stop: () => observer.disconnect() };
+  });
+}
