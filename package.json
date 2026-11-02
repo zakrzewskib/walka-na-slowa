@@ -15,7 +15,7 @@
     "prepare": "husky",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "e2e": "cypress run",
+    "e2e": "cypress run --spec cypress/e2e/Keyboard.cy.ts",
     "e2e:ci": "start-server-and-test dev http://localhost:5173 e2e",
     "test:e2e": "cross-env VITE_USE_FIREBASE_EMULATOR=true firebase emulators:exec --only firestore --project demo-walka-na-slowa \"pnpm run e2e:ci\""
   },

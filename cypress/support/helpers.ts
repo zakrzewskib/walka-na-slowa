@@ -1,3 +1,4 @@
+import { ALL_KEYS } from './keys';
 import { sel } from './selectors';
 
 export type InputMode = 'click' | 'keyboard';
@@ -108,3 +109,21 @@ export const makeGuess = (value: string, overrides: Partial<Guess> = {}): Guess 
   },
   ...overrides,
 });
+
+export const guesses = () => storeValue((s) => s.guesses);
+export const guessCount = () => storeValue((s) => s.guesses.length);
+
+/** Types through Cypress' real key simulation (keydown/keypress/keyup), e.g. '{enter}', '{backspace}'. */
+export const typePhysical = (text: string) => cy.get('body').type(text);
+
+/**
+ * Asserts that every key is rendered and in the given state.
+ * `.should('be.disabled')` on a multi-element subject passes if ANY element matches,
+ * so we assert that no key is in the opposite state instead.
+ */
+export function allKeysShouldBe(state: 'enabled' | 'disabled') {
+  keyboard().find('button').should('have.length', ALL_KEYS.length);
+  keyboard()
+    .find(state === 'enabled' ? 'button:disabled' : 'button:enabled')
+    .should('not.exist');
+}

@@ -1,26 +1,23 @@
 import { WORD_LENGTH } from '../../src/constants';
 import {
-  getStore,
+  allKeysShouldBe,
+  currentGuess,
+  guessCount,
   key,
   keyboard,
+  patchStore,
   pressBackspace,
   pressEnter,
-  startGame,
-  storeState,
+  typePhysical,
   typeWord,
 } from '../support/helpers';
-
-const ALL_KEYS = [
-  ...'QWERTYUIOP',
-  ...'ASDFGHJKL',
-  ...'ZXCVBNM',
-  ...'ĄĆĘŁŃÓŚŹŻ',
-  'Backspace',
-  'Enter',
-];
+import { ALL_KEYS } from '../support/keys';
+import { sel } from '../support/selectors';
 
 describe('Keyboard - layout and state', () => {
-  beforeEach(() => cy.visit('/'));
+  beforeEach(() => {
+    cy.visit('/');
+  });
 
   it('renders a labeled group with every key', () => {
     keyboard().should('have.attr', 'role', 'group').and('have.attr', 'aria-label', 'Klawiatura');
@@ -29,102 +26,90 @@ describe('Keyboard - layout and state', () => {
   });
 
   it('has all keys disabled before a game exists, and enabled after', () => {
-    keyboard()
-      .find('button')
-      .each(($k) => cy.wrap($k).should('be.disabled'));
-    startGame();
-    keyboard()
-      .find('button')
-      .each(($k) => cy.wrap($k).should('be.enabled'));
+    allKeysShouldBe('disabled');
+    cy.createGame();
+    allKeysShouldBe('enabled');
   });
 
   it('ignores the physical keyboard while there is no game', () => {
-    cy.get('body').type('kot');
-    storeState().its('currentGuess').should('eq', '');
+    typePhysical('kot');
+    currentGuess().should('eq', '');
   });
 
   it('disables all keys while a guess is being submitted', () => {
-    startGame();
-    cy.window().then((win) => getStore(win).setState({ isSubmittingGuess: true }));
-    keyboard()
-      .find('button')
-      .each(($k) => cy.wrap($k).should('be.disabled'));
+    cy.createGame();
+    patchStore({ isSubmittingGuess: true });
+    allKeysShouldBe('disabled');
   });
 });
 
 describe('Keyboard - typing', () => {
   beforeEach(() => {
-    cy.visit('/');
-    startGame();
+    cy.startGame();
   });
 
   it('types letters, including Polish ones, with on-screen keys', () => {
     typeWord('kąt');
-    storeState().its('currentGuess').should('eq', 'KĄT');
+    currentGuess().should('eq', 'KĄT');
   });
 
   it('removes the last letter with Backspace', () => {
     typeWord('kot');
     pressBackspace();
-    storeState().its('currentGuess').should('eq', 'KO');
+    currentGuess().should('eq', 'KO');
   });
 
   it('does nothing on Backspace with an empty guess', () => {
     pressBackspace();
-    storeState().its('currentGuess').should('eq', '');
+    currentGuess().should('eq', '');
   });
 
   it('does not accept more letters than the word length', () => {
     typeWord('kotekxx');
-    storeState().its('currentGuess').should('have.length', WORD_LENGTH);
+    currentGuess().should('have.length', WORD_LENGTH);
   });
 
   it('works with the physical keyboard', () => {
-    cy.get('body').type('kotx{backspace}');
-    storeState().its('currentGuess').should('eq', 'KOT');
+    typePhysical('kotx{backspace}');
+    currentGuess().should('eq', 'KOT');
   });
 
   it('ignores keys that are not on the keyboard', () => {
-    cy.get('body').type('12 -{leftarrow}');
-    storeState().its('currentGuess').should('eq', '');
+    typePhysical('12 -{leftarrow}');
+    currentGuess().should('eq', '');
   });
 });
 
 describe('Keyboard - submitting', () => {
   beforeEach(() => {
-    cy.visit('/');
-    startGame();
+    cy.startGame();
   });
 
   it('does not submit a word that is too short', () => {
     typeWord('kot');
     pressEnter();
-    storeState().then((s) => {
-      expect(s.guesses).to.have.length(0);
-      expect(s.currentGuess).to.eq('KOT');
-    });
+    guessCount().should('eq', 0);
+    currentGuess().should('eq', 'KOT');
   });
 
   it('submits a full word and clears the typed letters', () => {
     typeWord('kotek');
     pressEnter();
-    storeState().its('guesses').should('have.length', 1);
-    storeState().its('currentGuess').should('eq', '');
+    guessCount().should('eq', 1);
+    currentGuess().should('eq', '');
     key('Enter').should('be.enabled');
   });
 
   it('submits with the physical Enter key', () => {
-    cy.get('body').type('kotek{enter}');
-    storeState().its('guesses').should('have.length', 1);
+    typePhysical('kotek{enter}');
+    guessCount().should('eq', 1);
   });
 
   it('shows a toast when submitting fails', () => {
-    cy.window().then((win) => {
-      getStore(win).setState({ submitGuess: () => Promise.reject(new Error('boom')) });
-    });
+    patchStore({ submitGuess: () => Promise.reject(new Error('boom')) });
     typeWord('kotek');
     pressEnter();
-    cy.get('[data-testid="toaster"]').should('contain.text', 'Nie udało się zgadnąć');
+    cy.get(sel.toaster).should('contain.text', 'Nie udało się zgadnąć');
     key('Enter').should('be.enabled');
   });
 });
