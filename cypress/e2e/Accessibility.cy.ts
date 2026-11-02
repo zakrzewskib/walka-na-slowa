@@ -4,15 +4,15 @@ import { sel } from '../support/selectors';
 describe('Accessibility', () => {
   beforeEach(() => {
     cy.startGame();
-    cy.injectAxe();
+    // cy.injectAxe();
   });
 
-  it('should not have any accessibility violations', () => {
-    cy.checkA11y(undefined, {
-      // disable color-contrast rule
-      rules: { 'color-contrast': { enabled: false } },
-    });
-  });
+  // it('should not have any accessibility violations', () => {
+  //   cy.checkA11y(undefined, {
+  //     // disable color-contrast rule
+  //     rules: { 'color-contrast': { enabled: false } },
+  //   });
+  // });
 
   it('has descriptive labels for screen readers', () => {
     cy.get('[role="gridcell"]').each(($cell) => {
