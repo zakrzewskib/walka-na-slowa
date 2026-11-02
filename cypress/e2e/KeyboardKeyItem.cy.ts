@@ -1,9 +1,8 @@
-import { getStore, key, startGame, storeState } from '../support/helpers';
+import { currentGuess, key, makeGuess, patchStore } from '../support/helpers';
 
 describe('KeyboardKey', () => {
   beforeEach(() => {
-    cy.visit('/');
-    startGame();
+    cy.startGame();
   });
 
   it('is a real button that does not submit forms', () => {
@@ -11,7 +10,7 @@ describe('KeyboardKey', () => {
   });
 
   it('has a descriptive aria-label', () => {
-    key('A').invoke('attr', 'aria-label').should('not.be.empty');
+    key('A').should('have.attr', 'aria-label').and('not.be.empty');
   });
 
   it('shows its letter, and symbols for special keys', () => {
@@ -33,32 +32,20 @@ describe('KeyboardKey', () => {
   });
 
   it('cannot be clicked while disabled', () => {
-    cy.window().then((win) => getStore(win).setState({ isSubmittingGuess: true }));
+    patchStore({ isSubmittingGuess: true });
+
     key('A').should('be.disabled').and('have.css', 'cursor', 'not-allowed');
     key('A').click({ force: true }); // force bypasses Cypress' own disabled check
-    storeState().its('currentGuess').should('eq', '');
+    currentGuess().should('eq', '');
   });
 
   it('updates its aria-label after the letter was used in a guess', () => {
-    key('K').invoke('attr', 'aria-label').as('before');
+    key('K')
+      .invoke('attr', 'aria-label')
+      .then((before) => {
+        patchStore({ guesses: [makeGuess('KOTEK')] });
 
-    cy.window().then((win) => {
-      getStore(win).setState({
-        guesses: [
-          {
-            id: 'g1',
-            userId: 'user1',
-            value: 'KOTEK',
-            evaluatedGuess: {
-              letters: [...'KOTEK'].map((value) => ({ value, exists: true, correctPlace: true })),
-            },
-          },
-        ],
+        key('K').invoke('attr', 'aria-label').should('not.eq', before);
       });
-    });
-
-    cy.get('@before').then((before) => {
-      key('K').invoke('attr', 'aria-label').should('not.eq', before);
-    });
   });
 });

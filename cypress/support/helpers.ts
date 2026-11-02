@@ -95,3 +95,16 @@ export const surrender = () => cy.get(sel.surrenderBtn).click();
 /** The page must never scroll sideways: content width <= viewport width. */
 export const shouldNotOverflowHorizontally = (viewportWidth: number) =>
   cy.get('html').invoke('prop', 'scrollWidth').should('be.lte', viewportWidth);
+
+type Guess = AppState['guesses'][number];
+
+/** Builds a fully-correct guess for store patching. Override any field you need. */
+export const makeGuess = (value: string, overrides: Partial<Guess> = {}): Guess => ({
+  id: `guess-${value}`,
+  userId: 'user1',
+  value,
+  evaluatedGuess: {
+    letters: [...value].map((letter) => ({ value: letter, exists: true, correctPlace: true })),
+  },
+  ...overrides,
+});
