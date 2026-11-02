@@ -52,7 +52,7 @@ export function getStore(win: Window) {
 
 export const storeState = () => cy.window().then((win) => getStore(win).getState());
 
-export const currentGuess = () => storeState().its('currentGuess');
+export const currentGuess = () => storeValue((s) => s.currentGuess);
 
 // Submits a valid word and waits until the submission is finished:
 // keys are disabled while submitting, then re-enabled and the typed word is cleared.
@@ -61,3 +61,33 @@ export function submitWord(word: string, via: InputMode = 'click') {
   key('Enter').should('be.enabled');
   currentGuess().should('eq', '');
 }
+
+export const STORAGE_KEY = 'walka-na-slowa-storage';
+
+type AppState = ReturnType<ReturnType<typeof getStore>['getState']>;
+
+/**
+ * Retryable read of a single store value. The store is read again on every retry,
+ * so `.should()` waits for async updates (unlike `storeState().its(...)`, which is a snapshot).
+ */
+export function storeValue<T>(select: (state: AppState) => T) {
+  return cy
+    .window({ log: false })
+    .then((win) => ({ read: () => select(getStore(win).getState()) }))
+    .invoke('read');
+}
+
+/** Overrides store fields/actions, e.g. to simulate a failing action. */
+export function patchStore(patch: Partial<AppState>) {
+  cy.window().then((win) => getStore(win).setState(patch));
+}
+
+/** The persisted (localStorage) part of the store, parsed. */
+export const persistedState = () =>
+  cy
+    .window()
+    .its('localStorage')
+    .invoke('getItem', STORAGE_KEY)
+    .then((raw) => JSON.parse(raw ?? '{}') as { state?: Partial<AppState> });
+
+export const surrender = () => cy.get(sel.surrenderBtn).click();

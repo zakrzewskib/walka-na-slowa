@@ -5,4 +5,6 @@ export const sel = {
   playerBoard: '[data-testid="player-board"]',
   opponentBoard: '[data-testid="opponent-board"]',
   key: (value: string) => `[data-testid="key-${value}"]`,
+  surrenderBtn: '[data-testid="surrender-button"]',
+  toaster: '[data-testid="toaster"]',
 } as const;
