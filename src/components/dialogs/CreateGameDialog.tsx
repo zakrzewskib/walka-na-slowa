@@ -7,28 +7,50 @@ import { ErrorAlert } from '../alerts/ErrorAlert';
 export const CreateGameDialog = () => {
   const gameId = useAppStore((state) => state.gameId);
   const createGame = useAppStore((state) => state.createGame);
-  const [loading, setLoading] = useState(false);
+  const [soloLoading, setSoloLoading] = useState(false);
+  const [versusLoading, setVersusLoading] = useState(false);
+
+  const [soloDisabled, setSoloDisabled] = useState(false);
+  const [, setVersusDisabled] = useState(false);
+
   const [error, setError] = useState('');
 
   async function handleCreateGame(mode: GameMode) {
-    setLoading(true);
+    if (mode === 'solo') {
+      setSoloLoading(true);
+      setVersusDisabled(true);
+    } else {
+      setSoloDisabled(true);
+      setVersusLoading(true);
+    }
+
     setError('');
 
     try {
       // On success the store sets gameId, which closes the dialog
       await createGame(mode);
     } catch {
-      setLoading(false);
+      if (mode === 'solo') {
+        setSoloLoading(false);
+      } else {
+        setVersusLoading(false);
+      }
+
       setError('Nie udało się stworzyć gry. Proszę spróbować ponownie lub odświeżyć stronę.');
     }
   }
   // todo: Add button to handle login
 
+  function handleOnExitComplete() {
+    setSoloLoading(false);
+    setVersusLoading(false);
+  }
+
   return (
     <Dialog.Root
       open={!gameId}
       // Reset only after the close animation, so the button doesn't flash back
-      onExitComplete={() => setLoading(false)}
+      onExitComplete={handleOnExitComplete}
       closeOnEscape={false}
       closeOnInteractOutside={false}
       placement="center"
@@ -57,7 +79,8 @@ export const CreateGameDialog = () => {
                 onClick={() => handleCreateGame('solo')}
                 data-testid="create-game-dialog-btn-solo"
                 colorPalette="blackAlpha" // better for accessibility
-                loading={loading}
+                loading={soloLoading}
+                disabled={soloDisabled}
                 loadingText="Tworzenie..."
               >
                 Zagraj samemu
@@ -67,9 +90,9 @@ export const CreateGameDialog = () => {
                 onClick={() => handleCreateGame('versus')}
                 data-testid="create-game-dialog-btn-versus"
                 colorPalette="blackAlpha" // better for accessibility
-                loading={loading}
+                loading={versusLoading}
+                disabled={true} // todo: Implement versus mode
                 loadingText="Tworzenie..."
-                disabled={true}
               >
                 Znajdź przeciwnika
               </Button>
