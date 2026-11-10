@@ -48,7 +48,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       correctWord: '',
       guesses: [],
       currentGuess: '',
-      mode: 'versus',
+      mode: get().mode,
       gameResult: null,
     });
   },
