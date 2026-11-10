@@ -94,7 +94,7 @@ export const CreateGameDialog = () => {
                 disabled={true} // todo: Implement versus mode
                 loadingText="Tworzenie..."
               >
-                Znajdź przeciwnika
+                Znajdź przeciwnika (wkrótce 👨🏼‍💻)
               </Button>
             </Dialog.Footer>
           </Dialog.Content>

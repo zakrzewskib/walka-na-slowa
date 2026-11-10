@@ -2,6 +2,7 @@ import type { GameMode, Guess, GuessSubmit, PolishLetter } from '../types';
 
 export interface GameSlice {
   gameId: string;
+  mode: GameMode;
   correctWord: string;
   createGame: (mode: GameMode) => Promise<void>;
   loadGame: (gameId: string) => Promise<void>;

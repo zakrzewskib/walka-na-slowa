@@ -5,8 +5,11 @@ import { Keyboard } from './components/Keyboard/Keyboard';
 import { SurrenderButton } from './components/SurrenderButton';
 import { Toaster } from './components/ui/toaster';
 import { Layout } from './layout/Layout';
+import { useAppStore } from './store/store';
 
 function App() {
+  const gameMode = useAppStore((state) => state.mode);
+
   return (
     <>
       <Toaster />
@@ -16,7 +19,7 @@ function App() {
         <VStack w="full" flex="1" justifyContent="space-between">
           <HStack gap="24px" justifyContent="center" w="full">
             <GameBoard isPlayer={true} playerName="Gracz 1" />
-            <GameBoard isPlayer={false} playerName="Gracz 2" />
+            {gameMode === 'versus' && <GameBoard isPlayer={false} playerName="Gracz 2" />}
           </HStack>
 
           <Keyboard />

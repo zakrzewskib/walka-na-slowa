@@ -9,16 +9,30 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
 ) => ({
   gameId: '',
   correctWord: '',
+  mode: 'versus',
 
   createGame: async (mode: GameMode) => {
     const gameId = await firebaseCreateGame(mode);
-    set({ gameId, correctWord: HARDCODED_CORRECT_WORD, guesses: [], currentGuess: '' });
+    set({
+      gameId,
+      correctWord: HARDCODED_CORRECT_WORD,
+      guesses: [],
+      currentGuess: '',
+      mode: 'solo',
+    });
   },
 
   loadGame: async (gameId) => {
     const game = await firebaseGetGame(gameId);
+    // todo: Add loading state
     // todo: Add loading only user's guesses
-    set({ gameId, correctWord: game.correctWord, guesses: game.guesses, currentGuess: '' });
+    set({
+      gameId,
+      correctWord: game.correctWord,
+      guesses: game.guesses,
+      currentGuess: '',
+      mode: game.mode,
+    });
   },
 
   finishGame: async () => {
@@ -28,6 +42,6 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
     }
     // todo: Add setting game status
     // todo: Add firebase game update
-    set({ gameId: '', correctWord: '', guesses: [], currentGuess: '' });
+    set({ gameId: '', correctWord: '', guesses: [], currentGuess: '', mode: 'versus' });
   },
 });
