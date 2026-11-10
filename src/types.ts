@@ -20,13 +20,14 @@ export type GuessSubmit = Omit<Guess, 'evaluatedGuess'>;
 
 export type GameMode = 'solo' | 'versus';
 
-type GameStatus = 'waiting_for_opponent' | 'in_progress' | 'finished';
+export type GameStatus = 'waiting_for_opponent' | 'in_progress' | 'finished';
 
-type GameResult =
+export type GameResult =
   | { outcome: 'wonAlone' }
-  | { outcome: 'won'; winnerId: string }
-  | { outcome: 'lost' }
-  | { outcome: 'tie' };
+  | { outcome: 'lostAlone' }
+  | { outcome: 'finished'; winnerId: string }
+  | { outcome: 'tie' }
+  | null;
 
 // todo: Hide correct word: either a Cloud Function that validates guesses server-side and never sends the word to the client, or Firestore security rules that hide the field until the game is over.
 // todo: Hide enemy's guesses
@@ -38,7 +39,7 @@ export interface Game {
   guesses: Guess[];
   correctWord: string;
   status: GameStatus;
-  result: GameResult | null;
+  result: GameResult;
 }
 
 // prettier-ignore

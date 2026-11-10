@@ -1,4 +1,6 @@
-import type { EvaluatedGuess, LetterResult } from '../types';
+import { CURRENT_USER_ID, ENEMY_USER_ID, WORDS_LENGTH } from '../constants';
+import { HARDCODED_CORRECT_WORD } from '../firebase/games';
+import type { EvaluatedGuess, GameMode, GameResult, LetterResult } from '../types';
 
 export function getWordResult(rawGuess: string, rawCorrectWord: string): EvaluatedGuess {
   const correctWord = rawCorrectWord.toUpperCase();
@@ -42,4 +44,29 @@ export function getWordResult(rawGuess: string, rawCorrectWord: string): Evaluat
   return {
     letters: result,
   };
+}
+
+// todo: Move to backend
+// todo: guessesLength must be of users guesses not all guesses
+export function getGameResult(value: string, guessesLength: number, mode: GameMode): GameResult {
+  if (value === HARDCODED_CORRECT_WORD && mode === 'solo') {
+    return {
+      outcome: 'wonAlone',
+    };
+  } else if (value === HARDCODED_CORRECT_WORD && mode === 'versus') {
+    return {
+      outcome: 'finished',
+      winnerId: CURRENT_USER_ID,
+    };
+  } else if (guessesLength === WORDS_LENGTH && mode === 'solo') {
+    return {
+      outcome: 'lostAlone',
+    };
+  } else if (guessesLength === WORDS_LENGTH && mode === 'versus') {
+    return {
+      outcome: 'finished',
+      winnerId: ENEMY_USER_ID,
+    };
+  }
+  return null;
 }

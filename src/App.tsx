@@ -9,16 +9,21 @@ import { useAppStore } from './store/store';
 
 function App() {
   const gameMode = useAppStore((state) => state.mode);
+  const gameResult = useAppStore((state) => state.gameResult);
 
   return (
     <>
       <Toaster />
       <Layout>
         <CreateGameDialog />
+        {/* todo: Add finished dialog (has create new game button that calls finish game in store */}
 
         <VStack w="full" flex="1" justifyContent="space-between">
           <HStack gap="24px" justifyContent="center" w="full">
-            <GameBoard isPlayer={true} playerName="Gracz 1" />
+            <GameBoard
+              isPlayer={true}
+              playerName={`Gracz 1 ${gameResult ? gameResult.outcome : ''}`}
+            />
             {gameMode === 'versus' && <GameBoard isPlayer={false} playerName="Gracz 2" />}
           </HStack>
 

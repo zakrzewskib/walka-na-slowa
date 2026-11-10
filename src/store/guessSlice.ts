@@ -2,8 +2,6 @@ import type { StateCreator } from 'zustand';
 import { WORD_LENGTH } from '../constants';
 import { firebaseSubmitGuess } from '../firebase/games';
 import { logger } from '../logger/logger';
-import type { Guess } from '../types';
-import { getWordResult } from '../utils/gameLogic';
 import type { AppState, GuessSlice, StoreMutators } from './types';
 
 export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSlice> = (
@@ -43,32 +41,15 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
       throw new Error('Store: gameId or correct word does not exist!');
     }
 
-    // todo: Move evaluation to backend
-    const guess: Guess = {
-      ...guessSubmit,
-      evaluatedGuess: getWordResult(guessSubmit.value, correctWord),
-    };
-
-    // optimistic update: add the row and clear the typed word in one update
-    set((state) => ({
-      guesses: [...state.guesses, guess],
-      currentGuess: '',
-      isSubmittingGuess: true,
-    }));
-
     try {
-      await firebaseSubmitGuess(gameId, guess);
-    } catch (error) {
-      // undo the optimistic update and give the word back so the user can retry - but only if
-      // the game did not change meanwhile (finishGame/createGame already reset the guesses,
-      // and the word must not leak into a different game)
-      if (get().gameId === gameId) {
-        set((state) => ({
-          guesses: state.guesses.filter((g) => g.id !== guess.id),
-          currentGuess: guessSubmit.value,
-        }));
-      }
-      throw error;
+      const { guess, gameResult } = await firebaseSubmitGuess(gameId, guessSubmit);
+
+      set((state) => ({
+        guesses: [...state.guesses, guess],
+        currentGuess: '',
+        isSubmittingGuess: true,
+        gameResult: gameResult,
+      }));
     } finally {
       set({ isSubmittingGuess: false });
     }

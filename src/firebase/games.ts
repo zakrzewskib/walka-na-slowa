@@ -12,7 +12,8 @@ import {
 } from 'firebase/firestore';
 import { CURRENT_USER_ID } from '../constants';
 import { logger } from '../logger/logger';
-import type { Game, GameMode, Guess } from '../types';
+import type { Game, GameMode, GameResult, Guess, GuessSubmit } from '../types';
+import { getGameResult, getWordResult } from '../utils/gameLogic';
 import { db } from './firebase';
 
 export const HARDCODED_CORRECT_WORD = 'LALKA'; // todo: Add choosing correct word in the backend
@@ -48,15 +49,38 @@ export async function firebaseCreateGame(mode: GameMode): Promise<string> {
   }
 }
 
-export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise<void> {
+export async function firebaseSubmitGuess(
+  gameId: string,
+  guess: GuessSubmit,
+): Promise<{ guess: Guess; gameResult: GameResult }> {
   // todo: Offline/flaky network: write may hang (no error/rollback) or be saved twice on retry (new id + createdAt defeat arrayUnion dedupe)
 
   try {
     const gameRef = doc(gamesCollection, gameId);
+
+    // todo: Move evaluation to backend
+    const evaluatedGuess: Guess = {
+      ...guess,
+      evaluatedGuess: getWordResult(guess.value, HARDCODED_CORRECT_WORD),
+    };
+
     await updateDoc(gameRef, {
-      guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
+      guesses: arrayUnion({ ...evaluatedGuess, createdAt: Timestamp.now() }),
     });
+
+    const game = await firebaseGetGame(gameId);
+
+    // todo: Move winning logic to backend
+    const gameResult = getGameResult(guess.value, game.guesses.length, game.mode);
+
+    if (!gameResult) {
+      await updateDoc(gameRef, {
+        gameResult: gameResult,
+      });
+    }
+
     logger.debug('Added new guess', { gameId, guess });
+    return { guess: evaluatedGuess, gameResult };
   } catch (error) {
     logger.error('Error adding guess', error);
     throw error;

@@ -10,6 +10,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
   gameId: '',
   correctWord: '',
   mode: 'versus',
+  gameResult: null,
 
   createGame: async (mode: GameMode) => {
     const gameId = await firebaseCreateGame(mode);
@@ -42,6 +43,13 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
     }
     // todo: Add setting game status
     // todo: Add firebase game update
-    set({ gameId: '', correctWord: '', guesses: [], currentGuess: '', mode: 'versus' });
+    set({
+      gameId: '',
+      correctWord: '',
+      guesses: [],
+      currentGuess: '',
+      mode: 'versus',
+      gameResult: null,
+    });
   },
 });

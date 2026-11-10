@@ -100,21 +100,18 @@ export const CreateGameDialog = () => {
                   </Button>
                 </HStack>
                 <HStack filter="grayscale(100%)">
-                  <HStack>
-                    <Image
-                      src="src/assets/Facebook_Logo_Primary.png"
-                      height="6"
-                      width="6"
-                      cursor="pointer"
-                    />
-                    <Image
-                      src="src/assets/Theme=Neutral, Show text=No, Shape=Square, Platform=Android+Web.png"
-                      height="8"
-                      width="8"
-                      cursor="pointer"
-                    />
-                    (👨🏼‍💻)
-                  </HStack>
+                  <Image
+                    src="src/assets/Facebook_Logo_Primary.png"
+                    height="6"
+                    width="6"
+                    cursor="pointer"
+                  />
+                  <Image
+                    src="src/assets/Theme=Neutral, Show text=No, Shape=Square, Platform=Android+Web.png"
+                    height="8"
+                    width="8"
+                    cursor="pointer"
+                  />
                 </HStack>
               </VStack>
             </Dialog.Footer>
