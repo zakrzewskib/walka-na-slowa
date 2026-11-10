@@ -43,9 +43,12 @@ const makeGuess = (value: string): Guess => ({
   },
 });
 
-const makeGame = (overrides: Partial<GameDTO> = {}): GameDTO => ({
+const makeSoloGame = (overrides: Partial<GameDTO> = {}): GameDTO => ({
   id: 'game-123',
-  userId: 'test-user',
+  playerIds: ['test-user'],
+  mode: 'solo',
+  result: null,
+  status: 'in_progress',
   correctWord: 'LALKA',
   guesses: [],
   createdAt: Timestamp.now(),
@@ -63,11 +66,12 @@ beforeEach(() => {
   resetStore();
 });
 
+// todo: Add tests depending on the game mode
 describe('createGame', () => {
   it('stores the id returned by firebase and the correct word', async () => {
     vi.mocked(firebaseCreateGame).mockResolvedValue('game-123');
 
-    await useAppStore.getState().createGame();
+    await useAppStore.getState().createGame('solo');
 
     const { gameId, correctWord, guesses } = useAppStore.getState();
     expect(gameId).toBe('game-123');
@@ -79,7 +83,7 @@ describe('createGame', () => {
     useAppStore.setState({ guesses: [makeGuess('BRTGW')] });
     vi.mocked(firebaseCreateGame).mockResolvedValue('game-123');
 
-    await useAppStore.getState().createGame();
+    await useAppStore.getState().createGame('solo');
 
     expect(useAppStore.getState().guesses).toEqual([]);
   });
@@ -87,7 +91,7 @@ describe('createGame', () => {
   it('rejects and leaves the state untouched when firebase fails', async () => {
     vi.mocked(firebaseCreateGame).mockRejectedValue(new Error('network down'));
 
-    await expect(useAppStore.getState().createGame()).rejects.toThrow('network down');
+    await expect(useAppStore.getState().createGame('solo')).rejects.toThrow('network down');
 
     const { gameId, correctWord, guesses } = useAppStore.getState();
     expect(gameId).toBe('');
@@ -200,7 +204,7 @@ describe('submitGuess', () => {
 describe('loadGame', () => {
   it('loads gameId, correctWord and guesses from firebase', async () => {
     const guesses = [makeGuess('BRTGW'), makeGuess('LALKA')];
-    vi.mocked(firebaseGetGame).mockResolvedValue(makeGame({ guesses }));
+    vi.mocked(firebaseGetGame).mockResolvedValue(makeSoloGame({ guesses }));
     await useAppStore.getState().loadGame('game-123');
 
     expect(firebaseGetGame).toHaveBeenCalledWith('game-123');

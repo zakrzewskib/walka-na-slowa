@@ -3,7 +3,7 @@ import { sel } from '../support/selectors';
 
 describe('Accessibility', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createSoloGame();
     cy.injectAxe();
   });
 
@@ -65,7 +65,7 @@ describe('Accessibility - create game dialog', () => {
   });
 
   it('closes after the game is created', () => {
-    cy.createGame();
+    cy.createSoloGame();
     cy.get(sel.createGameDialog).should('not.exist');
   });
 });

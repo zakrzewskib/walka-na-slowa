@@ -1,6 +1,7 @@
 import { Button, Dialog, Portal } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useAppStore } from '../../store/store';
+import type { GameMode } from '../../types';
 import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
@@ -9,13 +10,13 @@ export const CreateGameDialog = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  async function handleCreateGame() {
+  async function handleCreateGame(mode: GameMode) {
     setLoading(true);
     setError('');
 
     try {
       // On success the store sets gameId, which closes the dialog
-      await createGame();
+      await createGame(mode);
     } catch {
       setLoading(false);
       setError('Nie udało się stworzyć gry. Proszę spróbować ponownie lub odświeżyć stronę.');
@@ -53,13 +54,24 @@ export const CreateGameDialog = () => {
 
             <Dialog.Footer>
               <Button
-                onClick={handleCreateGame}
-                data-testid="create-game-dialog-btn"
+                onClick={() => handleCreateGame('solo')}
+                data-testid="create-game-dialog-btn-solo"
                 colorPalette="blackAlpha" // better for accessibility
                 loading={loading}
                 loadingText="Tworzenie..."
               >
-                Stwórz grę bez logowania
+                Zagraj samemu
+              </Button>
+
+              <Button
+                onClick={() => handleCreateGame('versus')}
+                data-testid="create-game-dialog-btn-versus"
+                colorPalette="blackAlpha" // better for accessibility
+                loading={loading}
+                loadingText="Tworzenie..."
+                disabled={true}
+              >
+                Znajdź przeciwnika
               </Button>
             </Dialog.Footer>
           </Dialog.Content>

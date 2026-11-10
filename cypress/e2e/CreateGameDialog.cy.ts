@@ -1,7 +1,7 @@
 import { key, observeDisabled, patchStore } from '../support/helpers';
 import { sel } from '../support/selectors';
 
-describe('Create Game Dialog', () => {
+describe('Create Game Dialog solo game', () => {
   beforeEach(() => {
     cy.visit('/');
   });
@@ -9,19 +9,19 @@ describe('Create Game Dialog', () => {
   it('shows an error and re-enables the button when creating fails', () => {
     patchStore({ createGame: () => Promise.reject(new Error('boom')) });
 
-    cy.get(sel.createGameBtn).click();
+    cy.get(sel.createGameBtnSolo).click();
 
     cy.get(sel.errorAlert)
       .should('have.attr', 'role', 'alert')
       .and('contain.text', 'Nie udało się stworzyć gry');
-    cy.get(sel.createGameBtn).should('be.enabled');
+    cy.get(sel.createGameBtnSolo).should('be.enabled');
   });
 
   it('closes the dialog and enables the keyboard after creating a game', () => {
     cy.get(sel.createGameDialog).should('be.visible');
     key('A').should('be.disabled');
 
-    cy.createGame(); // clicks, waits for the dialog to be gone and the keys to be enabled
+    cy.createSoloGame(); // clicks, waits for the dialog to be gone and the keys to be enabled
 
     cy.get(sel.createGameDialog).should('not.exist');
     key('A').should('be.enabled');
@@ -29,8 +29,8 @@ describe('Create Game Dialog', () => {
 
   // Regression test: the button must not flash back to enabled while the dialog animates out.
   it('keeps the button disabled until the dialog is gone', () => {
-    observeDisabled(sel.createGameBtn).then(({ record, stop }) => {
-      cy.get(sel.createGameBtn).click();
+    observeDisabled(sel.createGameBtnSolo).then(({ record, stop }) => {
+      cy.get(sel.createGameBtnSolo).click();
       cy.get(sel.createGameDialog).should('not.exist');
 
       cy.wrap(record).its('sawDisabled').should('eq', true); // it was disabled while creating

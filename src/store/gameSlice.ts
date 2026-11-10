@@ -1,5 +1,6 @@
 import type { StateCreator } from 'zustand';
 import { firebaseCreateGame, firebaseGetGame, HARDCODED_CORRECT_WORD } from '../firebase/games';
+import type { GameMode } from '../types';
 import type { AppState, GameSlice, StoreMutators } from './types';
 
 export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlice> = (
@@ -9,8 +10,8 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
   gameId: '',
   correctWord: '',
 
-  createGame: async () => {
-    const gameId = await firebaseCreateGame();
+  createGame: async (mode: GameMode) => {
+    const gameId = await firebaseCreateGame(mode);
     set({ gameId, correctWord: HARDCODED_CORRECT_WORD, guesses: [], currentGuess: '' });
   },
 

@@ -27,7 +27,7 @@ describe('Keyboard - layout and state', () => {
 
   it('has all keys disabled before a game exists, and enabled after', () => {
     allKeysShouldBe('disabled');
-    cy.createGame();
+    cy.createSoloGame();
     allKeysShouldBe('enabled');
   });
 
@@ -37,7 +37,7 @@ describe('Keyboard - layout and state', () => {
   });
 
   it('disables all keys while a guess is being submitted', () => {
-    cy.createGame();
+    cy.createSoloGame();
     patchStore({ isSubmittingGuess: true });
     allKeysShouldBe('disabled');
   });
@@ -45,7 +45,7 @@ describe('Keyboard - layout and state', () => {
 
 describe('Keyboard - typing', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createSoloGame();
   });
 
   it('types letters, including Polish ones, with on-screen keys', () => {
@@ -82,7 +82,7 @@ describe('Keyboard - typing', () => {
 
 describe('Keyboard - submitting', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createSoloGame();
   });
 
   it('does not submit a word that is too short', () => {

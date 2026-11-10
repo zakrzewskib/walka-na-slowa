@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { CURRENT_USER_ID } from '../constants';
 import { logger } from '../logger/logger';
-import type { Game, Guess } from '../types';
+import type { Game, GameMode, Guess } from '../types';
 import { db } from './firebase';
 
 export const HARDCODED_CORRECT_WORD = 'LALKA'; // todo: Add choosing correct word in the backend
@@ -25,13 +25,16 @@ export interface GameDTO extends Game {
 
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
 
-export async function firebaseCreateGame(): Promise<string> {
+export async function firebaseCreateGame(mode: GameMode): Promise<string> {
   // Omit id to autogenerate it
   const newGame: Omit<GameDTO, 'id'> = {
-    userId: CURRENT_USER_ID,
+    playerIds: [CURRENT_USER_ID],
+    mode: mode,
+    status: mode === 'solo' ? 'in_progress' : 'waiting_for_opponent',
+    result: null,
+    correctWord: HARDCODED_CORRECT_WORD,
     guesses: [],
     createdAt: serverTimestamp(),
-    correctWord: HARDCODED_CORRECT_WORD,
   };
 
   try {

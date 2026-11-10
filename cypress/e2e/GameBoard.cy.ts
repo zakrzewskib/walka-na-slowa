@@ -4,7 +4,7 @@ import { sel } from '../support/selectors';
 
 describe('Game Boards Display', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createSoloGame();
   });
 
   it('displays exactly one player board and one opponent board', () => {

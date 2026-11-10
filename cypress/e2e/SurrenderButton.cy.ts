@@ -3,7 +3,7 @@ import { sel } from '../support/selectors';
 
 describe('Surrender Button', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createSoloGame();
   });
 
   it('shows new dialog', () => {

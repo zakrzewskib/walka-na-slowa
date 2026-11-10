@@ -2,7 +2,7 @@ import { currentGuess, key, makeGuess, patchStore } from '../support/helpers';
 
 describe('KeyboardKey', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createSoloGame();
   });
 
   it('is a real button that does not submit forms', () => {

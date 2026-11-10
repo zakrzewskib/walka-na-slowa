@@ -1,5 +1,6 @@
 export const sel = {
-  createGameBtn: '[data-testid="create-game-dialog-btn"]',
+  createGameBtnSolo: '[data-testid="create-game-dialog-btn-solo"]',
+  createGameBtnVersus: '[data-testid="create-game-dialog-btn-versus"]',
   createGameDialog: '[data-testid="create-game-dialog"]',
   keyboard: '[data-testid="keyboard"]',
   playerBoard: '[data-testid="player-board"]',
