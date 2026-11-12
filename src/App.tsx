@@ -12,8 +12,6 @@ function App() {
   const gameMode = useAppStore((state) => state.gameMode);
   const gameResult = useAppStore((state) => state.gameResult);
 
-  console.log(gameResult);
-
   return (
     <>
       <Toaster />

@@ -164,7 +164,7 @@ describe('getWordResult', () => {
 });
 
 describe('getGameResult', () => {
-  const wrongWord = `${HARDCODED_CORRECT_WORD}_WRONG`;
+  const wrongWord = HARDCODED_CORRECT_WORD.slice(0, 1) + 'X' + HARDCODED_CORRECT_WORD.slice(0 + 1);
   const stillPlaying = WORDS_LENGTH - 1;
 
   describe('solo mode', () => {

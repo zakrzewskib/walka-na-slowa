@@ -56,8 +56,6 @@ export function getGameResult(
   const correctWord = rawCorrectWord.toUpperCase();
   const guess = value.toUpperCase();
 
-  console.log(gameMode, guess, correctWord);
-
   if (gameMode === 'solo') {
     if (guess === correctWord) {
       return { mode: 'solo', outcome: 'won' };

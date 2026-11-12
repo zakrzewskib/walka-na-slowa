@@ -71,7 +71,7 @@ beforeEach(() => {
   vi.resetAllMocks();
   vi.mocked(firebaseSubmitGuess).mockResolvedValue({
     guess: makeGuess('ABCDE'),
-    gameResult: { mode: 'solo', outcome: 'lost' },
+    gameResult: null,
   });
   resetStore();
 });
