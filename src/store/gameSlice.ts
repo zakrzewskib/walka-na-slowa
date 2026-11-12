@@ -19,7 +19,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       correctWord: HARDCODED_CORRECT_WORD,
       guesses: [],
       currentGuess: '',
-      mode: mode,
+      mode,
     });
   },
 
