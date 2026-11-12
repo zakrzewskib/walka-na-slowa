@@ -34,12 +34,12 @@ export type GameResult =
 
 export interface Game {
   id: string;
-  mode: GameMode;
+  gameMode: GameMode;
   playerIds: string[];
   guesses: Guess[];
   correctWord: string;
   status: GameStatus;
-  result: GameResult;
+  gameResult: GameResult;
 }
 
 // prettier-ignore

@@ -46,8 +46,8 @@ const makeGuess = (value: string): Guess => ({
 const makeSoloGame = (overrides: Partial<GameDTO> = {}): GameDTO => ({
   id: 'game-123',
   playerIds: ['test-user'],
-  mode: 'solo',
-  result: null,
+  gameMode: 'solo',
+  gameResult: null,
   status: 'in_progress',
   correctWord: 'LALKA',
   guesses: [],
@@ -280,18 +280,18 @@ describe('finishGame', () => {
   });
 
   it('clears the persisted gameId, so a reload does not restore the finished game', async () => {
-    useAppStore.setState({ gameId: 'game-123', correctWord: 'LALKA', mode: 'solo' });
+    useAppStore.setState({ gameId: 'game-123', correctWord: 'LALKA', gameMode: 'solo' });
 
     expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({
       gameId: 'game-123',
-      mode: 'solo',
+      gameMode: 'solo',
     });
 
     await useAppStore.getState().finishGame();
 
     expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({
       gameId: '',
-      mode: 'solo',
+      gameMode: 'solo',
     });
   });
 
@@ -315,12 +315,12 @@ describe('persistence', () => {
       gameId: 'game-123',
       correctWord: 'LALKA',
       guesses: [makeGuess('BRTGW')],
-      mode: 'solo',
+      gameMode: 'solo',
     });
 
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}');
 
-    expect(stored.state).toEqual({ gameId: 'game-123', mode: 'solo' });
+    expect(stored.state).toEqual({ gameId: 'game-123', gameMode: 'solo' });
   });
 
   it('reloads the game from firebase when a gameId is found in storage', async () => {
@@ -329,11 +329,11 @@ describe('persistence', () => {
       userId: 'test-user',
       correctWord: 'LALKA',
       guesses: [makeGuess('BRTGW')],
-      mode: 'versus',
+      gameMode: 'versus',
     } as unknown as LoadedGame);
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ state: { gameId: 'game-123', mode: 'versus' }, version: 0 }),
+      JSON.stringify({ state: { gameId: 'game-123', gameMode: 'versus' }, version: 0 }),
     );
 
     await useAppStore.persist.rehydrate();

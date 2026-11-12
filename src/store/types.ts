@@ -2,10 +2,10 @@ import type { GameMode, GameResult, Guess, GuessSubmit, PolishLetter } from '../
 
 export interface GameSlice {
   gameId: string;
-  mode: GameMode;
+  gameMode: GameMode;
   correctWord: string;
   gameResult: GameResult;
-  createGame: (mode: GameMode) => Promise<void>;
+  createGame: (gameMode: GameMode) => Promise<void>;
   loadGame: (gameId: string) => Promise<void>;
   finishGame: () => Promise<void>;
 }

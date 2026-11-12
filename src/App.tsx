@@ -8,7 +8,7 @@ import { Layout } from './layout/Layout';
 import { useAppStore } from './store/store';
 
 function App() {
-  const gameMode = useAppStore((state) => state.mode);
+  const gameMode = useAppStore((state) => state.gameMode);
   const gameResult = useAppStore((state) => state.gameResult);
 
   return (

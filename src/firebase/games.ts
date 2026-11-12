@@ -29,9 +29,9 @@ export async function firebaseCreateGame(mode: GameMode): Promise<string> {
   // Omit id to autogenerate it
   const newGame: Omit<GameDTO, 'id'> = {
     playerIds: [CURRENT_USER_ID],
-    mode: mode,
+    gameMode: mode,
     status: mode === 'solo' ? 'in_progress' : 'waiting_for_opponent',
-    result: null,
+    gameResult: null,
     correctWord: HARDCODED_CORRECT_WORD,
     guesses: [],
     createdAt: serverTimestamp(),
@@ -78,14 +78,14 @@ export async function firebaseSubmitGuess(
       const gameResult = getGameResult(
         guess.value,
         game.guesses.length + 1,
-        game.mode,
+        game.gameMode,
         game.correctWord,
       );
 
       // One atomic write: the guess and (if the game ended) the result and status
       tx.update(gameRef, {
         guesses: [...game.guesses, { ...evaluatedGuess, createdAt: Timestamp.now() }],
-        ...(gameResult && { result: gameResult, status: 'finished' }),
+        ...(gameResult && { gameResult: gameResult, status: 'finished' }),
       });
 
       return { evaluatedGuess, gameResult };

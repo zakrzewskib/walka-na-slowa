@@ -15,8 +15,8 @@ export const CreateGameDialog = () => {
 
   const [error, setError] = useState('');
 
-  async function handleCreateGame(mode: GameMode) {
-    if (mode === 'solo') {
+  async function handleCreateGame(gameMode: GameMode) {
+    if (gameMode === 'solo') {
       setSoloLoading(true);
       setVersusDisabled(true);
     } else {
@@ -28,9 +28,9 @@ export const CreateGameDialog = () => {
 
     try {
       // On success the store sets gameId, which closes the dialog
-      await createGame(mode);
+      await createGame(gameMode);
     } catch {
-      if (mode === 'solo') {
+      if (gameMode === 'solo') {
         setSoloLoading(false);
       } else {
         setVersusLoading(false);

@@ -9,17 +9,17 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
 ) => ({
   gameId: '',
   correctWord: '',
-  mode: 'versus',
+  gameMode: 'versus',
   gameResult: null,
 
-  createGame: async (mode: GameMode) => {
-    const gameId = await firebaseCreateGame(mode);
+  createGame: async (gameMode: GameMode) => {
+    const gameId = await firebaseCreateGame(gameMode);
     set({
       gameId,
       correctWord: HARDCODED_CORRECT_WORD,
       guesses: [],
       currentGuess: '',
-      mode,
+      gameMode: gameMode,
     });
   },
 
@@ -32,7 +32,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       correctWord: game.correctWord,
       guesses: game.guesses,
       currentGuess: '',
-      mode: game.mode,
+      gameMode: game.gameMode,
     });
   },
 
