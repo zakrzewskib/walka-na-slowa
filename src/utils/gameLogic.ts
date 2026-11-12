@@ -56,28 +56,27 @@ export function getGameResult(
   const correctWord = rawCorrectWord.toUpperCase();
   const guess = value.toUpperCase();
 
+  console.log(gameMode, guess, correctWord);
+
   if (gameMode === 'solo') {
     if (guess === correctWord) {
-      return {
-        outcome: 'wonAlone',
-      };
+      return { mode: 'solo', outcome: 'won' };
     } else if (guessesLength === WORDS_LENGTH) {
-      return {
-        outcome: 'lostAlone',
-      };
+      return { mode: 'solo', outcome: 'lost' };
     }
   }
 
   if (gameMode === 'versus') {
     if (guess === correctWord) {
       return {
-        outcome: 'finished',
+        mode: 'versus',
         winnerId: CURRENT_USER_ID,
       };
     } else if (guessesLength === WORDS_LENGTH) {
       // todo: Add tie
+
       return {
-        outcome: 'finished',
+        mode: 'versus',
         winnerId: ENEMY_USER_ID,
       };
     }

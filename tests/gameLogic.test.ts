@@ -172,7 +172,8 @@ describe('getGameResult', () => {
       expect(
         getGameResult(HARDCODED_CORRECT_WORD, 1, 'solo', HARDCODED_CORRECT_WORD),
       ).to.deep.equal({
-        outcome: 'wonAlone',
+        mode: 'solo',
+        outcome: 'won',
       });
     });
 
@@ -180,18 +181,24 @@ describe('getGameResult', () => {
       expect(
         getGameResult(HARDCODED_CORRECT_WORD, WORDS_LENGTH, 'solo', HARDCODED_CORRECT_WORD),
       ).to.deep.equal({
-        outcome: 'wonAlone',
+        mode: 'solo',
+        outcome: 'won',
       });
     });
 
     it('loses when the guess limit is reached with a wrong word', () => {
       expect(getGameResult(wrongWord, WORDS_LENGTH, 'solo', HARDCODED_CORRECT_WORD)).to.deep.equal({
-        outcome: 'lostAlone',
+        mode: 'solo',
+        outcome: 'lost',
       });
     });
 
     it('returns null while the game is still going', () => {
       expect(getGameResult(wrongWord, stillPlaying, 'solo', HARDCODED_CORRECT_WORD)).to.equal(null);
+    });
+
+    it('returns null for a wrong word on the first guess', () => {
+      expect(getGameResult(wrongWord, 1, 'solo', HARDCODED_CORRECT_WORD)).to.equal(null);
     });
   });
 
@@ -200,7 +207,16 @@ describe('getGameResult', () => {
       expect(
         getGameResult(HARDCODED_CORRECT_WORD, 1, 'versus', HARDCODED_CORRECT_WORD),
       ).to.deep.equal({
-        outcome: 'finished',
+        mode: 'versus',
+        winnerId: CURRENT_USER_ID,
+      });
+    });
+
+    it('current user wins on the very last allowed guess (win takes priority over loss)', () => {
+      expect(
+        getGameResult(HARDCODED_CORRECT_WORD, WORDS_LENGTH, 'versus', HARDCODED_CORRECT_WORD),
+      ).to.deep.equal({
+        mode: 'versus',
         winnerId: CURRENT_USER_ID,
       });
     });
@@ -209,13 +225,54 @@ describe('getGameResult', () => {
       expect(
         getGameResult(wrongWord, WORDS_LENGTH, 'versus', HARDCODED_CORRECT_WORD),
       ).to.deep.equal({
-        outcome: 'finished',
+        mode: 'versus',
         winnerId: ENEMY_USER_ID,
       });
     });
 
     it('returns null while the game is still going', () => {
       expect(getGameResult(wrongWord, stillPlaying, 'versus', HARDCODED_CORRECT_WORD)).to.equal(
+        null,
+      );
+    });
+
+    // todo: replace with a tie test once ties are implemented
+  });
+
+  describe('input normalization', () => {
+    it('is case-insensitive for the guess', () => {
+      expect(getGameResult('lalka', 1, 'solo', 'LALKA')).to.deep.equal({
+        mode: 'solo',
+        outcome: 'won',
+      });
+    });
+
+    it('is case-insensitive for the correct word', () => {
+      expect(getGameResult('LALKA', 1, 'solo', 'lalka')).to.deep.equal({
+        mode: 'solo',
+        outcome: 'won',
+      });
+    });
+
+    it('handles Polish diacritics', () => {
+      expect(getGameResult('łódka', 1, 'versus', 'ŁÓDKA')).to.deep.equal({
+        mode: 'versus',
+        winnerId: CURRENT_USER_ID,
+      });
+    });
+  });
+
+  describe('guess limit', () => {
+    // Locks in the current strict equality check. If you switch to `>=`, change these
+    // expectations to a loss.
+    it('returns null in solo mode when guessesLength is above the limit', () => {
+      expect(getGameResult(wrongWord, WORDS_LENGTH + 1, 'solo', HARDCODED_CORRECT_WORD)).to.equal(
+        null,
+      );
+    });
+
+    it('returns null in versus mode when guessesLength is above the limit', () => {
+      expect(getGameResult(wrongWord, WORDS_LENGTH + 1, 'versus', HARDCODED_CORRECT_WORD)).to.equal(
         null,
       );
     });

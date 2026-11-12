@@ -23,10 +23,8 @@ export type GameMode = 'solo' | 'versus';
 export type GameStatus = 'waiting_for_opponent' | 'in_progress' | 'finished';
 
 export type GameResult =
-  | { outcome: 'wonAlone' }
-  | { outcome: 'lostAlone' }
-  | { outcome: 'finished'; winnerId: string }
-  | { outcome: 'tie' }
+  | { mode: 'solo'; outcome: 'won' | 'lost' }
+  | { mode: 'versus'; winnerId: string | null }
   | null;
 
 // todo: Hide correct word: either a Cloud Function that validates guesses server-side and never sends the word to the client, or Firestore security rules that hide the field until the game is over.

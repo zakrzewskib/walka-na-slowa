@@ -71,7 +71,7 @@ beforeEach(() => {
   vi.resetAllMocks();
   vi.mocked(firebaseSubmitGuess).mockResolvedValue({
     guess: makeGuess('ABCDE'),
-    gameResult: { outcome: 'lostAlone' },
+    gameResult: { mode: 'solo', outcome: 'lost' },
   });
   resetStore();
 });
@@ -127,7 +127,7 @@ describe('submitGuess', () => {
       useAppStore.setState({
         gameId: 'game-123',
         correctWord: 'LALKA',
-        gameResult: { outcome: 'lostAlone' },
+        gameResult: { mode: 'solo', outcome: 'lost' },
       });
 
       await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow(
@@ -139,7 +139,7 @@ describe('submitGuess', () => {
     });
 
     it('reports a finished game before a missing gameId', async () => {
-      useAppStore.setState({ gameId: '', gameResult: { outcome: 'lostAlone' } });
+      useAppStore.setState({ gameId: '', gameResult: { mode: 'solo', outcome: 'lost' } });
 
       await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow(
         'Store: game is finished!',
@@ -160,27 +160,41 @@ describe('submitGuess', () => {
       useAppStore.setState({ gameId: 'game-123', correctWord: 'LALKA', guesses: [] });
     });
 
-    it('stores the guess evaluated and returned by firebase', async () => {
-      const evaluated = makeGuess('LALKA');
+    it('stores a versus result with the winner id', async () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
-        guess: evaluated,
-        gameResult: { outcome: 'wonAlone' },
+        guess: makeGuess('LALKA'),
+        gameResult: { mode: 'versus', winnerId: 'test-user' },
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('LALKA'));
 
-      expect(useAppStore.getState().guesses).toEqual([evaluated]);
+      expect(useAppStore.getState().gameResult).toEqual({ mode: 'versus', winnerId: 'test-user' });
+    });
+
+    it('treats a versus draw (winnerId null) as a finished game', async () => {
+      vi.mocked(firebaseSubmitGuess).mockResolvedValue({
+        guess: makeGuess('BRTGW'),
+        gameResult: { mode: 'versus', winnerId: null },
+      });
+
+      await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
+
+      // the result object is truthy even without a winner, so the guard still blocks guesses
+      await expect(useAppStore.getState().submitGuess(makeSubmit('LALKA'))).rejects.toThrow(
+        'Store: game is finished!',
+      );
+      expect(firebaseSubmitGuess).toHaveBeenCalledTimes(1);
     });
 
     it('stores the game result returned by firebase', async () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('LALKA'),
-        gameResult: { outcome: 'wonAlone' },
+        gameResult: { mode: 'solo', outcome: 'won' },
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('LALKA'));
 
-      expect(useAppStore.getState().gameResult).toEqual({ outcome: 'wonAlone' });
+      expect(useAppStore.getState().gameResult).toEqual({ mode: 'solo', outcome: 'won' });
     });
 
     it('keeps gameResult empty while the game is still going', async () => {
@@ -197,7 +211,7 @@ describe('submitGuess', () => {
     it('rejects further guesses once the game has been won', async () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('LALKA'),
-        gameResult: { outcome: 'wonAlone' },
+        gameResult: { mode: 'solo', outcome: 'lost' },
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('LALKA'));
@@ -222,7 +236,10 @@ describe('submitGuess', () => {
     it('appends guesses in submission order', async () => {
       vi.mocked(firebaseSubmitGuess)
         .mockResolvedValueOnce({ guess: makeGuess('BRTGW'), gameResult: null })
-        .mockResolvedValueOnce({ guess: makeGuess('LALKA'), gameResult: { outcome: 'wonAlone' } });
+        .mockResolvedValueOnce({
+          guess: makeGuess('LALKA'),
+          gameResult: { mode: 'solo', outcome: 'won' },
+        });
 
       await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
       await useAppStore.getState().submitGuess(makeSubmit('LALKA'));
@@ -313,7 +330,11 @@ describe('submitGuess', () => {
 
     it('ignores a submit while in flight even when the game is finished or the gameId is missing', async () => {
       // the in-flight guard runs first, so it never reaches the validation errors
-      useAppStore.setState({ isSubmittingGuess: true, gameId: '' });
+      useAppStore.setState({
+        isSubmittingGuess: true,
+        gameId: '',
+        gameResult: { mode: 'solo', outcome: 'lost' },
+      });
 
       await expect(
         useAppStore.getState().submitGuess(makeSubmit('BRTGW')),
