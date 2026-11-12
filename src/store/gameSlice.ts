@@ -20,6 +20,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       guesses: [],
       currentGuess: '',
       gameMode: gameMode,
+      gameResult: null,
     });
   },
 
@@ -29,10 +30,8 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
     // todo: Add loading only user's guesses
     set({
       gameId,
-      correctWord: game.correctWord,
-      guesses: game.guesses,
       currentGuess: '',
-      gameMode: game.gameMode,
+      ...game,
     });
   },
 
