@@ -51,10 +51,13 @@ export function getGameResult(
   value: string,
   guessesLength: number,
   mode: GameMode,
-  correctWord: string,
+  rawCorrectWord: string,
 ): GameResult {
+  const correctWord = rawCorrectWord.toUpperCase();
+  const guess = value.toUpperCase();
+
   if (mode === 'solo') {
-    if (value === correctWord) {
+    if (guess === correctWord) {
       return {
         outcome: 'wonAlone',
       };
@@ -66,7 +69,7 @@ export function getGameResult(
   }
 
   if (mode === 'versus') {
-    if (value === correctWord) {
+    if (guess === correctWord) {
       return {
         outcome: 'finished',
         winnerId: CURRENT_USER_ID,
