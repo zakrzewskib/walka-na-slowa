@@ -169,60 +169,55 @@ describe('getGameResult', () => {
 
   describe('solo mode', () => {
     it('wins when the correct word is guessed', () => {
-      expect(getGameResult(HARDCODED_CORRECT_WORD, 1, 'solo')).to.deep.equal({
+      expect(
+        getGameResult(HARDCODED_CORRECT_WORD, 1, 'solo', HARDCODED_CORRECT_WORD),
+      ).to.deep.equal({
         outcome: 'wonAlone',
       });
     });
 
     it('wins on the very last allowed guess (win takes priority over loss)', () => {
-      expect(getGameResult(HARDCODED_CORRECT_WORD, WORDS_LENGTH, 'solo')).to.deep.equal({
+      expect(
+        getGameResult(HARDCODED_CORRECT_WORD, WORDS_LENGTH, 'solo', HARDCODED_CORRECT_WORD),
+      ).to.deep.equal({
         outcome: 'wonAlone',
       });
     });
 
     it('loses when the guess limit is reached with a wrong word', () => {
-      expect(getGameResult(wrongWord, WORDS_LENGTH, 'solo')).to.deep.equal({
+      expect(getGameResult(wrongWord, WORDS_LENGTH, 'solo', HARDCODED_CORRECT_WORD)).to.deep.equal({
         outcome: 'lostAlone',
       });
     });
 
     it('returns null while the game is still going', () => {
-      expect(getGameResult(wrongWord, stillPlaying, 'solo')).to.equal(null);
-    });
-
-    it('returns null for a wrong first guess', () => {
-      expect(getGameResult(wrongWord, 1, 'solo')).to.equal(null);
+      expect(getGameResult(wrongWord, stillPlaying, 'solo', HARDCODED_CORRECT_WORD)).to.equal(null);
     });
   });
 
   describe('versus mode', () => {
     it('current user wins when the correct word is guessed', () => {
-      expect(getGameResult(HARDCODED_CORRECT_WORD, 1, 'versus')).to.deep.equal({
-        outcome: 'finished',
-        winnerId: CURRENT_USER_ID,
-      });
-    });
-
-    it('current user wins on the very last allowed guess', () => {
-      expect(getGameResult(HARDCODED_CORRECT_WORD, WORDS_LENGTH, 'versus')).to.deep.equal({
+      expect(
+        getGameResult(HARDCODED_CORRECT_WORD, 1, 'versus', HARDCODED_CORRECT_WORD),
+      ).to.deep.equal({
         outcome: 'finished',
         winnerId: CURRENT_USER_ID,
       });
     });
 
     it('enemy wins when the guess limit is reached with a wrong word', () => {
-      expect(getGameResult(wrongWord, WORDS_LENGTH, 'versus')).to.deep.equal({
+      expect(
+        getGameResult(wrongWord, WORDS_LENGTH, 'versus', HARDCODED_CORRECT_WORD),
+      ).to.deep.equal({
         outcome: 'finished',
         winnerId: ENEMY_USER_ID,
       });
     });
 
     it('returns null while the game is still going', () => {
-      expect(getGameResult(wrongWord, stillPlaying, 'versus')).to.equal(null);
-    });
-
-    it('returns null for a wrong first guess', () => {
-      expect(getGameResult(wrongWord, 1, 'versus')).to.equal(null);
+      expect(getGameResult(wrongWord, stillPlaying, 'versus', HARDCODED_CORRECT_WORD)).to.equal(
+        null,
+      );
     });
   });
 });

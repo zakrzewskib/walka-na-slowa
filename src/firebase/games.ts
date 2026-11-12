@@ -75,7 +75,12 @@ export async function firebaseSubmitGuess(
       };
 
       // todo: Move winning logic to backend
-      const gameResult = getGameResult(guess.value, game.guesses.length + 1, game.mode);
+      const gameResult = getGameResult(
+        guess.value,
+        game.guesses.length + 1,
+        game.mode,
+        game.correctWord,
+      );
 
       // One atomic write: the guess and (if the game ended) the result and status
       tx.update(gameRef, {
