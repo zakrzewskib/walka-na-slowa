@@ -31,7 +31,15 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
     // the store must be safe on its own, even if the UI guard fails
     if (get().isSubmittingGuess) return;
 
-    const { gameId } = get();
+    const { gameId, gameResult } = get();
+
+    if (gameResult) {
+      logger.error('Store: Could not submit guess to finished game', {
+        gameId,
+        gameResult,
+      });
+      throw new Error('Store: game is finished!');
+    }
 
     if (!gameId) {
       logger.error('Store: Could not submit guess to empty gameId', {
