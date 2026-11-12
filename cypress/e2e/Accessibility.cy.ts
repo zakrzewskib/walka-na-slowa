@@ -1,7 +1,7 @@
-import { currentGuess, key, keyboard, opponentBoard, playerBoard } from '../support/helpers';
+import { currentGuess, key, keyboard, playerBoard } from '../support/helpers';
 import { sel } from '../support/selectors';
 
-describe('Accessibility', () => {
+describe('Accessibility solo game', () => {
   beforeEach(() => {
     cy.createSoloGame();
     cy.injectAxe();
@@ -14,13 +14,12 @@ describe('Accessibility', () => {
     });
   });
 
-  it('has descriptive labels for screen readers', () => {
+  it('has descriptive labels for screen readers for 1 boards', () => {
     cy.get('[role="gridcell"]').each(($cell) => {
       cy.wrap($cell).should('have.attr', 'aria-label').and('not.be.empty');
     });
 
     playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
-    opponentBoard().should('have.attr', 'aria-label', 'Plansza przeciwnika');
   });
 
   describe('on-screen keyboard', () => {

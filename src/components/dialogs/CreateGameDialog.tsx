@@ -105,12 +105,14 @@ export const CreateGameDialog = () => {
                     height="6"
                     width="6"
                     cursor="pointer"
+                    alt="Zaloguj się przez facebooka"
                   />
                   <Image
                     src="src/assets/Theme=Neutral, Show text=No, Shape=Square, Platform=Android+Web.png"
                     height="8"
                     width="8"
                     cursor="pointer"
+                    alt="Zaloguj się przez Google"
                   />
                 </HStack>
               </VStack>
