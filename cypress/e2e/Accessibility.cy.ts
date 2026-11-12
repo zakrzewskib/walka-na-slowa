@@ -1,7 +1,7 @@
 import { currentGuess, key, keyboard, opponentBoard, playerBoard } from '../support/helpers';
 import { sel } from '../support/selectors';
 
-describe('Accessibility', () => {
+describe('Accessibility for both players', () => {
   beforeEach(() => {
     cy.createVersusGame();
     cy.injectAxe();

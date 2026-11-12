@@ -7,7 +7,7 @@ describe('Responsive Design', () => {
     describe(`${device} (${width}x${height})`, () => {
       beforeEach(() => {
         cy.viewport(width, height);
-        cy.createSoloGame();
+        cy.createVersusGame();
       });
 
       it('displays boards correctly', () => {
