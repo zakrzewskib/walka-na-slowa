@@ -1,14 +1,13 @@
 import {
   addDoc,
-  arrayUnion,
   collection,
   CollectionReference,
   doc,
   FieldValue,
   getDoc,
+  runTransaction,
   serverTimestamp,
   Timestamp,
-  updateDoc,
 } from 'firebase/firestore';
 import { CURRENT_USER_ID } from '../constants';
 import { logger } from '../logger/logger';
@@ -53,32 +52,39 @@ export async function firebaseSubmitGuess(
   gameId: string,
   guess: GuessSubmit,
 ): Promise<{ guess: Guess; gameResult: GameResult }> {
-  // todo: Offline/flaky network: write may hang (no error/rollback) or be saved twice on retry (new id + createdAt defeat arrayUnion dedupe)
-
   try {
     const gameRef = doc(gamesCollection, gameId);
 
-    // todo: Move evaluation to backend
-    const evaluatedGuess: Guess = {
-      ...guess,
-      evaluatedGuess: getWordResult(guess.value, HARDCODED_CORRECT_WORD),
-    };
+    const { evaluatedGuess, gameResult } = await runTransaction(db, async (tx) => {
+      const snapshot = await tx.get(gameRef);
 
-    await updateDoc(gameRef, {
-      guesses: arrayUnion({ ...evaluatedGuess, createdAt: Timestamp.now() }),
-    });
+      if (!snapshot.exists()) {
+        throw new Error(`Game ${gameId} does not exist`);
+      }
 
-    const game = await firebaseGetGame(gameId);
+      const game = snapshot.data();
 
-    // todo: Move winning logic to backend
-    const gameResult = getGameResult(guess.value, game.guesses.length, game.mode);
+      if (game.status === 'finished') {
+        throw new Error(`Game ${gameId} is already finished`);
+      }
 
-    if (gameResult) {
-      await updateDoc(gameRef, {
-        gameResult: gameResult,
-        status: 'finished',
+      // todo: Move evaluation to backend
+      const evaluatedGuess: Guess = {
+        ...guess,
+        evaluatedGuess: getWordResult(guess.value, game.correctWord),
+      };
+
+      // todo: Move winning logic to backend
+      const gameResult = getGameResult(guess.value, game.guesses.length + 1, game.mode);
+
+      // One atomic write: the guess and (if the game ended) the result and status
+      tx.update(gameRef, {
+        guesses: [...game.guesses, { ...evaluatedGuess, createdAt: Timestamp.now() }],
+        ...(gameResult && { result: gameResult, status: 'finished' }),
       });
-    }
+
+      return { evaluatedGuess, gameResult };
+    });
 
     logger.debug('Added new guess', { gameId, guess });
     return { guess: evaluatedGuess, gameResult };
