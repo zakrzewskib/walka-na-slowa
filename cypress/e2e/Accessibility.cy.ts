@@ -1,9 +1,9 @@
-import { currentGuess, key, keyboard, playerBoard } from '../support/helpers';
+import { currentGuess, key, keyboard, opponentBoard, playerBoard } from '../support/helpers';
 import { sel } from '../support/selectors';
 
-describe('Accessibility solo game', () => {
+describe('Accessibility', () => {
   beforeEach(() => {
-    cy.createSoloGame();
+    cy.createVersusGame();
     cy.injectAxe();
   });
 
@@ -20,6 +20,7 @@ describe('Accessibility solo game', () => {
     });
 
     playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
+    opponentBoard().should('have.attr', 'aria-label', 'Plansza przeciwnika');
   });
 
   describe('on-screen keyboard', () => {

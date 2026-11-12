@@ -93,7 +93,7 @@ export const CreateGameDialog = () => {
                     data-testid="create-game-dialog-btn-versus"
                     colorPalette="blackAlpha" // better for accessibility
                     loading={versusLoading}
-                    disabled={true} // todo: Implement versus mode
+                    // disabled={true} // todo: Implement versus mode
                     loadingText="Tworzenie..."
                   >
                     Znajdź przeciwnika (wkrótce 👨🏼‍💻)
