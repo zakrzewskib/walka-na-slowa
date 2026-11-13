@@ -1,7 +1,5 @@
-import { Button, Dialog, HStack, Image, Portal, VStack } from '@chakra-ui/react';
+import { Button, Dialog, HStack, Portal, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
-import facebookLogo from '../../assets/facebook_logo.png';
-import googleLogo from '../../assets/google_logo.png';
 import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
 import type { GameMode } from '../../types';
@@ -84,13 +82,13 @@ export const CreateGameDialog = () => {
                     data-testid="create-game-dialog-btn-versus"
                     colorPalette="blackAlpha" // better for accessibility
                     loading={pendingMode === 'versus'}
-                    disabled={pendingMode !== null} // todo: Implement versus mode
+                    disabled={true} // todo: Implement versus mode
                     loadingText="Tworzenie..."
                   >
                     Znajdź przeciwnika (wkrótce 👨🏼‍💻)
                   </Button>
                 </HStack>
-                <HStack filter="grayscale(100%)">
+                {/* <HStack filter="grayscale(100%)">
                   <Image
                     src={facebookLogo}
                     height="6"
@@ -105,7 +103,7 @@ export const CreateGameDialog = () => {
                     cursor="pointer"
                     alt="Zaloguj się przez Google"
                   />
-                </HStack>
+                </HStack> */}
               </VStack>
             </Dialog.Footer>
           </Dialog.Content>

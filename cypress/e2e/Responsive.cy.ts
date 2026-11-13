@@ -3,7 +3,8 @@ import { sel } from '../support/selectors';
 import { viewports } from '../support/viewports';
 
 const modes = [
-  { mode: 'versus', create: () => cy.createVersusGame(), boards: 2 },
+  // Todo: implement versus mode
+  // { mode: 'versus', create: () => cy.createVersusGame(), boards: 2 },
   { mode: 'solo', create: () => cy.createSoloGame(), boards: 1 },
 ] as const;
 

@@ -51,7 +51,6 @@ export const createGuessSlice: StateCreator<AppState, StoreMutators, [], GuessSl
     try {
       set({ isSubmittingGuess: true });
       const { guess, gameResult, gameStatus } = await firebaseSubmitGuess(gameId, guessSubmit);
-      console.log(gameStatus);
       set((state) => ({
         guesses: [...state.guesses, guess],
         currentGuess: '',

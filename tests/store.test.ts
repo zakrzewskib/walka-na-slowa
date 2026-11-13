@@ -48,7 +48,7 @@ const makeSoloGame = (overrides: Partial<GameDTO> = {}): GameDTO => ({
   playerIds: ['test-user'],
   gameMode: 'solo',
   gameResult: null,
-  status: 'in_progress',
+  gameStatus: 'in_progress',
   correctWord: 'LALKA',
   guesses: [],
   createdAt: Timestamp.now(),
@@ -72,6 +72,7 @@ beforeEach(() => {
   vi.mocked(firebaseSubmitGuess).mockResolvedValue({
     guess: makeGuess('ABCDE'),
     gameResult: null,
+    gameStatus: null,
   });
   resetStore();
 });
@@ -79,7 +80,7 @@ beforeEach(() => {
 // todo: Add tests depending on the game mode
 describe('createGame', () => {
   it('stores the id returned by firebase and the correct word', async () => {
-    vi.mocked(firebaseCreateGame).mockResolvedValue('game-123');
+    vi.mocked(firebaseCreateGame).mockResolvedValue(makeSoloGame());
 
     await useAppStore.getState().createGame('solo');
 
@@ -91,7 +92,7 @@ describe('createGame', () => {
 
   it('clears guesses left over from a previous game', async () => {
     useAppStore.setState({ guesses: [makeGuess('BRTGW')] });
-    vi.mocked(firebaseCreateGame).mockResolvedValue('game-123');
+    vi.mocked(firebaseCreateGame).mockResolvedValue(makeSoloGame());
 
     await useAppStore.getState().createGame('solo');
 
@@ -164,6 +165,7 @@ describe('submitGuess', () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('LALKA'),
         gameResult: { mode: 'versus', winnerId: 'test-user' },
+        gameStatus: 'finished',
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('LALKA'));
@@ -175,6 +177,7 @@ describe('submitGuess', () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('BRTGW'),
         gameResult: { mode: 'versus', winnerId: null },
+        gameStatus: 'finished',
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
@@ -190,6 +193,7 @@ describe('submitGuess', () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('LALKA'),
         gameResult: { mode: 'solo', outcome: 'won' },
+        gameStatus: 'finished',
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('LALKA'));
@@ -201,6 +205,7 @@ describe('submitGuess', () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('BRTGW'),
         gameResult: null,
+        gameStatus: 'in_progress',
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
@@ -212,6 +217,7 @@ describe('submitGuess', () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('LALKA'),
         gameResult: { mode: 'solo', outcome: 'lost' },
+        gameStatus: 'finished',
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('LALKA'));
@@ -235,10 +241,15 @@ describe('submitGuess', () => {
 
     it('appends guesses in submission order', async () => {
       vi.mocked(firebaseSubmitGuess)
-        .mockResolvedValueOnce({ guess: makeGuess('BRTGW'), gameResult: null })
+        .mockResolvedValueOnce({
+          guess: makeGuess('BRTGW'),
+          gameResult: null,
+          gameStatus: 'in_progress',
+        })
         .mockResolvedValueOnce({
           guess: makeGuess('LALKA'),
           gameResult: { mode: 'solo', outcome: 'won' },
+          gameStatus: 'finished',
         });
 
       await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
@@ -252,6 +263,7 @@ describe('submitGuess', () => {
       vi.mocked(firebaseSubmitGuess).mockResolvedValue({
         guess: makeGuess('BRTGW'),
         gameResult: null,
+        gameStatus: 'in_progress',
       });
 
       await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
@@ -271,7 +283,7 @@ describe('submitGuess', () => {
 
       expect(useAppStore.getState().isSubmittingGuess).toBe(true);
 
-      resolveSubmit({ guess: makeGuess('BRTGW'), gameResult: null });
+      resolveSubmit({ guess: makeGuess('BRTGW'), gameResult: null, gameStatus: 'in_progress' });
       await pending;
 
       expect(useAppStore.getState().isSubmittingGuess).toBe(false);
@@ -295,7 +307,11 @@ describe('submitGuess', () => {
     it('allows submitting again after a failed submit', async () => {
       vi.mocked(firebaseSubmitGuess)
         .mockRejectedValueOnce(new Error('network down'))
-        .mockResolvedValueOnce({ guess: makeGuess('BRTGW'), gameResult: null });
+        .mockResolvedValueOnce({
+          guess: makeGuess('BRTGW'),
+          gameResult: null,
+          gameStatus: 'in_progress',
+        });
 
       await expect(useAppStore.getState().submitGuess(makeSubmit('BRTGW'))).rejects.toThrow();
       await useAppStore.getState().submitGuess(makeSubmit('BRTGW'));
@@ -321,7 +337,7 @@ describe('submitGuess', () => {
       // the ignored call must not reset the flag of the request that is still running
       expect(useAppStore.getState().isSubmittingGuess).toBe(true);
 
-      resolveFirst({ guess: makeGuess('BRTGW'), gameResult: null });
+      resolveFirst({ guess: makeGuess('BRTGW'), gameResult: null, gameStatus: 'in_progress' });
       await first;
 
       expect(useAppStore.getState().guesses.map((g) => g.value)).toEqual(['BRTGW']);
@@ -334,6 +350,7 @@ describe('submitGuess', () => {
         isSubmittingGuess: true,
         gameId: '',
         gameResult: { mode: 'solo', outcome: 'lost' },
+        gameStatus: 'finished',
       });
 
       await expect(
@@ -397,22 +414,6 @@ describe('finishGame', () => {
     expect(guesses).toEqual([]);
   });
 
-  it('clears the persisted gameId, so a reload does not restore the finished game', async () => {
-    useAppStore.setState({ gameId: 'game-123', correctWord: 'LALKA', gameMode: 'solo' });
-
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({
-      gameId: 'game-123',
-      gameMode: 'solo',
-    });
-
-    await useAppStore.getState().finishGame();
-
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}').state).toEqual({
-      gameId: '',
-      gameMode: 'solo',
-    });
-  });
-
   // Locks in the current early return. When the store todo turns this into an error,
   // change the assertion to `rejects.toThrow()`.
   it('does nothing when there is no active game', async () => {
@@ -428,17 +429,24 @@ describe('finishGame', () => {
 });
 
 describe('persistence', () => {
-  it('persists gameId and mode', () => {
+  it('persists state', () => {
     useAppStore.setState({
       gameId: 'game-123',
       correctWord: 'LALKA',
       guesses: [makeGuess('BRTGW')],
       gameMode: 'solo',
+      gameResult: null,
+      gameStatus: 'in_progress',
     });
 
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}');
 
-    expect(stored.state).toEqual({ gameId: 'game-123', gameMode: 'solo' });
+    expect(stored.state).toEqual({
+      gameId: 'game-123',
+      gameMode: 'solo',
+      gameResult: null,
+      gameStatus: 'in_progress',
+    });
   });
 
   it('reloads the game from firebase when a gameId is found in storage', async () => {

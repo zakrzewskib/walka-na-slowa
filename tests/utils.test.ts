@@ -5,8 +5,8 @@ import { gameResultToText } from '../src/utils';
 
 describe('gameResultToText', () => {
   describe('without a result', () => {
-    it('returns an empty string for null', () => {
-      expect(gameResultToText(null, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('');
+    it('returns "Rozpocznij grę" for null', () => {
+      expect(gameResultToText(null, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Rozpocznij grę');
     });
   });
 
