@@ -2,12 +2,15 @@ import { Button, Dialog, HStack, Image, Portal, VStack } from '@chakra-ui/react'
 import { useState } from 'react';
 import facebookLogo from '../../assets/facebook_logo.png';
 import googleLogo from '../../assets/google_logo.png';
+import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
 import type { GameMode } from '../../types';
+import { gameResultToText } from '../../utils';
 import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
+  const gameResult = useAppStore((state) => state.gameResult);
   const createGame = useAppStore((state) => state.createGame);
   const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
   const [error, setError] = useState('');
@@ -51,7 +54,9 @@ export const CreateGameDialog = () => {
             aria-label="Dialog pozwalający stworzyć grę"
           >
             <Dialog.Header>
-              <Dialog.Title>Rozpocznij grę</Dialog.Title>
+              <Dialog.Title>
+                {gameResultToText(gameResult, CURRENT_USER_ID, ENEMY_USER_ID)}
+              </Dialog.Title>
             </Dialog.Header>
 
             {error && (
@@ -71,7 +76,7 @@ export const CreateGameDialog = () => {
                     disabled={pendingMode !== null}
                     loadingText="Tworzenie..."
                   >
-                    Zagraj samemu
+                    {gameResult ? 'Zagraj ponownie' : 'Zagraj samemu'}
                   </Button>
 
                   <Button

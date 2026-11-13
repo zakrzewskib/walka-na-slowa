@@ -43,7 +43,6 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       // todo: Add error handling when there is no game
       return;
     }
-    // todo: Add setting game status
     // todo: Add firebase game update
     set({
       gameId: '',

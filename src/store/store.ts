@@ -19,6 +19,7 @@ export const useAppStore = create<AppState>()(
         gameId: state.gameId,
         gameMode: state.gameMode,
         gameStatus: state.gameStatus,
+        gameResult: state.gameResult,
       }),
 
       // load game after rehydrate
