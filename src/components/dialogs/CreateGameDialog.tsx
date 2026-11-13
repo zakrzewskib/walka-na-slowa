@@ -1,5 +1,7 @@
 import { Button, Dialog, HStack, Image, Portal, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
+import facebookLogo from '../../assets/facebook_logo.png';
+import googleLogo from '../../assets/google_logo.png';
 import { useAppStore } from '../../store/store';
 import type { GameMode } from '../../types';
 import { ErrorAlert } from '../alerts/ErrorAlert';
@@ -85,14 +87,14 @@ export const CreateGameDialog = () => {
                 </HStack>
                 <HStack filter="grayscale(100%)">
                   <Image
-                    src="src/assets/Facebook_Logo_Primary.png"
+                    src={facebookLogo}
                     height="6"
                     width="6"
                     cursor="pointer"
                     alt="Zaloguj się przez facebooka"
                   />
                   <Image
-                    src="src/assets/Theme=Neutral, Show text=No, Shape=Square, Platform=Android+Web.png"
+                    src={googleLogo}
                     height="8"
                     width="8"
                     cursor="pointer"
