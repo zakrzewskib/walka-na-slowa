@@ -10,6 +10,13 @@ export default defineConfig({
     // When globals: true, Vitest uses chai-style assertions by default
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',
+    // Dummy values so modules that import src/firebase/firebase.ts can load in unit tests.
+    // The "demo-" prefix guarantees these never point at a real Firebase project.
+    env: {
+      VITE_FIREBASE_API_KEY: 'demo-api-key',
+      VITE_FIREBASE_AUTH_DOMAIN: 'demo-walka-na-slowa.firebaseapp.com',
+      VITE_FIREBASE_PROJECT_ID: 'demo-walka-na-slowa',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],

@@ -1,18 +1,18 @@
 import {
   addDoc,
-  arrayUnion,
   collection,
   CollectionReference,
   doc,
   FieldValue,
   getDoc,
+  runTransaction,
   serverTimestamp,
   Timestamp,
-  updateDoc,
 } from 'firebase/firestore';
 import { CURRENT_USER_ID } from '../constants';
 import { logger } from '../logger/logger';
-import type { Game, Guess } from '../types';
+import type { Game, GameMode, GameResult, Guess, GuessSubmit } from '../types';
+import { getGameResult, getWordResult } from '../utils/gameLogic';
 import { db } from './firebase';
 
 export const HARDCODED_CORRECT_WORD = 'LALKA'; // todo: Add choosing correct word in the backend
@@ -25,13 +25,16 @@ export interface GameDTO extends Game {
 
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
 
-export async function firebaseCreateGame(): Promise<string> {
+export async function firebaseCreateGame(mode: GameMode): Promise<string> {
   // Omit id to autogenerate it
   const newGame: Omit<GameDTO, 'id'> = {
-    userId: CURRENT_USER_ID,
+    playerIds: [CURRENT_USER_ID],
+    gameMode: mode,
+    status: mode === 'solo' ? 'in_progress' : 'waiting_for_opponent',
+    gameResult: null,
+    correctWord: HARDCODED_CORRECT_WORD,
     guesses: [],
     createdAt: serverTimestamp(),
-    correctWord: HARDCODED_CORRECT_WORD,
   };
 
   try {
@@ -45,15 +48,51 @@ export async function firebaseCreateGame(): Promise<string> {
   }
 }
 
-export async function firebaseSubmitGuess(gameId: string, guess: Guess): Promise<void> {
-  // todo: Offline/flaky network: write may hang (no error/rollback) or be saved twice on retry (new id + createdAt defeat arrayUnion dedupe)
-
+export async function firebaseSubmitGuess(
+  gameId: string,
+  guess: GuessSubmit,
+): Promise<{ guess: Guess; gameResult: GameResult }> {
   try {
     const gameRef = doc(gamesCollection, gameId);
-    await updateDoc(gameRef, {
-      guesses: arrayUnion({ ...guess, createdAt: Timestamp.now() }),
+
+    const { evaluatedGuess, gameResult } = await runTransaction(db, async (tx) => {
+      const snapshot = await tx.get(gameRef);
+
+      if (!snapshot.exists()) {
+        throw new Error(`Game ${gameId} does not exist`);
+      }
+
+      const game = snapshot.data();
+
+      if (game.status === 'finished') {
+        throw new Error(`Game ${gameId} is already finished`);
+      }
+
+      // todo: Move evaluation to backend
+      const evaluatedGuess: Guess = {
+        ...guess,
+        evaluatedGuess: getWordResult(guess.value, game.correctWord),
+      };
+
+      // todo: Move winning logic to backend
+      const gameResult = getGameResult(
+        guess.value,
+        game.guesses.length + 1,
+        game.gameMode,
+        game.correctWord,
+      );
+
+      // One atomic write: the guess and (if the game ended) the result and status
+      tx.update(gameRef, {
+        guesses: [...game.guesses, { ...evaluatedGuess, createdAt: Timestamp.now() }],
+        ...(gameResult && { gameResult: gameResult, status: 'finished' }),
+      });
+
+      return { evaluatedGuess, gameResult };
     });
+
     logger.debug('Added new guess', { gameId, guess });
+    return { guess: evaluatedGuess, gameResult };
   } catch (error) {
     logger.error('Error adding guess', error);
     throw error;

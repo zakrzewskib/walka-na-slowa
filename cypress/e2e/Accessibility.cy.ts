@@ -1,9 +1,9 @@
 import { currentGuess, key, keyboard, opponentBoard, playerBoard } from '../support/helpers';
 import { sel } from '../support/selectors';
 
-describe('Accessibility', () => {
+describe('Accessibility for both players', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createVersusGame();
     cy.injectAxe();
   });
 
@@ -14,7 +14,7 @@ describe('Accessibility', () => {
     });
   });
 
-  it('has descriptive labels for screen readers', () => {
+  it('has descriptive labels for screen readers for 1 boards', () => {
     cy.get('[role="gridcell"]').each(($cell) => {
       cy.wrap($cell).should('have.attr', 'aria-label').and('not.be.empty');
     });
@@ -65,7 +65,46 @@ describe('Accessibility - create game dialog', () => {
   });
 
   it('closes after the game is created', () => {
-    cy.createGame();
+    cy.createSoloGame();
     cy.get(sel.createGameDialog).should('not.exist');
+  });
+});
+
+describe('Accessibility for solo mode', () => {
+  beforeEach(() => {
+    cy.createSoloGame();
+    cy.injectAxe();
+  });
+
+  it('should not have any accessibility violations', () => {
+    cy.checkA11y(undefined, {
+      rules: { 'color-contrast': { enabled: false } },
+    });
+  });
+
+  it('has descriptive labels for screen readers for 1 board', () => {
+    cy.get('[role="gridcell"]').each(($cell) => {
+      cy.wrap($cell).should('have.attr', 'aria-label').and('not.be.empty');
+    });
+
+    playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
+    opponentBoard().should('not.exist');
+  });
+
+  describe('on-screen keyboard', () => {
+    it('renders keys as buttons with accessible names', () => {
+      keyboard()
+        .find('button')
+        .each(($btn) => {
+          const name = $btn.attr('aria-label') ?? $btn.text().trim();
+          cy.wrap(name, { log: false }).should('not.be.empty');
+        });
+    });
+
+    it('does not double-register a letter when a focused key is activated with the keyboard', () => {
+      key('A').focus();
+      cy.get('body').trigger('keydown', { key: 'a', bubbles: true });
+      currentGuess().should('eq', 'A');
+    });
   });
 });

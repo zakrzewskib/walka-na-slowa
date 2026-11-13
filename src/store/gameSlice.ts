@@ -1,5 +1,6 @@
 import type { StateCreator } from 'zustand';
 import { firebaseCreateGame, firebaseGetGame, HARDCODED_CORRECT_WORD } from '../firebase/games';
+import type { GameMode } from '../types';
 import type { AppState, GameSlice, StoreMutators } from './types';
 
 export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlice> = (
@@ -8,16 +9,30 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
 ) => ({
   gameId: '',
   correctWord: '',
+  gameMode: 'versus',
+  gameResult: null,
 
-  createGame: async () => {
-    const gameId = await firebaseCreateGame();
-    set({ gameId, correctWord: HARDCODED_CORRECT_WORD, guesses: [], currentGuess: '' });
+  createGame: async (gameMode: GameMode) => {
+    const gameId = await firebaseCreateGame(gameMode);
+    set({
+      gameId,
+      correctWord: HARDCODED_CORRECT_WORD,
+      guesses: [],
+      currentGuess: '',
+      gameMode: gameMode,
+      gameResult: null,
+    });
   },
 
   loadGame: async (gameId) => {
     const game = await firebaseGetGame(gameId);
+    // todo: Add loading state
     // todo: Add loading only user's guesses
-    set({ gameId, correctWord: game.correctWord, guesses: game.guesses, currentGuess: '' });
+    set({
+      gameId,
+      currentGuess: '',
+      ...game,
+    });
   },
 
   finishGame: async () => {
@@ -27,6 +42,12 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
     }
     // todo: Add setting game status
     // todo: Add firebase game update
-    set({ gameId: '', correctWord: '', guesses: [], currentGuess: '' });
+    set({
+      gameId: '',
+      correctWord: '',
+      guesses: [],
+      currentGuess: '',
+      gameResult: null,
+    });
   },
 });

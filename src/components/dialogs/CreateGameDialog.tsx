@@ -1,33 +1,42 @@
-import { Button, Dialog, Portal } from '@chakra-ui/react';
+import { Button, Dialog, HStack, Image, Portal, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
+import facebookLogo from '../../assets/facebook_logo.png';
+import googleLogo from '../../assets/google_logo.png';
 import { useAppStore } from '../../store/store';
+import type { GameMode } from '../../types';
 import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
   const gameId = useAppStore((state) => state.gameId);
   const createGame = useAppStore((state) => state.createGame);
-  const [loading, setLoading] = useState(false);
+  const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
+
   const [error, setError] = useState('');
 
-  async function handleCreateGame() {
-    setLoading(true);
+  async function handleCreateGame(gameMode: GameMode) {
+    setPendingMode(gameMode);
+
     setError('');
 
     try {
       // On success the store sets gameId, which closes the dialog
-      await createGame();
+      await createGame(gameMode);
     } catch {
-      setLoading(false);
+      setPendingMode(null);
       setError('Nie udało się stworzyć gry. Proszę spróbować ponownie lub odświeżyć stronę.');
     }
   }
   // todo: Add button to handle login
 
+  function handleOnExitComplete() {
+    setPendingMode(null);
+  }
+
   return (
     <Dialog.Root
       open={!gameId}
       // Reset only after the close animation, so the button doesn't flash back
-      onExitComplete={() => setLoading(false)}
+      onExitComplete={handleOnExitComplete}
       closeOnEscape={false}
       closeOnInteractOutside={false}
       placement="center"
@@ -42,7 +51,7 @@ export const CreateGameDialog = () => {
             aria-label="Dialog pozwalający stworzyć grę"
           >
             <Dialog.Header>
-              <Dialog.Title>Walka na słowa</Dialog.Title>
+              <Dialog.Title>Rozpocznij grę</Dialog.Title>
             </Dialog.Header>
 
             {error && (
@@ -51,16 +60,48 @@ export const CreateGameDialog = () => {
               </Dialog.Body>
             )}
 
-            <Dialog.Footer>
-              <Button
-                onClick={handleCreateGame}
-                data-testid="create-game-dialog-btn"
-                colorPalette="blackAlpha" // better for accessibility
-                loading={loading}
-                loadingText="Tworzenie..."
-              >
-                Stwórz grę bez logowania
-              </Button>
+            <Dialog.Footer justifyContent="center">
+              <VStack>
+                <HStack>
+                  <Button
+                    onClick={() => handleCreateGame('solo')}
+                    data-testid="create-game-dialog-btn-solo"
+                    colorPalette="blackAlpha" // better for accessibility
+                    loading={pendingMode === 'solo'}
+                    disabled={pendingMode !== null}
+                    loadingText="Tworzenie..."
+                  >
+                    Zagraj samemu
+                  </Button>
+
+                  <Button
+                    onClick={() => handleCreateGame('versus')}
+                    data-testid="create-game-dialog-btn-versus"
+                    colorPalette="blackAlpha" // better for accessibility
+                    loading={pendingMode === 'versus'}
+                    disabled={pendingMode !== null} // todo: Implement versus mode
+                    loadingText="Tworzenie..."
+                  >
+                    Znajdź przeciwnika (wkrótce 👨🏼‍💻)
+                  </Button>
+                </HStack>
+                <HStack filter="grayscale(100%)">
+                  <Image
+                    src={facebookLogo}
+                    height="6"
+                    width="6"
+                    cursor="pointer"
+                    alt="Zaloguj się przez facebooka"
+                  />
+                  <Image
+                    src={googleLogo}
+                    height="8"
+                    width="8"
+                    cursor="pointer"
+                    alt="Zaloguj się przez Google"
+                  />
+                </HStack>
+              </VStack>
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>

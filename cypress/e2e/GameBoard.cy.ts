@@ -2,9 +2,9 @@ import { WORD_LENGTH, WORDS_LENGTH } from '../../src/constants';
 import { eachRowShouldHaveCells, opponentBoard, playerBoard } from '../support/helpers';
 import { sel } from '../support/selectors';
 
-describe('Game Boards Display', () => {
+describe('Game Boards Display for both players', () => {
   beforeEach(() => {
-    cy.startGame();
+    cy.createVersusGame();
   });
 
   it('displays exactly one player board and one opponent board', () => {
@@ -54,4 +54,43 @@ describe('Game Boards Display', () => {
   // highlighting depend on live game state (WebSocket/game session) which
   // isn't seeded in e2e yet. Not covering that here — e2e coverage of
   // in-progress game state isn't a priority right now.
+});
+
+describe('Game Boards Display for solo mode', () => {
+  beforeEach(() => {
+    cy.createSoloGame();
+  });
+
+  it('displays exactly one player board and no opponent board', () => {
+    playerBoard().should('have.length', 1);
+    opponentBoard().should('not.exist');
+  });
+
+  it('does not show a second player', () => {
+    cy.contains('Gracz 2').should('not.exist');
+  });
+
+  it('labels the board as the player board', () => {
+    playerBoard().should('have.attr', 'aria-label', 'Twoja plansza');
+  });
+
+  describe('player board', () => {
+    it('displays correct number of rows', () => {
+      playerBoard().find(sel.row).should('have.length', WORDS_LENGTH);
+    });
+
+    it('displays correct number of cells per row', () => {
+      eachRowShouldHaveCells(playerBoard(), WORD_LENGTH);
+    });
+
+    it('displays correct total number of cells', () => {
+      playerBoard()
+        .find(sel.gridCell)
+        .should('have.length', WORDS_LENGTH * WORD_LENGTH);
+    });
+  });
+
+  it('renders only one grid in the whole page', () => {
+    cy.get(sel.grid).should('have.length', 1);
+  });
 });

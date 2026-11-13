@@ -4,6 +4,7 @@ export const WORD_LENGTH = 5;
 export const WORDS_LENGTH = 6;
 export const HIDDEN_LETTER = '-';
 export const CURRENT_USER_ID = 'user1';
+export const ENEMY_USER_ID = 'user2';
 
 export const POLISH_ALPHABET_ROWS: PolishLetter[][] = [
   ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
