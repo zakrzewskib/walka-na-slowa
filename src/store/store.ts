@@ -23,9 +23,10 @@ export const useAppStore = create<AppState>()(
       }),
 
       // load game after rehydrate
-      onRehydrateStorage: () => (state) => {
-        if (!state?.gameId) return;
+      onRehydrateStorage: () => (state, error) => {
+        if (error || !state?.gameId) return;
 
+        // loadGame sets state to the new game
         state.loadGame(state.gameId).catch((error) => {
           logger.error('Store: Could not load game on rehydrate', error);
 

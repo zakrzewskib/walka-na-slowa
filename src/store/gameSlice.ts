@@ -7,6 +7,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
   set,
   get,
 ) => ({
+  // todo: Think if it should be a game object
   gameId: '',
   correctWord: '',
   gameMode: 'versus',
@@ -29,6 +30,9 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
 
   loadGame: async (gameId) => {
     const game = await firebaseGetGame(gameId);
+
+    if (get().gameId !== gameId) return;
+
     // todo: Add loading state
     // todo: Add loading only user's guesses
     set({

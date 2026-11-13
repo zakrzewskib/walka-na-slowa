@@ -2,8 +2,8 @@ import type { GameMode, GameResult, GameStatus, Guess, GuessSubmit, PolishLetter
 
 export interface GameSlice {
   gameId: string;
-  gameMode: GameMode;
   correctWord: string;
+  gameMode: GameMode;
   gameResult: GameResult;
   gameStatus: GameStatus;
   createGame: (gameMode: GameMode) => Promise<void>;
