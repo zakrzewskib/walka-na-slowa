@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { CURRENT_USER_ID } from '../constants';
 import { logger } from '../logger/logger';
-import type { Game, GameMode, GameResult, Guess, GuessSubmit } from '../types';
+import type { Game, GameMode, GameResult, GameStatus, Guess, GuessSubmit } from '../types';
 import { getGameResult, getWordResult } from '../utils/gameLogic';
 import { db } from './firebase';
 
@@ -25,12 +25,12 @@ export interface GameDTO extends Game {
 
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
 
-export async function firebaseCreateGame(mode: GameMode): Promise<string> {
+export async function firebaseCreateGame(mode: GameMode): Promise<GameDTO> {
   // Omit id to autogenerate it
   const newGame: Omit<GameDTO, 'id'> = {
     playerIds: [CURRENT_USER_ID],
     gameMode: mode,
-    status: mode === 'solo' ? 'in_progress' : 'waiting_for_opponent',
+    gameStatus: mode === 'solo' ? 'in_progress' : 'waiting_for_opponent',
     gameResult: null,
     correctWord: HARDCODED_CORRECT_WORD,
     guesses: [],
@@ -41,7 +41,10 @@ export async function firebaseCreateGame(mode: GameMode): Promise<string> {
     const docRef = await addDoc(gamesCollection, newGame);
     const gameId = docRef.id;
     logger.debug('Game created', { gameId });
-    return gameId;
+    return {
+      id: gameId,
+      ...newGame,
+    };
   } catch (error) {
     logger.error('Error creating game', error);
     throw error;
@@ -51,7 +54,7 @@ export async function firebaseCreateGame(mode: GameMode): Promise<string> {
 export async function firebaseSubmitGuess(
   gameId: string,
   guess: GuessSubmit,
-): Promise<{ guess: Guess; gameResult: GameResult }> {
+): Promise<{ guess: Guess; gameResult: GameResult; gameStatus: GameStatus }> {
   try {
     const gameRef = doc(gamesCollection, gameId);
 
@@ -64,7 +67,7 @@ export async function firebaseSubmitGuess(
 
       const game = snapshot.data();
 
-      if (game.status === 'finished') {
+      if (game.gameStatus === 'finished') {
         throw new Error(`Game ${gameId} is already finished`);
       }
 
@@ -85,14 +88,18 @@ export async function firebaseSubmitGuess(
       // One atomic write: the guess and (if the game ended) the result and status
       tx.update(gameRef, {
         guesses: [...game.guesses, { ...evaluatedGuess, createdAt: Timestamp.now() }],
-        ...(gameResult && { gameResult: gameResult, status: 'finished' }),
+        ...(gameResult && { gameResult: gameResult, gameStatus: 'finished' }),
       });
 
       return { evaluatedGuess, gameResult };
     });
 
     logger.debug('Added new guess', { gameId, guess });
-    return { guess: evaluatedGuess, gameResult };
+    return {
+      guess: evaluatedGuess,
+      gameResult,
+      gameStatus: gameResult ? 'finished' : 'in_progress',
+    };
   } catch (error) {
     logger.error('Error adding guess', error);
     throw error;

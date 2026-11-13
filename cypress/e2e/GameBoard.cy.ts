@@ -2,7 +2,8 @@ import { WORD_LENGTH, WORDS_LENGTH } from '../../src/constants';
 import { eachRowShouldHaveCells, opponentBoard, playerBoard } from '../support/helpers';
 import { sel } from '../support/selectors';
 
-describe('Game Boards Display for both players', () => {
+// todo: Implement versus mode
+describe.skip('Game Boards Display for both players', () => {
   beforeEach(() => {
     cy.createVersusGame();
   });

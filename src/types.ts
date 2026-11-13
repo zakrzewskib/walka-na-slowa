@@ -20,7 +20,7 @@ export type GuessSubmit = Omit<Guess, 'evaluatedGuess'>;
 
 export type GameMode = 'solo' | 'versus';
 
-export type GameStatus = 'waiting_for_opponent' | 'in_progress' | 'finished';
+export type GameStatus = 'waiting_for_opponent' | 'in_progress' | 'finished' | null;
 
 export type GameResult =
   | { mode: 'solo'; outcome: 'won' | 'lost' }
@@ -36,7 +36,7 @@ export interface Game {
   playerIds: string[];
   guesses: Guess[];
   correctWord: string;
-  status: GameStatus;
+  gameStatus: GameStatus;
   gameResult: GameResult;
 }
 

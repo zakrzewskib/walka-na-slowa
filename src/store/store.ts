@@ -15,12 +15,18 @@ export const useAppStore = create<AppState>()(
     {
       name: 'walka-na-slowa-storage',
 
-      partialize: (state) => ({ gameId: state.gameId, gameMode: state.gameMode }),
+      partialize: (state) => ({
+        gameId: state.gameId,
+        gameMode: state.gameMode,
+        gameStatus: state.gameStatus,
+        gameResult: state.gameResult,
+      }),
 
       // load game after rehydrate
-      onRehydrateStorage: () => (state) => {
-        if (!state?.gameId) return;
+      onRehydrateStorage: () => (state, error) => {
+        if (error || !state?.gameId) return;
 
+        // loadGame sets state to the new game
         state.loadGame(state.gameId).catch((error) => {
           logger.error('Store: Could not load game on rehydrate', error);
 

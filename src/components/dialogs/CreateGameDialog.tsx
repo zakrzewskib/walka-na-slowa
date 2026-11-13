@@ -1,17 +1,18 @@
-import { Button, Dialog, HStack, Image, Portal, VStack } from '@chakra-ui/react';
+import { Button, Dialog, HStack, Portal, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
-import facebookLogo from '../../assets/facebook_logo.png';
-import googleLogo from '../../assets/google_logo.png';
+import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
 import type { GameMode } from '../../types';
+import { gameResultToText } from '../../utils';
 import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
-  const gameId = useAppStore((state) => state.gameId);
+  const gameStatus = useAppStore((state) => state.gameStatus);
+  const gameResult = useAppStore((state) => state.gameResult);
   const createGame = useAppStore((state) => state.createGame);
   const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
-
   const [error, setError] = useState('');
+  const isOpen = gameStatus == 'waiting_for_opponent' || !gameStatus || gameStatus === 'finished';
 
   async function handleCreateGame(gameMode: GameMode) {
     setPendingMode(gameMode);
@@ -34,7 +35,7 @@ export const CreateGameDialog = () => {
 
   return (
     <Dialog.Root
-      open={!gameId}
+      open={isOpen}
       // Reset only after the close animation, so the button doesn't flash back
       onExitComplete={handleOnExitComplete}
       closeOnEscape={false}
@@ -51,7 +52,9 @@ export const CreateGameDialog = () => {
             aria-label="Dialog pozwalający stworzyć grę"
           >
             <Dialog.Header>
-              <Dialog.Title>Rozpocznij grę</Dialog.Title>
+              <Dialog.Title>
+                {gameResultToText(gameResult, CURRENT_USER_ID, ENEMY_USER_ID)}
+              </Dialog.Title>
             </Dialog.Header>
 
             {error && (
@@ -71,7 +74,7 @@ export const CreateGameDialog = () => {
                     disabled={pendingMode !== null}
                     loadingText="Tworzenie..."
                   >
-                    Zagraj samemu
+                    {gameResult ? 'Zagraj ponownie' : 'Zagraj samemu'}
                   </Button>
 
                   <Button
@@ -79,13 +82,13 @@ export const CreateGameDialog = () => {
                     data-testid="create-game-dialog-btn-versus"
                     colorPalette="blackAlpha" // better for accessibility
                     loading={pendingMode === 'versus'}
-                    disabled={pendingMode !== null} // todo: Implement versus mode
+                    disabled={true} // todo: Implement versus mode
                     loadingText="Tworzenie..."
                   >
                     Znajdź przeciwnika (wkrótce 👨🏼‍💻)
                   </Button>
                 </HStack>
-                <HStack filter="grayscale(100%)">
+                {/* <HStack filter="grayscale(100%)">
                   <Image
                     src={facebookLogo}
                     height="6"
@@ -100,7 +103,7 @@ export const CreateGameDialog = () => {
                     cursor="pointer"
                     alt="Zaloguj się przez Google"
                   />
-                </HStack>
+                </HStack> */}
               </VStack>
             </Dialog.Footer>
           </Dialog.Content>

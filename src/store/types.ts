@@ -1,10 +1,11 @@
-import type { GameMode, GameResult, Guess, GuessSubmit, PolishLetter } from '../types';
+import type { GameMode, GameResult, GameStatus, Guess, GuessSubmit, PolishLetter } from '../types';
 
 export interface GameSlice {
   gameId: string;
-  gameMode: GameMode;
   correctWord: string;
+  gameMode: GameMode;
   gameResult: GameResult;
+  gameStatus: GameStatus;
   createGame: (gameMode: GameMode) => Promise<void>;
   loadGame: (gameId: string) => Promise<void>;
   finishGame: () => Promise<void>;
