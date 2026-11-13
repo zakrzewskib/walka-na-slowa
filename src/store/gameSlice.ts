@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand';
-import { firebaseCreateGame, firebaseGetGame, HARDCODED_CORRECT_WORD } from '../firebase/games';
+import { firebaseCreateGame, firebaseGetGame } from '../firebase/games';
 import type { GameMode } from '../types';
 import type { AppState, GameSlice, StoreMutators } from './types';
 
@@ -11,16 +11,19 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
   correctWord: '',
   gameMode: 'versus',
   gameResult: null,
+  gameStatus: null,
 
   createGame: async (gameMode: GameMode) => {
-    const gameId = await firebaseCreateGame(gameMode);
+    const game = await firebaseCreateGame(gameMode);
+
     set({
-      gameId,
-      correctWord: HARDCODED_CORRECT_WORD,
+      gameId: game.id,
+      correctWord: game.correctWord,
       guesses: [],
       currentGuess: '',
       gameMode: gameMode,
       gameResult: null,
+      gameStatus: game.gameStatus,
     });
   },
 
@@ -48,6 +51,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       guesses: [],
       currentGuess: '',
       gameResult: null,
+      gameStatus: null,
     });
   },
 });

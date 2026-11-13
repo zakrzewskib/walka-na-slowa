@@ -15,7 +15,11 @@ export const useAppStore = create<AppState>()(
     {
       name: 'walka-na-slowa-storage',
 
-      partialize: (state) => ({ gameId: state.gameId, gameMode: state.gameMode }),
+      partialize: (state) => ({
+        gameId: state.gameId,
+        gameMode: state.gameMode,
+        gameStatus: state.gameStatus,
+      }),
 
       // load game after rehydrate
       onRehydrateStorage: () => (state) => {

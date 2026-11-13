@@ -7,11 +7,11 @@ import type { GameMode } from '../../types';
 import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
-  const gameId = useAppStore((state) => state.gameId);
+  const gameStatus = useAppStore((state) => state.gameStatus);
   const createGame = useAppStore((state) => state.createGame);
   const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
-
   const [error, setError] = useState('');
+  const isOpen = gameStatus == 'waiting_for_opponent' || !gameStatus || gameStatus === 'finished';
 
   async function handleCreateGame(gameMode: GameMode) {
     setPendingMode(gameMode);
@@ -34,7 +34,7 @@ export const CreateGameDialog = () => {
 
   return (
     <Dialog.Root
-      open={!gameId}
+      open={isOpen}
       // Reset only after the close animation, so the button doesn't flash back
       onExitComplete={handleOnExitComplete}
       closeOnEscape={false}
