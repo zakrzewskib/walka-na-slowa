@@ -8,7 +8,7 @@ export interface GameSlice {
   gameStatus: GameStatus;
   createGame: (gameMode: GameMode) => Promise<void>;
   loadGame: (gameId: string) => Promise<void>;
-  finishGame: () => Promise<void>;
+  surrenderGame: () => Promise<void>;
 }
 
 export interface GuessSlice {

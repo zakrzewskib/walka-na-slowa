@@ -4,7 +4,7 @@ import { useAppStore } from '../store/store';
 import { toaster } from './ui/toaster';
 
 export const SurrenderButton = (props: ButtonProps) => {
-  const finishGame = useAppStore((state) => state.finishGame);
+  const surrenderGame = useAppStore((state) => state.surrenderGame);
   const gameId = useAppStore((state) => state.gameId);
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +13,7 @@ export const SurrenderButton = (props: ButtonProps) => {
 
     try {
       // todo: Add confirmation
-      await finishGame();
+      await surrenderGame();
     } catch {
       toaster.create({
         title: 'Błąd',
