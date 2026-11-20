@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Portal, VStack } from '@chakra-ui/react';
+import { Box, Button, CloseButton, Dialog, Portal, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useAppStore } from '../../store/store';
 import { ErrorAlert } from '../alerts/ErrorAlert';
@@ -72,6 +72,10 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
                 </Box>
               </VStack>
             </Dialog.Footer>
+
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="sm" onClick={close} />
+            </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>
