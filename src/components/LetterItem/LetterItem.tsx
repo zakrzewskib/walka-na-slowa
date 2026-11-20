@@ -26,6 +26,7 @@ export const LetterItem = (props: LetterItemProps) => {
       justifyContent="center"
       rounded="sm"
       width="60px"
+      maxWidth="60px"
       height="60px"
       fontSize="24px"
       fontWeight="bolder"

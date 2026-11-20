@@ -56,6 +56,7 @@ export const CreateGameDialog = () => {
           >
             <Dialog.Header>
               <Dialog.Title>
+                {/* todo: Add Szukanie przeciwnika text */}
                 {gameResultToText(gameResult, CURRENT_USER_ID, ENEMY_USER_ID)}
               </Dialog.Title>
             </Dialog.Header>

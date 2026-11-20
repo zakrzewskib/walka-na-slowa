@@ -12,6 +12,7 @@ interface GameBoardProps {
 
 export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
   const currentGuess = useAppStore((state) => state.currentGuess);
+  const gameMode = useAppStore((state) => state.gameMode);
 
   // todo: separate players guesses on the backend side
   const guesses = useAppStore(
@@ -28,9 +29,11 @@ export const GameBoard = ({ isPlayer, playerName }: GameBoardProps) => {
 
   return (
     <VStack mdDown={{ width: 'full', alignItems: 'stretch' }}>
-      <Text alignSelf={isPlayer ? 'start' : 'end'}>
-        {playerName} {isPlayer && '(Ty)'}
-      </Text>
+      {gameMode === 'versus' && (
+        <Text alignSelf={isPlayer ? 'start' : 'end'}>
+          {playerName} {isPlayer && '(Ty)'}
+        </Text>
+      )}
 
       <VStack
         gap="4px"

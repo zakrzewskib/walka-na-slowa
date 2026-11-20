@@ -23,6 +23,7 @@ export const Keyboard = () => {
       role="group"
       aria-label="Klawiatura"
       data-testid="keyboard"
+      marginTop="auto"
     >
       {KEYBOARD_ROWS.map((row, rowIndex) => (
         <HStack key={rowIndex} gap={{ base: '2px', sm: '4px' }}>
