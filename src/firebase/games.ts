@@ -22,6 +22,7 @@ type FirebaseWriteReadTimeStamp = FieldValue | Timestamp;
 
 export interface GameDTO extends Game {
   createdAt: FirebaseWriteReadTimeStamp;
+  finishedAt?: FirebaseWriteReadTimeStamp;
 }
 
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
@@ -129,17 +130,14 @@ export async function firebaseGetGame(gameId: string): Promise<GameDTO> {
   }
 }
 
-export async function firebaseUpdateGame(
-  gameId: string,
-  gameStatus: GameStatus,
-  gameResult: GameResult,
-) {
+export async function firebaseFinishGame(gameId: string, gameResult: GameResult) {
   const gameRef = doc(gamesCollection, gameId);
 
   try {
     await updateDoc(gameRef, {
-      gameStatus: gameStatus,
+      gameStatus: 'finished',
       gameResult: gameResult,
+      finishedAt: serverTimestamp(),
     });
   } catch (error) {
     logger.error('Error updating game', { gameId, error });

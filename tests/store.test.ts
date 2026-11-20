@@ -5,9 +5,9 @@ import { toaster } from '../src/components/ui/toaster';
 import { ENEMY_USER_ID } from '../src/constants';
 import {
   firebaseCreateGame,
+  firebaseFinishGame,
   firebaseGetGame,
   firebaseSubmitGuess,
-  firebaseUpdateGame,
   type GameDTO,
 } from '../src/firebase/games';
 import { useAppStore } from '../src/store/store';
@@ -18,7 +18,7 @@ vi.mock('../src/firebase/games', () => ({
   firebaseCreateGame: vi.fn(),
   firebaseGetGame: vi.fn(),
   firebaseSubmitGuess: vi.fn(),
-  firebaseUpdateGame: vi.fn(),
+  firebaseFinishGame: vi.fn(),
 }));
 
 vi.mock('../src/components/ui/toaster', () => ({
@@ -409,7 +409,7 @@ describe('surrenderGame', () => {
 
     await expect(useAppStore.getState().surrenderGame()).resolves.toBeUndefined();
 
-    expect(firebaseUpdateGame).not.toHaveBeenCalled();
+    expect(firebaseFinishGame).not.toHaveBeenCalled();
     expect(useAppStore.getState().gameResult).toBeNull();
     expect(useAppStore.getState().gameStatus).toBeNull();
   });
@@ -428,8 +428,8 @@ describe('surrenderGame', () => {
 
       await useAppStore.getState().surrenderGame();
 
-      expect(firebaseUpdateGame).toHaveBeenCalledTimes(1);
-      expect(firebaseUpdateGame).toHaveBeenCalledWith('game-123', 'finished', {
+      expect(firebaseFinishGame).toHaveBeenCalledTimes(1);
+      expect(firebaseFinishGame).toHaveBeenCalledWith('game-123', 'finished', {
         mode: 'solo',
         outcome: 'lost',
       });
@@ -443,7 +443,7 @@ describe('surrenderGame', () => {
 
       await useAppStore.getState().surrenderGame();
 
-      expect(firebaseUpdateGame).toHaveBeenCalledWith('game-123', 'finished', {
+      expect(firebaseFinishGame).toHaveBeenCalledWith('game-123', 'finished', {
         mode: 'versus',
         winnerId: ENEMY_USER_ID,
       });
@@ -472,7 +472,7 @@ describe('surrenderGame', () => {
 
     it('updates the store only after firebase has resolved', async () => {
       let resolveUpdate!: () => void;
-      vi.mocked(firebaseUpdateGame).mockReturnValueOnce(
+      vi.mocked(firebaseFinishGame).mockReturnValueOnce(
         new Promise<void>((resolve) => {
           resolveUpdate = resolve;
         }),
@@ -490,7 +490,7 @@ describe('surrenderGame', () => {
     });
 
     it('rejects and leaves the state untouched when firebase fails', async () => {
-      vi.mocked(firebaseUpdateGame).mockRejectedValue(new Error('network down'));
+      vi.mocked(firebaseFinishGame).mockRejectedValueOnce(new Error('network down'));
 
       await expect(useAppStore.getState().surrenderGame()).rejects.toThrow('network down');
 

@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand';
 import { ENEMY_USER_ID } from '../constants';
-import { firebaseCreateGame, firebaseGetGame, firebaseUpdateGame } from '../firebase/games';
+import { firebaseCreateGame, firebaseFinishGame, firebaseGetGame } from '../firebase/games';
 import type { GameMode, GameResult } from '../types';
 import type { AppState, GameSlice, StoreMutators } from './types';
 
@@ -45,18 +45,20 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
 
   surrenderGame: async () => {
     const gameId = get().gameId;
-    if (!gameId) return;
+
+    if (!gameId || get().gameStatus === 'finished') return;
 
     const gameResult: GameResult =
       get().gameMode === 'solo'
         ? { mode: 'solo', outcome: 'lost' }
         : { mode: 'versus', winnerId: ENEMY_USER_ID };
 
-    await firebaseUpdateGame(gameId, 'finished', gameResult);
+    await firebaseFinishGame(gameId, gameResult);
 
     set({
-      gameResult: gameResult,
+      gameResult,
       gameStatus: 'finished',
+      currentGuess: '',
     });
   },
 });
