@@ -1,41 +1,22 @@
-import { Button, type ButtonProps } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useAppStore } from '../store/store';
-import { toaster } from './ui/toaster';
+import { SurrenderDialog } from './dialogs/SurrenderDialog';
 
-export const SurrenderButton = (props: ButtonProps) => {
-  const surrenderGame = useAppStore((state) => state.surrenderGame);
+export const SurrenderButton = () => {
   const gameId = useAppStore((state) => state.gameId);
-  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  async function handleSurrender() {
-    setLoading(true);
-
-    try {
-      // todo: Add confirmation
-      await surrenderGame();
-    } catch {
-      toaster.create({
-        title: 'Błąd',
-        description: 'Nie udało się zakończyć gry. Proszę spróbować później.',
-        type: 'error',
-        closable: true,
-      });
-    } finally {
-      setLoading(false);
-    }
+  function handleSurrender() {
+    setOpen(true);
   }
 
   return (
-    <Button
-      onClick={handleSurrender}
-      disabled={!gameId}
-      loading={loading}
-      loadingText="..."
-      data-testid="surrender-button"
-      {...props}
-    >
-      Poddaj się
-    </Button>
+    <>
+      <SurrenderDialog open={open} close={() => setOpen(false)} />
+      <Button onClick={handleSurrender} disabled={!gameId} data-testid="surrender-button">
+        Poddaj się
+      </Button>
+    </>
   );
 };
