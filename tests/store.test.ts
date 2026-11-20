@@ -2,10 +2,12 @@
 import { Timestamp } from 'firebase/firestore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toaster } from '../src/components/ui/toaster';
+import { ENEMY_USER_ID } from '../src/constants';
 import {
   firebaseCreateGame,
   firebaseGetGame,
   firebaseSubmitGuess,
+  firebaseUpdateGame,
   type GameDTO,
 } from '../src/firebase/games';
 import { useAppStore } from '../src/store/store';
@@ -16,6 +18,7 @@ vi.mock('../src/firebase/games', () => ({
   firebaseCreateGame: vi.fn(),
   firebaseGetGame: vi.fn(),
   firebaseSubmitGuess: vi.fn(),
+  firebaseUpdateGame: vi.fn(),
 }));
 
 vi.mock('../src/components/ui/toaster', () => ({
@@ -61,6 +64,8 @@ function resetStore() {
     correctWord: '',
     guesses: [],
     gameResult: null,
+    gameMode: 'solo',
+    gameStatus: null,
     currentGuess: '',
     isSubmittingGuess: false,
   });
@@ -398,33 +403,101 @@ describe('loadGame', () => {
   });
 });
 
-describe('finishGame', () => {
-  it('clears gameId, correctWord and guesses', async () => {
-    useAppStore.setState({
-      gameId: 'game-123',
-      correctWord: 'LALKA',
-      guesses: [makeGuess('BRTGW')],
-    });
+describe('surrenderGame', () => {
+  it('does nothing when there is no gameId', async () => {
+    useAppStore.setState({ gameId: '' });
 
-    await useAppStore.getState().finishGame();
+    await expect(useAppStore.getState().surrenderGame()).resolves.toBeUndefined();
 
-    const { gameId, correctWord, guesses } = useAppStore.getState();
-    expect(gameId).toBe('');
-    expect(correctWord).toBe('');
-    expect(guesses).toEqual([]);
+    expect(firebaseUpdateGame).not.toHaveBeenCalled();
+    expect(useAppStore.getState().gameResult).toBeNull();
+    expect(useAppStore.getState().gameStatus).toBeNull();
   });
 
-  // Locks in the current early return. When the store todo turns this into an error,
-  // change the assertion to `rejects.toThrow()`.
-  it('does nothing when there is no active game', async () => {
-    const existing = [makeGuess('BRTGW')];
-    useAppStore.setState({ gameId: '', correctWord: 'LALKA', guesses: existing });
+  describe('with an active game', () => {
+    beforeEach(() => {
+      useAppStore.setState({
+        gameId: 'game-123',
+        correctWord: 'LALKA',
+        guesses: [makeGuess('BRTGW')],
+      });
+    });
 
-    await expect(useAppStore.getState().finishGame()).resolves.toBeUndefined();
+    it('marks a solo game as lost and finished', async () => {
+      useAppStore.setState({ gameMode: 'solo' });
 
-    const state = useAppStore.getState();
-    expect(state.correctWord).toBe('LALKA');
-    expect(state.guesses).toEqual(existing);
+      await useAppStore.getState().surrenderGame();
+
+      expect(firebaseUpdateGame).toHaveBeenCalledTimes(1);
+      expect(firebaseUpdateGame).toHaveBeenCalledWith('game-123', 'finished', {
+        mode: 'solo',
+        outcome: 'lost',
+      });
+      const state = useAppStore.getState();
+      expect(state.gameResult).toEqual({ mode: 'solo', outcome: 'lost' });
+      expect(state.gameStatus).toBe('finished');
+    });
+
+    it('makes the enemy the winner in a versus game', async () => {
+      useAppStore.setState({ gameMode: 'versus' });
+
+      await useAppStore.getState().surrenderGame();
+
+      expect(firebaseUpdateGame).toHaveBeenCalledWith('game-123', 'finished', {
+        mode: 'versus',
+        winnerId: ENEMY_USER_ID,
+      });
+      const state = useAppStore.getState();
+      expect(state.gameResult).toEqual({ mode: 'versus', winnerId: ENEMY_USER_ID });
+      expect(state.gameStatus).toBe('finished');
+    });
+
+    it('keeps gameId, correctWord and guesses', async () => {
+      await useAppStore.getState().surrenderGame();
+
+      const state = useAppStore.getState();
+      expect(state.gameId).toBe('game-123');
+      expect(state.correctWord).toBe('LALKA');
+      expect(state.guesses.map((g) => g.value)).toEqual(['BRTGW']);
+    });
+
+    it('rejects further guesses after surrendering', async () => {
+      await useAppStore.getState().surrenderGame();
+
+      await expect(useAppStore.getState().submitGuess(makeSubmit('LALKA'))).rejects.toThrow(
+        'Store: game is finished!',
+      );
+      expect(firebaseSubmitGuess).not.toHaveBeenCalled();
+    });
+
+    it('updates the store only after firebase has resolved', async () => {
+      let resolveUpdate!: () => void;
+      vi.mocked(firebaseUpdateGame).mockReturnValueOnce(
+        new Promise<void>((resolve) => {
+          resolveUpdate = resolve;
+        }),
+      );
+
+      const pending = useAppStore.getState().surrenderGame();
+
+      expect(useAppStore.getState().gameResult).toBeNull();
+      expect(useAppStore.getState().gameStatus).not.toBe('finished');
+
+      resolveUpdate();
+      await pending;
+
+      expect(useAppStore.getState().gameStatus).toBe('finished');
+    });
+
+    it('rejects and leaves the state untouched when firebase fails', async () => {
+      vi.mocked(firebaseUpdateGame).mockRejectedValue(new Error('network down'));
+
+      await expect(useAppStore.getState().surrenderGame()).rejects.toThrow('network down');
+
+      const state = useAppStore.getState();
+      expect(state.gameResult).toBeNull();
+      expect(state.gameStatus).not.toBe('finished');
+    });
   });
 });
 
