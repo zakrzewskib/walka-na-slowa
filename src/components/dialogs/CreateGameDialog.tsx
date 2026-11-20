@@ -1,10 +1,11 @@
-import { Button, Dialog, HStack, Portal, VStack } from '@chakra-ui/react';
+import { Button, Dialog, HStack, Portal, Text, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
 import type { GameMode } from '../../types';
 import { gameResultToText } from '../../utils';
 import { ErrorAlert } from '../alerts/ErrorAlert';
+import CorrectWord from '../correctWord/CorrectWord';
 
 export const CreateGameDialog = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
@@ -13,6 +14,8 @@ export const CreateGameDialog = () => {
   const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
   const [error, setError] = useState('');
   const isOpen = gameStatus == 'waiting_for_opponent' || !gameStatus || gameStatus === 'finished';
+
+  const correctWord = useAppStore((state) => state.correctWord);
 
   async function handleCreateGame(gameMode: GameMode) {
     setPendingMode(gameMode);
@@ -60,6 +63,13 @@ export const CreateGameDialog = () => {
             {error && (
               <Dialog.Body>
                 <ErrorAlert text={error} />
+              </Dialog.Body>
+            )}
+
+            {gameStatus === 'finished' && (
+              <Dialog.Body display="flex" flexDir="column" alignItems="center">
+                <Text>Poprawne słowo to:</Text>
+                <CorrectWord correctWord={correctWord} />
               </Dialog.Body>
             )}
 
