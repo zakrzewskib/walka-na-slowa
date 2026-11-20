@@ -1,9 +1,14 @@
-import { Box, Button, CloseButton, Dialog, Portal, VStack } from '@chakra-ui/react';
+import { Button, CloseButton, Dialog, HStack, Portal } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { useAppStore } from '../../store/store';
 import { ErrorAlert } from '../alerts/ErrorAlert';
 
-export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => void }) => {
+interface SurrenderDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const SurrenderDialog = ({ isOpen, onClose }: SurrenderDialogProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const surrenderGame = useAppStore((state) => state.surrenderGame);
@@ -24,9 +29,8 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
   }
   return (
     <Dialog.Root
-      open={open}
+      open={isOpen}
       onExitComplete={() => {
-        setLoading(false);
         setError('');
       }}
       closeOnEscape={!loading}
@@ -54,32 +58,29 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
             )}
 
             <Dialog.Footer justifyContent="center">
-              <VStack>
-                <Box display="flex" gap="1">
-                  <Button
-                    onClick={handleSurrender}
-                    colorPalette="red"
-                    loading={loading}
-                    disabled={loading}
-                    loadingText="Kończenie gry..."
-                  >
-                    Tak
-                  </Button>
+              <HStack gap="1">
+                <Button
+                  onClick={handleSurrender}
+                  colorPalette="red"
+                  loading={loading}
+                  loadingText="Kończenie gry..."
+                >
+                  Tak
+                </Button>
 
-                  <Button
-                    colorPalette="blackAlpha" // better for accessibility
-                    disabled={loading}
-                    onClick={close}
-                    ref={ref}
-                  >
-                    Nie
-                  </Button>
-                </Box>
-              </VStack>
+                <Button
+                  colorPalette="blackAlpha" // better for accessibility
+                  disabled={loading}
+                  onClick={onClose}
+                  ref={ref}
+                >
+                  Nie
+                </Button>
+              </HStack>
             </Dialog.Footer>
 
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" onClick={close} />
+              <CloseButton size="sm" onClick={onClose} />
             </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>

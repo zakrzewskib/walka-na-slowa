@@ -6,13 +6,13 @@ import { SurrenderDialog } from './dialogs/SurrenderDialog';
 export const SurrenderButton = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
   const gameId = useAppStore((state) => state.gameId);
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <SurrenderDialog open={open} close={() => setOpen(false)} />
+      <SurrenderDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <Button
-        onClick={() => setOpen(true)}
+        onClick={() => setIsOpen(true)}
         disabled={gameStatus === 'finished' || !gameId}
         data-testid="surrender-button"
       >
