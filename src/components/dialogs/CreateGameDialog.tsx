@@ -1,4 +1,4 @@
-import { Button, Dialog, HStack, Portal, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Dialog, Portal, Text, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
@@ -46,6 +46,7 @@ export const CreateGameDialog = () => {
       placement="center"
       lazyMount
       unmountOnExit
+      size={{ smDown: 'xs', sm: 'md' }}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -76,7 +77,7 @@ export const CreateGameDialog = () => {
 
             <Dialog.Footer justifyContent="center">
               <VStack>
-                <HStack>
+                <Box display="flex" flexDir={{ smDown: 'column', base: 'row' }} gap="1">
                   <Button
                     onClick={() => handleCreateGame('solo')}
                     data-testid="create-game-dialog-btn-solo"
@@ -98,7 +99,7 @@ export const CreateGameDialog = () => {
                   >
                     Znajdź przeciwnika (wkrótce 👨🏼‍💻)
                   </Button>
-                </HStack>
+                </Box>
                 {/* <HStack filter="grayscale(100%)">
                   <Image
                     src={facebookLogo}
