@@ -20,10 +20,11 @@ describe('Responsive Design', () => {
 
           it('displays boards correctly', () => {
             cy.get(sel.grid).should('have.length', boards).and('be.visible');
-            cy.contains('Gracz 1').should('be.visible');
             if (mode === 'solo') {
+              cy.contains('Gracz 1').should('not.exist');
               cy.contains('Gracz 2').should('not.exist');
             } else {
+              cy.contains('Gracz 1').should('be.visible');
               cy.contains('Gracz 2').should('be.visible');
             }
           });
