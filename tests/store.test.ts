@@ -429,7 +429,7 @@ describe('surrenderGame', () => {
       await useAppStore.getState().surrenderGame();
 
       expect(firebaseFinishGame).toHaveBeenCalledTimes(1);
-      expect(firebaseFinishGame).toHaveBeenCalledWith('game-123', 'finished', {
+      expect(firebaseFinishGame).toHaveBeenCalledWith('game-123', {
         mode: 'solo',
         outcome: 'lost',
       });
@@ -443,7 +443,7 @@ describe('surrenderGame', () => {
 
       await useAppStore.getState().surrenderGame();
 
-      expect(firebaseFinishGame).toHaveBeenCalledWith('game-123', 'finished', {
+      expect(firebaseFinishGame).toHaveBeenCalledWith('game-123', {
         mode: 'versus',
         winnerId: ENEMY_USER_ID,
       });
