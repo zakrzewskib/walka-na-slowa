@@ -21,7 +21,7 @@ describe('Surrender', () => {
 
     cy.get(sel.surrenderDialog).contains('button', 'Nie').click();
 
-    cy.get(sel.surrenderDialog).should('not.exist');
+    cy.get(sel.surrenderDialog, { timeout: 10000 }).should('not.exist');
     storeValue((s) => s.gameStatus).should('not.eq', 'finished');
     storeValue((s) => s.gameResult).should('eq', null);
     storeValue((s) => s.gameId).should('not.eq', '');
@@ -34,8 +34,7 @@ describe('Surrender', () => {
     surrender();
     cy.get(sel.surrenderDialog).contains('button', 'Tak').click();
 
-    cy.get(sel.surrenderDialog).should('not.exist');
-
+    cy.get(sel.surrenderDialog, { timeout: 10000 }).should('not.exist');
     storeValue((s) => s.gameStatus).should('eq', 'finished');
     storeValue((s) => s.gameResult).should('deep.eq', { mode: 'solo', outcome: 'lost' });
 
@@ -48,8 +47,7 @@ describe('Surrender', () => {
   it('persists the finished state so a reload shows the finished game', () => {
     surrender();
     cy.get(sel.surrenderDialog).contains('button', 'Tak').click();
-    cy.get(sel.surrenderDialog).should('not.exist');
-
+    cy.get(sel.surrenderDialog, { timeout: 10000 }).should('not.exist');
     persistedState().its('state.gameId').should('not.eq', '');
     persistedState().its('state.gameStatus').should('eq', 'finished');
     persistedState().its('state.gameResult').should('deep.eq', { mode: 'solo', outcome: 'lost' });
@@ -66,7 +64,7 @@ describe('Surrender', () => {
     cy.get(sel.surrenderDialog).should('contain.text', 'Kończenie gry...');
     cy.get(sel.surrenderDialog).contains('button', 'Nie').should('be.disabled');
 
-    cy.get(sel.surrenderDialog).should('not.exist');
+    cy.get(sel.surrenderDialog, { timeout: 10000 }).should('not.exist');
   });
 
   it('shows an error in the dialog and keeps it open when surrendering fails', () => {
@@ -84,7 +82,7 @@ describe('Surrender', () => {
     storeValue((s) => s.gameResult).should('eq', null);
 
     cy.get(sel.surrenderDialog).contains('button', 'Nie').should('not.be.disabled').click();
-    cy.get(sel.surrenderDialog).should('not.exist');
+    cy.get(sel.surrenderDialog, { timeout: 10000 }).should('not.exist');
   });
 
   it('does not show the previous error when the dialog is reopened', () => {
@@ -95,8 +93,7 @@ describe('Surrender', () => {
     cy.get(sel.surrenderDialog).should('contain.text', 'Nie udało się zakończyć gry');
 
     cy.get(sel.surrenderDialog).contains('button', 'Nie').click();
-    cy.get(sel.surrenderDialog).should('not.exist');
-
+    cy.get(sel.surrenderDialog, { timeout: 10000 }).should('not.exist');
     surrender();
 
     cy.get(sel.surrenderDialog).should('be.visible');

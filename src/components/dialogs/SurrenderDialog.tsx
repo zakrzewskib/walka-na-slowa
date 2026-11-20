@@ -20,7 +20,7 @@ export const SurrenderDialog = ({ isOpen, onClose }: SurrenderDialogProps) => {
 
     try {
       await surrenderGame();
-      close();
+      onClose();
     } catch {
       setError('Nie udało się zakończyć gry. Proszę spróbować ponownie lub odświeżyć stronę.');
     } finally {
