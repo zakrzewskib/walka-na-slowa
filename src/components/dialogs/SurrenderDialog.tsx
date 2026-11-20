@@ -1,5 +1,5 @@
 import { Box, Button, CloseButton, Dialog, Portal, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useAppStore } from '../../store/store';
 import { ErrorAlert } from '../alerts/ErrorAlert';
 
@@ -7,6 +7,7 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const surrenderGame = useAppStore((state) => state.surrenderGame);
+  const ref = useRef<HTMLButtonElement | null>(null);
 
   async function handleSurrender() {
     setLoading(true);
@@ -28,12 +29,15 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
         setLoading(false);
         setError('');
       }}
-      closeOnEscape={false}
+      closeOnEscape={!loading}
+      onOpenChange={(e) => !e.open && !loading && close()}
       closeOnInteractOutside={false}
       placement="center"
       lazyMount
       unmountOnExit
+      role="alertdialog"
       size={{ smDown: 'xs', sm: 'md' }}
+      initialFocusEl={() => ref.current}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -66,6 +70,7 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
                     colorPalette="blackAlpha" // better for accessibility
                     disabled={loading}
                     onClick={close}
+                    ref={ref}
                   >
                     Nie
                   </Button>
