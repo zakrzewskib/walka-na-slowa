@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Portal, Text, VStack } from '@chakra-ui/react';
+import { Button, Dialog, Portal, Stack, Text, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
@@ -10,11 +10,12 @@ export const CreateGameDialog = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
   const gameResult = useAppStore((state) => state.gameResult);
   const createGame = useAppStore((state) => state.createGame);
+  const correctWord = useAppStore((state) => state.correctWord);
+
   const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
   const [error, setError] = useState('');
-  const isOpen = gameStatus == 'waiting_for_opponent' || !gameStatus || gameStatus === 'finished';
 
-  const correctWord = useAppStore((state) => state.correctWord);
+  const isOpen = gameStatus == 'waiting_for_opponent' || !gameStatus || gameStatus === 'finished';
 
   async function handleCreateGame(gameMode: GameMode) {
     setPendingMode(gameMode);
@@ -78,7 +79,7 @@ export const CreateGameDialog = () => {
 
             <Dialog.Footer justifyContent="center">
               <VStack>
-                <Box display="flex" flexDir={{ smDown: 'column', base: 'row' }} gap="1">
+                <Stack direction={{ smDown: 'column', base: 'row' }} display="flex" gap="1">
                   <Button
                     onClick={() => handleCreateGame('solo')}
                     data-testid="create-game-dialog-btn-solo"
@@ -100,7 +101,7 @@ export const CreateGameDialog = () => {
                   >
                     Znajdź przeciwnika (wkrótce 👨🏼‍💻)
                   </Button>
-                </Box>
+                </Stack>
                 {/* <HStack filter="grayscale(100%)">
                   <Image
                     src={facebookLogo}
