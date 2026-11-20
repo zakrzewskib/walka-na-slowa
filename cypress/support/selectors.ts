@@ -7,6 +7,7 @@ export const sel = {
   opponentBoard: '[data-testid="opponent-board"]',
   key: (value: string) => `[data-testid="key-${value}"]`,
   surrenderBtn: '[data-testid="surrender-button"]',
+  surrenderDialog: '[data-testid="surrender-dialog"]',
   toaster: '[data-testid="toaster"]',
   grid: '[role="grid"]',
   gridCell: '[role="gridcell"]',

@@ -10,6 +10,7 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
 
   async function handleSurrender() {
     setLoading(true);
+    setError('');
 
     try {
       await surrenderGame();
@@ -23,7 +24,10 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
   return (
     <Dialog.Root
       open={open}
-      onExitComplete={() => setLoading(false)}
+      onExitComplete={() => {
+        setLoading(false);
+        setError('');
+      }}
       closeOnEscape={false}
       closeOnInteractOutside={false}
       placement="center"
@@ -34,10 +38,7 @@ export const SurrenderDialog = ({ open, close }: { open: boolean; close: () => v
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content
-            data-testid="create-game-dialog"
-            aria-label="Dialog pozwalający poddać grę"
-          >
+          <Dialog.Content data-testid="surrender-dialog" aria-label="Dialog pozwalający poddać grę">
             <Dialog.Header>
               <Dialog.Title>Czy na pewno chcesz się poddać?</Dialog.Title>
             </Dialog.Header>
