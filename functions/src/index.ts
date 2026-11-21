@@ -11,6 +11,7 @@ import { getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { setGlobalOptions } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/https';
+
 // import {onRequest} from "firebase-functions/https";
 // import * as logger from "firebase-functions/logger";
 
@@ -31,7 +32,7 @@ setGlobalOptions({ maxInstances: 10 });
 
 if (!getApps().length) initializeApp();
 
-export const getRandomWord = onCall({ maxInstances: 3 }, async () => {
+export const getRandomWord = onCall(async () => {
   const snap = await getFirestore().doc('config/words').get();
 
   if (!snap.exists) {

@@ -68,6 +68,7 @@ export const CreateGameDialog = () => {
               </Dialog.Body>
             )}
 
+            {/* todo: Do not display this when there is no game */}
             {gameStatus === 'finished' && (
               <Dialog.Body display="flex" flexDir="column" alignItems="center">
                 <Text mb="1">Poprawne słowo to:</Text>
