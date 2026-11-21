@@ -1,10 +1,13 @@
 import { initializeApp } from 'firebase/app';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { logger } from '../logger/logger';
 
 // Module state is reset on every Vite HMR re-evaluation, so the "already connected"
 // flag has to live on globalThis to survive it.
 declare global {
   var __firestoreEmulatorConnected: boolean | undefined;
+  var __functionsEmulatorConnected: boolean | undefined;
 }
 
 function requireEnv(name: string, value: string | undefined): string {
@@ -28,8 +31,10 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-// Emulators for testing, VITE_USE_FIREBASE_EMULATOR is set to true in CI pipeline.
+// VITE_USE_FIREBASE_EMULATOR is set to true in CI pipeline.
 // Must run right after getFirestore() and before anything uses `db`.
+
+// firestoreEmulator
 if (
   import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true' &&
   !globalThis.__firestoreEmulatorConnected
@@ -44,5 +49,26 @@ if (
   }
 
   connectFirestoreEmulator(db, host, port);
+  logger.info('Connected firestore emulator');
+
   globalThis.__firestoreEmulatorConnected = true;
+}
+
+// functionsEmulator
+if (
+  import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true' &&
+  !globalThis.__functionsEmulatorConnected
+) {
+  const host = import.meta.env.VITE_FIREBASE_EMULATOR_HOST ?? '127.0.0.1';
+  const port = Number(import.meta.env.VITE_FIREBASE_EMULATOR_PORT ?? 5001);
+
+  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
+    throw new Error(
+      `Invalid VITE_FIREBASE_EMULATOR_PORT: ${import.meta.env.VITE_FIREBASE_EMULATOR_PORT}`,
+    );
+  }
+
+  connectFunctionsEmulator(getFunctions(app), host, port);
+  logger.info('Connected functions emulator');
+  globalThis.__functionsEmulatorConnected = true;
 }

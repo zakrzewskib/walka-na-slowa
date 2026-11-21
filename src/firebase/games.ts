@@ -15,6 +15,7 @@ import { logger } from '../logger/logger';
 import type { Game, GameMode, GameResult, GameStatus, Guess, GuessSubmit } from '../types';
 import { getGameResult, getWordResult } from '../utils/gameLogic';
 import { db } from './firebase';
+import { getCorrectWord } from './functions/client';
 
 export const HARDCODED_CORRECT_WORD = 'LALKA'; // todo: Add choosing correct word in the backend
 
@@ -28,13 +29,22 @@ export interface GameDTO extends Game {
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
 
 export async function firebaseCreateGame(mode: GameMode): Promise<GameDTO> {
+  let correctWord;
+
+  try {
+    correctWord = await getCorrectWord();
+  } catch (error) {
+    logger.error('Error getting correct word game', error);
+    throw error;
+  }
+
   // Omit id to autogenerate it
   const newGame: Omit<GameDTO, 'id'> = {
     playerIds: [CURRENT_USER_ID],
     gameMode: mode,
     gameStatus: mode === 'solo' ? 'in_progress' : 'waiting_for_opponent',
     gameResult: null,
-    correctWord: HARDCODED_CORRECT_WORD,
+    correctWord: correctWord,
     guesses: [],
     createdAt: serverTimestamp(),
   };

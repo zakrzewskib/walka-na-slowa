@@ -6,6 +6,9 @@
   "packageManager": "pnpm@10.33.2",
   "scripts": {
     "dev": "vite",
+    "dev:emulators": "cross-env VITE_USE_FIREBASE_EMULATOR=true vite",
+    "emulators:start": "firebase emulators:start --import=./emulator-data --export-on-exit",
+    "functions:build": "pnpm --dir functions exec tsc --watch",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
