@@ -106,6 +106,14 @@ or run: (also in parallel)
 "functions:build"
 ```
 
+You can use
+
+```
+dev:full
+```
+
+script
+
 emulators data will be preserved in the emulator-data directory
 
 When you run emulators you can add data manually using ui emulator

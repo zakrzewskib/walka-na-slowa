@@ -72,9 +72,17 @@ export const CreateGameDialog = () => {
             {gameStatus === 'finished' && (
               <Dialog.Body display="flex" flexDir="column" alignItems="center">
                 <Text mb="1">Poprawne słowo to:</Text>
-                <HStack gap="1">
-                  {correctWord.split('').map((letter) => (
+                <HStack
+                  gap="1"
+                  onCopy={(e) => {
+                    // Overwrite copy functionality to get for LALKA instead L A L K A
+                    e.preventDefault();
+                    e.clipboardData.setData('text/plain', correctWord);
+                  }}
+                >
+                  {correctWord.split('').map((letter, idx) => (
                     <HStack
+                      key={idx}
                       fontSize="24px"
                       fontWeight="bolder"
                       backgroundColor="green.500"
