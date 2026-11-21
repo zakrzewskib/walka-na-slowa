@@ -109,3 +109,13 @@ or run: (also in parallel)
 emulators data will be preserved in the emulator-data directory
 
 When you run emulators you can add data manually using ui emulator
+
+## Deployment
+
+To deploy firebase cloud functions use
+
+```
+firebase deploy --only functions
+```
+
+and set your plan to Blaze pay-as-you-go
