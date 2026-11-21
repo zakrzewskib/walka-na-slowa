@@ -1,4 +1,4 @@
-import { Button, Dialog, HStack, Portal, VStack } from '@chakra-ui/react';
+import { Button, Dialog, HStack, Portal, Stack, Text, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
@@ -10,8 +10,11 @@ export const CreateGameDialog = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
   const gameResult = useAppStore((state) => state.gameResult);
   const createGame = useAppStore((state) => state.createGame);
+  const correctWord = useAppStore((state) => state.correctWord);
+
   const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
   const [error, setError] = useState('');
+
   const isOpen = gameStatus == 'waiting_for_opponent' || !gameStatus || gameStatus === 'finished';
 
   async function handleCreateGame(gameMode: GameMode) {
@@ -43,6 +46,7 @@ export const CreateGameDialog = () => {
       placement="center"
       lazyMount
       unmountOnExit
+      size={{ smDown: 'xs', sm: 'md' }}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -53,6 +57,7 @@ export const CreateGameDialog = () => {
           >
             <Dialog.Header>
               <Dialog.Title>
+                {/* todo: Add Szukanie przeciwnika text */}
                 {gameResultToText(gameResult, CURRENT_USER_ID, ENEMY_USER_ID)}
               </Dialog.Title>
             </Dialog.Header>
@@ -63,9 +68,32 @@ export const CreateGameDialog = () => {
               </Dialog.Body>
             )}
 
+            {gameStatus === 'finished' && (
+              <Dialog.Body display="flex" flexDir="column" alignItems="center">
+                <Text mb="1">Poprawne słowo to:</Text>
+                <HStack gap="1">
+                  {correctWord.split('').map((letter) => (
+                    <HStack
+                      fontSize="24px"
+                      fontWeight="bolder"
+                      backgroundColor="green.500"
+                      color="white"
+                      height="48px"
+                      width="48px"
+                      alignItems="center"
+                      justifyContent="center"
+                      rounded="sm"
+                    >
+                      {letter}
+                    </HStack>
+                  ))}
+                </HStack>
+              </Dialog.Body>
+            )}
+
             <Dialog.Footer justifyContent="center">
               <VStack>
-                <HStack>
+                <Stack direction={{ smDown: 'column', base: 'row' }} display="flex" gap="1">
                   <Button
                     onClick={() => handleCreateGame('solo')}
                     data-testid="create-game-dialog-btn-solo"
@@ -87,7 +115,7 @@ export const CreateGameDialog = () => {
                   >
                     Znajdź przeciwnika (wkrótce 👨🏼‍💻)
                   </Button>
-                </HStack>
+                </Stack>
                 {/* <HStack filter="grayscale(100%)">
                   <Image
                     src={facebookLogo}

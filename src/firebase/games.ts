@@ -8,6 +8,7 @@ import {
   runTransaction,
   serverTimestamp,
   Timestamp,
+  updateDoc,
 } from 'firebase/firestore';
 import { CURRENT_USER_ID } from '../constants';
 import { logger } from '../logger/logger';
@@ -21,6 +22,7 @@ type FirebaseWriteReadTimeStamp = FieldValue | Timestamp;
 
 export interface GameDTO extends Game {
   createdAt: FirebaseWriteReadTimeStamp;
+  finishedAt?: FirebaseWriteReadTimeStamp;
 }
 
 const gamesCollection = collection(db, 'games') as CollectionReference<GameDTO>;
@@ -116,7 +118,7 @@ export async function firebaseGetGame(gameId: string): Promise<GameDTO> {
 
     if (!snap.exists()) {
       logger.warn('gameRef does not exist', { gameId });
-      throw new Error('Could not load game.');
+      throw new Error('Could not get game.');
     }
 
     const game: GameDTO = { ...snap.data(), id: snap.id };
@@ -124,6 +126,21 @@ export async function firebaseGetGame(gameId: string): Promise<GameDTO> {
     return game;
   } catch (error) {
     logger.error('Error creating game', { gameId, error });
+    throw error;
+  }
+}
+
+export async function firebaseFinishGame(gameId: string, gameResult: GameResult) {
+  const gameRef = doc(gamesCollection, gameId);
+
+  try {
+    await updateDoc(gameRef, {
+      gameStatus: 'finished',
+      gameResult: gameResult,
+      finishedAt: serverTimestamp(),
+    });
+  } catch (error) {
+    logger.error('Error updating game', { gameId, error });
     throw error;
   }
 }

@@ -1,6 +1,7 @@
 import type { StateCreator } from 'zustand';
-import { firebaseCreateGame, firebaseGetGame } from '../firebase/games';
-import type { GameMode } from '../types';
+import { ENEMY_USER_ID } from '../constants';
+import { firebaseCreateGame, firebaseFinishGame, firebaseGetGame } from '../firebase/games';
+import type { GameMode, GameResult } from '../types';
 import type { AppState, GameSlice, StoreMutators } from './types';
 
 export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlice> = (
@@ -42,19 +43,22 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
     });
   },
 
-  finishGame: async () => {
-    if (!get().gameId) {
-      // todo: Add error handling when there is no game
-      return;
-    }
-    // todo: Add firebase game update
+  surrenderGame: async () => {
+    const gameId = get().gameId;
+
+    if (!gameId || get().gameStatus === 'finished') return;
+
+    const gameResult: GameResult =
+      get().gameMode === 'solo'
+        ? { mode: 'solo', outcome: 'lost' }
+        : { mode: 'versus', winnerId: ENEMY_USER_ID };
+
+    await firebaseFinishGame(gameId, gameResult);
+
     set({
-      gameId: '',
-      correctWord: '',
-      guesses: [],
+      gameResult,
+      gameStatus: 'finished',
       currentGuess: '',
-      gameResult: null,
-      gameStatus: null,
     });
   },
 });

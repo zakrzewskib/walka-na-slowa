@@ -21,6 +21,7 @@ export const WordItem = (props: WordItemProps) => {
         gap: '2px',
       }}
       role="row"
+      justifyContent="center"
     >
       {guess.letters.map((letter, idx) => (
         <LetterItem key={idx} letter={letter} isPlayer={isPlayer} isCurrentTurn={isCurrentTurn} />

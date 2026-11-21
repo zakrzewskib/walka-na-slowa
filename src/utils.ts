@@ -10,15 +10,15 @@ export function gameResultToText(
   }
   if (gameResult.mode === 'solo') {
     if (gameResult.outcome === 'lost') {
-      return 'Przegrałeś! 😭';
+      return 'Przegrana! 😭'; // todo: Add "Przegrałeś/Przegrałaś/Przegrałoś" when user logs in
     } else {
-      return 'Wygrałeś! 🏆';
+      return 'Wygrana! 🏆';
     }
   } else {
     if (gameResult.winnerId === currentUserId) {
-      return 'Wygrałeś! 🏆';
+      return 'Wygrana! 🏆';
     } else if (gameResult.winnerId === enemyUserId) {
-      return 'Przegrałeś! 😭';
+      return 'Przegrana! 😭';
     } else {
       return 'Remis! 🤝';
     }
