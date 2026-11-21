@@ -11,30 +11,30 @@ describe('gameResultToText', () => {
   });
 
   describe('solo mode', () => {
-    it('returns "Przegrałeś! 😭" when the outcome is lost', () => {
+    it('returns "Przegrana! 😭" when the outcome is lost', () => {
       const result = { mode: 'solo', outcome: 'lost' } as GameResult;
 
-      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Przegrałeś! 😭');
+      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Przegrana! 😭');
     });
 
-    it('returns "Wygrałeś! 🏆" when the outcome is won', () => {
+    it('returns "Wygrana! 🏆" when the outcome is won', () => {
       const result = { mode: 'solo', outcome: 'won' } as GameResult;
 
-      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Wygrałeś! 🏆');
+      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Wygrana! 🏆');
     });
   });
 
   describe('versus mode', () => {
-    it('returns "Wygrałeś! 🏆" when the current user is the winner', () => {
+    it('returns "Wygrana! 🏆" when the current user is the winner', () => {
       const result = { mode: 'versus', winnerId: CURRENT_USER_ID } as GameResult;
 
-      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Wygrałeś! 🏆');
+      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Wygrana! 🏆');
     });
 
-    it('returns "Przegrałeś! 😭" when the enemy is the winner', () => {
+    it('returns "Przegrana! 😭" when the enemy is the winner', () => {
       const result = { mode: 'versus', winnerId: ENEMY_USER_ID } as GameResult;
 
-      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Przegrałeś! 😭');
+      expect(gameResultToText(result, CURRENT_USER_ID, ENEMY_USER_ID)).toBe('Przegrana! 😭');
     });
 
     it('returns "Remis! 🤝" when there is no winner', () => {
