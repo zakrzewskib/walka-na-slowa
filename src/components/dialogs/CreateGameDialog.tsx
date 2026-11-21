@@ -1,4 +1,4 @@
-import { Button, Dialog, Portal, Stack, Text, VStack } from '@chakra-ui/react';
+import { Button, Dialog, HStack, Portal, Stack, Text, VStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { CURRENT_USER_ID, ENEMY_USER_ID } from '../../constants';
 import { useAppStore } from '../../store/store';
@@ -70,10 +70,24 @@ export const CreateGameDialog = () => {
 
             {gameStatus === 'finished' && (
               <Dialog.Body display="flex" flexDir="column" alignItems="center">
-                <Text>Poprawne słowo to:</Text>
-                <Text fontSize="24px" fontWeight="bolder" letterSpacing="wider" mt="1">
-                  {correctWord}
-                </Text>
+                <Text mb="1">Poprawne słowo to:</Text>
+                <HStack gap="1">
+                  {correctWord.split('').map((letter) => (
+                    <HStack
+                      fontSize="24px"
+                      fontWeight="bolder"
+                      backgroundColor="green.500"
+                      color="white"
+                      height="48px"
+                      width="48px"
+                      alignItems="center"
+                      justifyContent="center"
+                      rounded="sm"
+                    >
+                      {letter}
+                    </HStack>
+                  ))}
+                </HStack>
               </Dialog.Body>
             )}
 
