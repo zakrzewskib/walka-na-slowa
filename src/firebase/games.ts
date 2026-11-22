@@ -135,7 +135,7 @@ export async function firebaseGetGame(gameId: string): Promise<GameDTO> {
     logger.debug('Game loaded', { gameId, game });
     return game;
   } catch (error) {
-    logger.error('Error creating game', { gameId, error });
+    logger.error('Error getting game', { gameId, error });
     throw error;
   }
 }

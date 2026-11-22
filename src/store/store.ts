@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { toaster } from '../components/ui/toaster';
 import { logger } from '../logger/logger';
 import { createGameSlice } from './gameSlice';
 import { createGuessSlice } from './guessSlice';
@@ -19,7 +18,7 @@ export const useAppStore = create<AppState>()(
         gameId: state.gameId,
         gameMode: state.gameMode,
         gameStatus: state.gameStatus,
-        gameResult: state.gameResult,
+        // gameResult: state.gameResult,
       }),
 
       // load game after rehydrate
@@ -27,15 +26,12 @@ export const useAppStore = create<AppState>()(
         if (error || !state?.gameId) return;
 
         // loadGame sets state to the new game
-        state.loadGame(state.gameId).catch((error) => {
+        state.loadGame(state.gameId).catch((error: Error) => {
           logger.error('Store: Could not load game on rehydrate', error);
 
-          toaster.create({
-            title: 'Błąd',
-            description:
-              'Nie udało się wczytać poprzedniej gry. Odśwież stronę lub stwórz nową grę',
-            type: 'error',
-            closable: true,
+          useAppStore.setState({
+            getGameError:
+              'Nie udało się wczytać gry. Proszę stworzyć nową grę lub odświeżyć stronę.',
           });
         });
       },

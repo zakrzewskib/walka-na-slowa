@@ -14,8 +14,13 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
   gameMode: 'versus',
   gameResult: null,
   gameStatus: null,
+  getGameError: null,
 
   createGame: async (gameMode: GameMode) => {
+    set({
+      getGameError: null,
+    });
+
     const game = await firebaseCreateGame(gameMode);
 
     set({
@@ -40,6 +45,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       gameId,
       currentGuess: '',
       ...game,
+      getGameError: null,
     });
   },
 
