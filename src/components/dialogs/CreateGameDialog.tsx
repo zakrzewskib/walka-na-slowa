@@ -8,6 +8,7 @@ import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
+  const gameId = useAppStore((state) => state.gameId);
   const gameResult = useAppStore((state) => state.gameResult);
   const createGame = useAppStore((state) => state.createGame);
   const correctWord = useAppStore((state) => state.correctWord);
@@ -59,7 +60,7 @@ export const CreateGameDialog = () => {
             <Dialog.Header>
               <Dialog.Title>
                 {/* todo: Add Szukanie przeciwnika text */}
-                {getGameError || error
+                {!gameId || getGameError || error
                   ? 'Rozpocznij grę'
                   : gameResultToText(gameResult, CURRENT_USER_ID, ENEMY_USER_ID)}
               </Dialog.Title>
@@ -78,7 +79,7 @@ export const CreateGameDialog = () => {
             )}
 
             {/* todo: Do not display this when there is no game */}
-            {!getGameError && !error && gameStatus === 'finished' && (
+            {gameId && !getGameError && !error && gameStatus === 'finished' && (
               <Dialog.Body display="flex" flexDir="column" alignItems="center">
                 <Text mb="1">Poprawne słowo to:</Text>
                 <HStack

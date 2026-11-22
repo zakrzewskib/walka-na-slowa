@@ -13,6 +13,7 @@ export const SurrenderDialog = ({ isOpen, onClose }: SurrenderDialogProps) => {
   const [error, setError] = useState('');
   const surrenderGame = useAppStore((state) => state.surrenderGame);
   const ref = useRef<HTMLButtonElement | null>(null);
+  const gameMode = useAppStore((state) => state.gameMode);
 
   async function handleSurrender() {
     setLoading(true);
@@ -48,7 +49,9 @@ export const SurrenderDialog = ({ isOpen, onClose }: SurrenderDialogProps) => {
         <Dialog.Positioner>
           <Dialog.Content data-testid="surrender-dialog" aria-label="Dialog pozwalający poddać grę">
             <Dialog.Header>
-              <Dialog.Title>Czy na pewno chcesz się poddać?</Dialog.Title>
+              <Dialog.Title>
+                Czy na pewno chcesz {gameMode === 'solo' ? 'zakończyć grę?' : 'się poddać?'}
+              </Dialog.Title>
             </Dialog.Header>
 
             {error && (

@@ -9,5 +9,5 @@ const list = readFileSync('words.txt', 'utf8')
 
 getFirestore()
   .doc('config/words')
-  .set({ list })
+  .set({ list }, { merge: true })
   .then(() => console.log(`Uploaded ${list.length} words`));
