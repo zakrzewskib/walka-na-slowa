@@ -48,20 +48,29 @@ jobs:
             firebase-emulators-${{ runner.os }}-
 
       # Dependencies
+      - name: Install all dependencies
       - run: corepack enable
       - run: pnpm install
 
+      - name: Install functions dependencies
+      - run: npm ci
+      - working-directory: functions
+
       # Installing cypress
+      - name: Install cypress
       - run: pnpm exec cypress install
 
       # Checks:
+      - name: Run checks
       - run: pnpm run lint
       - run: pnpm run typecheck
 
       # Build:
+      - name: Build app
       - run: pnpm run build
 
       # Tests
+      - name: Run tests
       - run: pnpm run coverage
 
       - run: pnpm run test:e2e
