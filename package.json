@@ -9,6 +9,7 @@
     "dev:emulators": "cross-env VITE_USE_FIREBASE_EMULATOR=true vite",
     "emulators:start": "firebase emulators:start --import=./emulator-data --export-on-exit",
     "functions:build": "pnpm --dir functions exec tsc --watch",
+    "functions:build:once": "pnpm --dir functions exec tsc",
     "dev:full": "concurrently -k \"pnpm run functions:build\" \"pnpm run emulators:start\" \"pnpm run dev:emulators\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -19,9 +20,13 @@
     "prepare": "husky",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
+    "e2e:specific-file": "cypress run --spec cypress/e2e/<name>.cy.ts",
     "e2e": "cypress run",
-    "e2e:ci": "start-server-and-test dev http://localhost:5173 e2e",
-    "test:e2e": "cross-env VITE_USE_FIREBASE_EMULATOR=true firebase emulators:exec --only firestore --project demo-walka-na-slowa \"pnpm run e2e:ci\""
+    "e2e:open": "cypress open",
+    "e2e:ci": "start-server-and-test dev:emulators http://localhost:5173 e2e",
+    "e2e:ci:open": "start-server-and-test dev:emulators http://localhost:5173 e2e:open",
+    "test:e2e": "pnpm run functions:build:once && cross-env VITE_USE_FIREBASE_EMULATOR=true VITE_FIREBASE_PROJECT_ID=demo-walka-na-slowa firebase emulators:exec --project demo-walka-na-slowa \"pnpm run e2e:ci\"",
+    "test:e2e:interactive": "pnpm run functions:build:once && cross-env VITE_USE_FIREBASE_EMULATOR=true VITE_FIREBASE_PROJECT_ID=demo-walka-na-slowa firebase emulators:exec --project demo-walka-na-slowa \"pnpm run e2e:ci:open\""
   },
   "dependencies": {
     "@chakra-ui/cli": "^3.32.0",

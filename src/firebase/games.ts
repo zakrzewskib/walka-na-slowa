@@ -58,6 +58,7 @@ export async function firebaseCreateGame(mode: GameMode): Promise<GameDTO> {
       ...newGame,
     };
   } catch (error) {
+    console.error(error);
     logger.error('Error creating game', error);
     throw error;
   }

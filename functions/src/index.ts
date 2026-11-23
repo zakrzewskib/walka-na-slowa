@@ -11,6 +11,7 @@ import { getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { setGlobalOptions } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/https';
+import { readFileSync } from 'node:fs';
 
 // import {onRequest} from "firebase-functions/https";
 // import * as logger from "firebase-functions/logger";
@@ -49,4 +50,29 @@ export const getRandomWord = onCall(async () => {
   const correctWord = list[Math.floor(Math.random() * list.length)];
 
   return { correctWord };
+});
+
+// Create possible answers and seed config/words
+
+const ref = getFirestore().doc('config/words');
+
+async function seed() {
+  const snap = await ref.get();
+  if (snap.exists) {
+    console.log('config/words already exists, skipping');
+    return;
+  }
+
+  const list = readFileSync('words.txt', 'utf8')
+    .split(/\r?\n/)
+    .map((w) => w.trim().toUpperCase())
+    .filter(Boolean);
+
+  await ref.set({ list });
+  console.log(`Uploaded ${list.length} words`);
+}
+
+seed().catch((e) => {
+  console.error(e);
+  process.exit(1);
 });
