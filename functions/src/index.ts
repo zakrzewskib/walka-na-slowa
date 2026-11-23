@@ -63,10 +63,15 @@ async function seed() {
     return;
   }
 
-  const list = readFileSync('words.txt', 'utf8')
-    .split(/\r?\n/)
-    .map((w) => w.trim().toUpperCase())
-    .filter(Boolean);
+  // set it locally
+  const useWordsFile = false;
+
+  const list = useWordsFile
+    ? readFileSync('words.txt', 'utf8')
+        .split(/\r?\n/)
+        .map((w) => w.trim().toUpperCase())
+        .filter(Boolean)
+    : ['LALKA', 'HOTEL', 'FLESZ'];
 
   await ref.set({ list });
   console.log(`Uploaded ${list.length} words`);
