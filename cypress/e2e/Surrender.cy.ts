@@ -11,10 +11,7 @@ describe('Surrender', () => {
     surrender();
 
     cy.get(sel.surrenderDialog).should('be.visible');
-    cy.get(sel.surrenderDialog).should(
-      'contain.text',
-      'Czy na pewno chcesz się zakończyć grę?TakNie',
-    );
+    cy.get(sel.surrenderDialog).should('contain.text', 'Czy na pewno chcesz zakończyć grę?TakNie');
 
     storeValue((s) => s.gameStatus).should('not.eq', 'finished');
     storeValue((s) => s.gameResult).should('eq', null);
