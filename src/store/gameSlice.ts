@@ -64,6 +64,12 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
 
     try {
       await firebaseFinishGame(gameId, gameResult);
+
+      set({
+        gameResult,
+        gameStatus: 'finished',
+        currentGuess: '',
+      });
     } catch (error) {
       const err = error as unknown as FirebaseError;
 
@@ -78,11 +84,5 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
         });
       }
     }
-
-    set({
-      gameResult,
-      gameStatus: 'finished',
-      currentGuess: '',
-    });
   },
 });

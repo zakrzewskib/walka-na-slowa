@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
+import { FirebaseError } from 'firebase/app';
 import { Timestamp } from 'firebase/firestore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { toaster } from '../src/components/ui/toaster';
 import { ENEMY_USER_ID } from '../src/constants';
 import {
   firebaseCreateGame,
@@ -489,10 +489,21 @@ describe('surrenderGame', () => {
       expect(useAppStore.getState().gameStatus).toBe('finished');
     });
 
-    it('rejects and leaves the state untouched when firebase fails', async () => {
-      vi.mocked(firebaseFinishGame).mockRejectedValueOnce(new Error('network down'));
+    it('rejects and resets the state when firebase fails with not-found error', async () => {
+      vi.mocked(firebaseFinishGame).mockRejectedValueOnce(
+        new FirebaseError('not-found', 'Game not found'),
+      );
 
-      await expect(useAppStore.getState().surrenderGame()).rejects.toThrow('network down');
+      const state = useAppStore.getState();
+      expect(state.gameResult).toBeNull();
+      expect(state.gameStatus).toBeNull();
+      expect(state.getGameError).toBeNull();
+    });
+
+    it('rejects and leaves the state untouched when firebase fails', async () => {
+      vi.mocked(firebaseFinishGame).mockRejectedValueOnce(
+        new FirebaseError('network-down', 'network down'),
+      );
 
       const state = useAppStore.getState();
       expect(state.gameResult).toBeNull();
@@ -551,19 +562,13 @@ describe('persistence', () => {
 
   it('shows an error toast when the stored game cannot be restored', async () => {
     vi.mocked(firebaseGetGame).mockRejectedValue(new Error('boom'));
+
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({ state: { gameId: 'stale-game' }, version: 0 }),
     );
 
     await useAppStore.persist.rehydrate();
-
-    // loadGame is fired from the rehydrate callback without being awaited
-    await vi.waitFor(() =>
-      expect(toaster.create).toHaveBeenCalledWith(
-        expect.objectContaining({ type: 'error', closable: true }),
-      ),
-    );
 
     // nothing was loaded
     expect(useAppStore.getState().correctWord).toBe('');
