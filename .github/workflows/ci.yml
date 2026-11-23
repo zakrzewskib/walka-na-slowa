@@ -49,31 +49,34 @@ jobs:
 
       # Dependencies
       - name: Install all dependencies
-      - run: corepack enable
-      - run: pnpm install
+        run: |
+          corepack enable
+          pnpm install
 
       - name: Install functions dependencies
-      - run: npm ci
-      - working-directory: functions
+        run: npm ci
+        working-directory: functions
 
       # Installing cypress
       - name: Install cypress
-      - run: pnpm exec cypress install
+        run: pnpm exec cypress install
 
       # Checks:
       - name: Run checks
-      - run: pnpm run lint
-      - run: pnpm run typecheck
+        run: |
+          pnpm run lint 
+          pnpm run typecheck
 
       # Build:
       - name: Build app
-      - run: pnpm run build
+        run: pnpm run build
 
       # Tests
       - name: Run tests
-      - run: pnpm run coverage
+        run: pnpm run coverage
 
-      - run: pnpm run test:e2e
+      - name: Run e2e tests
+        run: pnpm run test:e2e
         env:
           VITE_USE_FIREBASE_EMULATOR: 'true'
           # Dummy values: the emulator never talks to a real Firebase project.
