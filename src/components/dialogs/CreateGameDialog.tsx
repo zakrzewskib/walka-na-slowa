@@ -8,9 +8,11 @@ import { ErrorAlert } from '../alerts/ErrorAlert';
 
 export const CreateGameDialog = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
+  const gameId = useAppStore((state) => state.gameId);
   const gameResult = useAppStore((state) => state.gameResult);
   const createGame = useAppStore((state) => state.createGame);
   const correctWord = useAppStore((state) => state.correctWord);
+  const getGameError = useAppStore((state) => state.getGameError);
 
   const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
   const [error, setError] = useState('');
@@ -58,7 +60,9 @@ export const CreateGameDialog = () => {
             <Dialog.Header>
               <Dialog.Title>
                 {/* todo: Add Szukanie przeciwnika text */}
-                {gameResultToText(gameResult, CURRENT_USER_ID, ENEMY_USER_ID)}
+                {!gameId || getGameError || error
+                  ? 'Rozpocznij grę'
+                  : gameResultToText(gameResult, CURRENT_USER_ID, ENEMY_USER_ID)}
               </Dialog.Title>
             </Dialog.Header>
 
@@ -68,25 +72,43 @@ export const CreateGameDialog = () => {
               </Dialog.Body>
             )}
 
-            {gameStatus === 'finished' && (
+            {getGameError && (
+              <Dialog.Body>
+                <ErrorAlert text={getGameError} />
+              </Dialog.Body>
+            )}
+
+            {/* todo: Do not display this when there is no game */}
+            {gameId && !getGameError && !error && gameStatus === 'finished' && (
               <Dialog.Body display="flex" flexDir="column" alignItems="center">
                 <Text mb="1">Poprawne słowo to:</Text>
-                <HStack gap="1">
-                  {correctWord.split('').map((letter) => (
-                    <HStack
-                      fontSize="24px"
-                      fontWeight="bolder"
-                      backgroundColor="green.500"
-                      color="white"
-                      height="48px"
-                      width="48px"
-                      alignItems="center"
-                      justifyContent="center"
-                      rounded="sm"
-                    >
-                      {letter}
-                    </HStack>
-                  ))}
+                <HStack
+                  gap="1"
+                  onCopy={(e) => {
+                    // Overwrite copy functionality to get for LALKA instead L A L K A
+                    e.preventDefault();
+                    e.clipboardData.setData('text/plain', correctWord);
+                  }}
+                >
+                  {correctWord
+                    .toUpperCase()
+                    .split('')
+                    .map((letter, idx) => (
+                      <HStack
+                        key={idx}
+                        fontSize="24px"
+                        fontWeight="bolder"
+                        backgroundColor="green.500"
+                        color="white"
+                        height="48px"
+                        width="48px"
+                        alignItems="center"
+                        justifyContent="center"
+                        rounded="sm"
+                      >
+                        {letter}
+                      </HStack>
+                    ))}
                 </HStack>
               </Dialog.Body>
             )}

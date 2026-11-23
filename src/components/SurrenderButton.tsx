@@ -5,6 +5,7 @@ import { SurrenderDialog } from './dialogs/SurrenderDialog';
 
 export const SurrenderButton = () => {
   const gameStatus = useAppStore((state) => state.gameStatus);
+  const gameMode = useAppStore((state) => state.gameMode);
   const gameId = useAppStore((state) => state.gameId);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -16,7 +17,7 @@ export const SurrenderButton = () => {
         disabled={gameStatus === 'finished' || !gameId}
         data-testid="surrender-button"
       >
-        Poddaj się
+        {gameMode === 'solo' ? 'Zakończ grę' : 'Poddaj się'}
       </Button>
     </>
   );

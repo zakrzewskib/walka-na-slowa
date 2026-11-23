@@ -1,6 +1,7 @@
 import { patchStore, persistedState, storeValue, submitWord, surrender } from '../support/helpers';
 import { sel } from '../support/selectors';
 
+// todo: Add versus mode
 describe('Surrender', () => {
   beforeEach(() => {
     cy.createSoloGame();
@@ -10,7 +11,7 @@ describe('Surrender', () => {
     surrender();
 
     cy.get(sel.surrenderDialog).should('be.visible');
-    cy.get(sel.surrenderDialog).should('contain.text', 'Czy na pewno chcesz się poddać?');
+    cy.get(sel.surrenderDialog).should('contain.text', 'Czy na pewno chcesz zakończyć grę?TakNie');
 
     storeValue((s) => s.gameStatus).should('not.eq', 'finished');
     storeValue((s) => s.gameResult).should('eq', null);

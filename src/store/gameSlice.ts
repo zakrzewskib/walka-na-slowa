@@ -1,3 +1,4 @@
+import type { FirebaseError } from 'firebase/app';
 import type { StateCreator } from 'zustand';
 import { ENEMY_USER_ID } from '../constants';
 import { firebaseCreateGame, firebaseFinishGame, firebaseGetGame } from '../firebase/games';
@@ -14,8 +15,15 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
   gameMode: 'versus',
   gameResult: null,
   gameStatus: null,
+  getGameError: null,
 
   createGame: async (gameMode: GameMode) => {
+    set({
+      getGameError: null,
+      gameStatus: null,
+      gameResult: null,
+    });
+
     const game = await firebaseCreateGame(gameMode);
 
     set({
@@ -40,6 +48,7 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
       gameId,
       currentGuess: '',
       ...game,
+      getGameError: null,
     });
   },
 
@@ -53,12 +62,27 @@ export const createGameSlice: StateCreator<AppState, StoreMutators, [], GameSlic
         ? { mode: 'solo', outcome: 'lost' }
         : { mode: 'versus', winnerId: ENEMY_USER_ID };
 
-    await firebaseFinishGame(gameId, gameResult);
+    try {
+      await firebaseFinishGame(gameId, gameResult);
 
-    set({
-      gameResult,
-      gameStatus: 'finished',
-      currentGuess: '',
-    });
+      set({
+        gameResult,
+        gameStatus: 'finished',
+        currentGuess: '',
+      });
+    } catch (error) {
+      const err = error as unknown as FirebaseError;
+
+      // Reset state when could not finish game that does not exist
+      if (err.code === 'not-found') {
+        set({
+          gameId: '',
+          gameStatus: null,
+          gameResult: null,
+          currentGuess: '',
+          getGameError: null,
+        });
+      }
+    }
   },
 });

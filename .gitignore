@@ -45,3 +45,5 @@ firestore-debug.log
 *-debug.log.
 # firebase cache:
 .firebase/ 
+
+emulator-data/

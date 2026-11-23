@@ -82,3 +82,48 @@ story-point:<value>
 ## Useful links
 
 - https://stackoverflow.com/questions/8981194/changing-git-commit-message-after-push-given-that-no-one-pulled-from-remote
+
+## Firebase guide
+
+### Firebase emulators
+
+To run development process with emulators connected run scripts:
+
+```
+"emulators:start"
+```
+
+and in parallel:
+
+```
+"dev:emulators"
+```
+
+Important note - to have newest version possible of functions run build script inside functions dir
+or run: (also in parallel)
+
+```
+"functions:build"
+```
+
+You can use
+
+```
+dev:full
+```
+
+script
+
+emulators data will be preserved in the emulator-data directory
+
+When you run emulators you can add data manually using ui emulator
+
+## Deployment
+
+To deploy firebase cloud functions use
+
+```
+firebase deploy --only functions
+```
+
+and set your plan to Blaze pay-as-you-go
